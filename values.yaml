@@ -1,0 +1,266 @@
+# Default values for netbox.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: netboxcommunity/netbox
+  tag: v2.5.13
+  pullPolicy: IfNotPresent
+
+# This is a list of valid fully-qualified domain names (FQDNs) for the NetBox
+# server. NetBox will not permit write access to the server via any other
+# hostnames. The first FQDN in the list will be treated as the preferred name.
+allowedHosts:
+  - '*'
+
+# Specify one or more name and email address tuples representing NetBox
+# administrators. These people will be notified of application errors (assuming
+# correct email settings are provided).
+admins: []
+  # - ['John Doe', 'jdoe@example.com']
+
+banner:
+  # Optionally display a persistent banner at the top and/or bottom of every
+  # page. HTML is allowed.
+  top: ''
+  bottom: ''
+
+  # Text to include on the login page above the login form. HTML is allowed.
+  login: ''
+
+# Base URL path if accessing NetBox within a directory. For example, if
+# installed at http://example.com/netbox/, set to 'netbox/'
+basePath: ''
+
+# API Cross-Origin Resource Sharing (CORS) settings. If originAllowAll
+# is set to true, all origins will be allowed. Otherwise, define a list of
+# allowed origins using either originWhitelist or originRegexWhitelist. For
+# more information, see https://github.com/ottoyiu/django-cors-headers
+cors:
+  originAllowAll: false
+  originWhitelist: []
+  originRegexWhitelist: []
+  #  - '^(https?://)?(\w+\.)?example\.com$'
+
+# Set to True to enable server debugging. WARNING: Debugging introduces a
+# substantial performance penalty and may reveal sensitive information about
+# your installation. Only enable debugging while performing testing. Never
+# enable debugging on a production system.
+debug: false
+
+# Email settings
+email:
+  server: localhost
+  port: 25
+  username: ''
+  password: ''
+  timeout: 10  # seconds
+  from: ''
+
+# Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce
+# unique IP space within the global table (all prefixes and IP addresses not
+# assigned to a VRF), set enforceGlobalUnique to True.
+enforceGlobalUnique: false
+
+# Enable custom logging. Please see the Django documentation for detailed
+# guidance on configuring custom logs:
+# https://docs.djangoproject.com/en/1.11/topics/logging/
+logging: {}
+
+# Setting this to True will permit only authenticated users to access any part
+# of NetBox. By default, anonymous users are permitted to access most data in
+# NetBox (excluding secrets) but not make any changes.
+loginRequired: false
+
+# Setting this to True will display a "maintenance mode" banner at the top of
+# every page.
+maintenanceMode: false
+
+# An API consumer can request an arbitrary number of objects by appending the
+# "limit" parameter to the URL (e.g. "?limit=1000"). This setting defines the
+# maximum limit. Setting it to 0 or None will allow an API consumer to request
+# all objects by specifying "?limit=0".
+maxPageSize: 1000
+
+napalm:
+  # Credentials that NetBox will use to access live devices.
+  username: ''
+  password: ''
+
+  # NAPALM timeout (in seconds). (Default: 30)
+  timeout: 30
+
+  # NAPALM optional arguments (see
+  # http://napalm.readthedocs.io/en/latest/support/#optional-arguments).
+  # Arguments must be provided as a dictionary.
+  args: {}
+
+# Determine how many objects to display per page within a list. (Default: 50)
+paginateCount: 50
+
+# When determining the primary IP address for a device, IPv6 is preferred over
+# IPv4 by default. Set this to True to prefer IPv4 instead.
+preferIPv4: false
+
+# Webhooks can be disabled to remove the dependency on Redis.
+webhooksEnabled: true
+
+# Time zone (default: UTC)
+timeZone: UTC
+
+# Date/time formatting. See the following link for supported formats:
+# https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
+dateFormat: 'N j, Y'
+shortDateFormat: 'Y-m-d'
+timeFormat: 'g:i a'
+shortTimeFormat: 'H:i:s'
+dateTimeFormat: 'N j, Y g:i a'
+shortDateTimeFormat: 'Y-m-d H:i'
+
+# If provided, this should be a 50+ character string of random characters. It
+# will be randomly generated if left blank.
+secretKey: ""
+
+## Provide passwords using existing secret
+# If set, this Secret must contain the following keys:
+# - db_password: database password (if postgresql.enabled is false and
+#     externalDatabase.existingSecretName is blank)
+# - email_password: SMTP user password
+# - napalm_password: NAPALM user password
+# - redis_password: Redis password (if redis.enabled is false and
+#     externalRedis.existingSecretName is blank)
+# - secret_key: session encryption token (50+ random characters)
+existingSecret: ""
+
+postgresql:
+  ## Deploy PostgreSQL using bundled chart
+  # To use an external database, set this to false and configure the settings
+  # under externalDatabase
+  enabled: true
+
+  postgresqlUsername: netbox
+  postgresqlDatabase: netbox
+
+## External database settings
+# These are used if postgresql.enabled is false, and are ignored otherwise
+externalDatabase:
+  host: localhost
+  port: 5432
+  database: netbox
+  username: netbox
+  password: ""
+  existingSecretName: ""
+  existingSecretKey: postgresql-password
+
+redisDatabase: 0
+redisTimeout: 300
+redisSsl: false
+
+redis:
+  ## Deploy Redis using bundled chart
+  # To use an external Redis instance, set this to false and configure the
+  # settings under externalRedis
+  enabled: true
+
+externalRedis:
+  host: localhost
+  port: 6379
+  password: ""
+  existingSecretName: ""
+  existingSecretKey: redis-password
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+## Storage configuration for media
+persistence:
+  enabled: true
+  ##
+  ## Existing claim to use
+  existingClaim: ""
+  ## Existing claim's subPath to use, e.g. "media" (optional)
+  subPath: ""
+  ##
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  ##
+  ## Persistant storage size request
+  size: 1Gi
+
+## Storage configuration for reports
+reportsPersistence:
+  enabled: false
+  ##
+  ## Existing claim to use
+  existingClaim: ""
+  ## Existing claim's subPath to use, e.g. "media" (optional)
+  subPath: ""
+  ##
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  ##
+  ## Persistant storage size request
+  size: 1Gi
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - /
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nginx:
+  image:
+    repository: nginx
+    tag: 1.16.0
+    pullPolicy: IfNotPresent
+
+  resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+updateStrategy: {}
+  # type: RollingUpdate
+
+affinity: {}

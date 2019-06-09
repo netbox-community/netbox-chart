@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "netbox.fullname" . }}
+  labels:
+{{ include "netbox.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "netbox.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  {{ if .Values.updateStrategy -}}
+  strategy:
+    {{ toYaml .Values.updateStrategy | indent 4 | trim }}
+  {{ end -}}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "netbox.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml . | indent 8 | trim }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: netbox
+              containerPort: 8001
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /login/
+              port: netbox
+          volumeMounts:
+            - name: config
+              mountPath: /etc/netbox/config/configuration.py
+              subPath: configuration.py
+              readOnly: true
+            - name: config
+              mountPath: /run/config/netbox
+              readOnly: true
+            - name: secrets
+              mountPath: /run/secrets/netbox
+              readOnly: true
+            - name: media
+              mountPath: /opt/netbox/netbox/media
+              subPath: {{ .Values.persistence.subPath | default "" | quote }}
+            {{- if .Values.reportsPersistence.enabled }}
+            - name: reports
+              mountPath: /opt/netbox/netbox/reports
+              subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
+            {{- end }}
+            - name: static
+              mountPath: /opt/netbox/netbox/static
+            {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
+            - name: db-secret
+              mountPath: /run/secrets/database
+              readOnly: true
+            {{- end }}
+            {{- if or .Values.redis.enabled .Values.externalRedis.existingSecretName }}
+            - name: redis-secret
+              mountPath: /run/secrets/redis
+              readOnly: true
+            {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{ toYaml .Values.resources | indent 12 | trim }}
+          {{- end }}
+        - name: nginx
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: static
+              mountPath: /opt/netbox/netbox/static
+              readOnly: true
+          {{- if .Values.nginx.resources }}
+          resources:
+            {{ toYaml .Values.nginx.resources | indent 12 | trim }}
+          {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "netbox.fullname" . }}
+        - name: secrets
+          secret:
+            secretName: {{ include "netbox.fullname" . }}
+        - name: media
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.reportsPersistence.enabled }}
+        - name: reports
+          persistentVolumeClaim:
+            claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+        {{- end }}
+        - name: static
+          emptyDir: {}
+        {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
+        - name: db-secret
+          secret:
+            {{- if .Values.redis.enabled }}
+            secretName: {{ include "netbox.postgresql.fullname" . | quote }}
+            {{- else }}
+            secretName: {{ .Values.externalDatabase.existingSecretName | quote }}
+            {{- end }}
+        {{- end }}
+        {{- if or .Values.redis.enabled .Values.externalRedis.existingSecretName }}
+        - name: redis-secret
+          secret:
+            {{- if .Values.redis.enabled }}
+            secretName: {{ include "netbox.redis.fullname" . | quote }}
+            {{- else }}
+            secretName: {{ .Values.externalRedis.existingSecretName | quote }}
+            {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | indent 8 | trim }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{ toYaml . | indent 8 | trim }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{ toYaml . | indent 8 | trim }}
+      {{- end }}

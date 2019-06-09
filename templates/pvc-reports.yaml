@@ -1,0 +1,21 @@
+{{- if and .Values.reportsPersistence.enabled (not .Values.reportsPersistence.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "netbox.fullname" . }}-reports
+  labels:
+{{ include "netbox.labels" . | indent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.reportsPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.reportsPersistence.size | quote }}
+{{- if .Values.reportsPersistence.storageClass }}
+{{- if (eq "-" .Values.reportsPersistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: {{ .Values.reportsPersistence.storageClass | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}

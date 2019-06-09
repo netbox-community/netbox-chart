@@ -1,0 +1,24 @@
+---
+stages:
+  - test
+  - release
+
+lint:
+  stage: test
+  image: gcr.io/kubernetes-helm/tiller:v2.14.1
+  script:
+    - /helm lint .
+
+release-chart:
+  stage: release
+  image: tigercomputing/cloud-tools:latest
+  script:
+    - >-
+      curl -X POST -F token=${CHARTS_TRIGGER_TOKEN} -F ref=master
+      -F variables[CHART_NAME]=${CI_PROJECT_NAME}
+      -F variables[CHART_VERSION]=${CI_COMMIT_TAG}
+      https://git.boo.tc/api/v4/projects/20/trigger/pipeline
+  only:
+    - tags
+
+# vim: ai ts=2 sw=2 et sts=2 ft=yaml

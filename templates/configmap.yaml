@@ -1,0 +1,149 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "netbox.fullname" . }}
+  labels:
+{{ include "netbox.labels" . | indent 4 }}
+data:
+  configuration.py: |
+    import yaml
+
+    def _load_yaml():
+      with open('/run/config/netbox/netbox.yaml', 'r') as f:
+        config = yaml.safe_load(f)
+
+      globals().update(config)
+
+    def _load_secret(name, key):
+      path = "/run/secrets/{name}/{key}".format(name=name, key=key)
+      with open(path, 'r') as f:
+        return f.read()
+
+    _load_yaml()
+
+    DATABASE['PASSWORD'] = _load_secret(
+      {{- if .Values.postgresql.enabled -}}
+      'database', 'postgresql-password'
+      {{- else -}}
+      {{- if .Values.externalDatabase.existingSecretName -}}
+      'database', {{ .Values.externalDatabase.existingSecretKey | squote }}
+      {{- else -}}
+      'netbox', 'db_password'
+      {{- end -}}
+      {{- end -}})
+    NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
+    REDIS['PASSWORD'] = _load_secret(
+      {{- if .Values.redis.enabled -}}
+      'redis', 'redis-password'
+      {{- else -}}
+      {{- if .Values.externalRedis.existingSecretName -}}
+      'redis', {{ .Values.externalRedis.existingSecretKey | squote }}
+      {{- else -}}
+      'netbox', 'redis_password'
+      {{- end -}}
+      {{- end -}})
+    SECRET_KEY = _load_secret('netbox', 'secret_key')
+
+  netbox.yaml: |
+    ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
+
+    DATABASE:
+      {{ if .Values.postgresql.enabled -}}
+      HOST: {{ include "netbox.postgresql.fullname" . | quote }}
+      USER: {{ .Values.postgresql.postgresqlUsername | quote }}
+      NAME: {{ .Values.postgresql.postgresqlDatabase | quote }}
+      PORT: {{ .Values.postgresql.service.port | int }}
+      {{- else -}}
+      HOST: {{ .Values.externalDatabase.host | quote }}
+      USER: {{ .Values.externalDatabase.username | quote }}
+      NAME: {{ .Values.externalDatabase.database | quote }}
+      PORT: {{ .Values.externalDatabase.port | int}}
+      {{- end }}
+
+    ADMINS: {{ toJson .Values.admins }}
+    BANNER_TOP: {{ .Values.banner.top | quote }}
+    BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
+    BANNER_LOGIN: {{ .Values.banner.login | quote }}
+    BASE_PATH: {{ .Values.basePath | quote }}
+    CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
+    CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
+    CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
+    DEBUG: {{ toJson .Values.debug }}
+
+    EMAIL:
+      SERVER: {{ .Values.email.server | quote }}
+      PORT: {{ .Values.email.port | int }}
+      USERNAME: {{ .Values.email.username | quote }}
+      TIMEOUT: {{ .Values.email.timeout | int }}
+      FROM_EMAIL: {{ toJson .Values.email.from }}
+
+    ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
+    LOGGING: {{ toJson .Values.logging }}
+    LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
+    MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
+    MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
+    MEDIA_ROOT: /opt/netbox/netbox/media
+    NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
+    NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
+    NAPALM_ARGS: {{ toJson .Values.napalm.args }}
+    PAGINATE_COUNT: {{ int .Values.paginateCount }}
+    PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
+    WEBHOOKS_ENABLED: {{ toJson .Values.webhooksEnabled }}
+
+    REDIS:
+      {{ if .Values.redis.enabled -}}
+      HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
+      PORT: {{ .Values.redis.redisPort | int }}
+      {{- else -}}
+      HOST: {{ .Values.externalRedis.host | quote }}
+      PORT: {{ .Values.externalRedis.port | int}}
+      {{- end }}
+      DATABASE: {{ int .Values.redisDatabase }}
+      DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
+      SSL: {{ toJson .Values.redisSsl }}
+
+    REPORTS_ROOT: /opt/netbox/netbox/reports
+    TIME_ZONE: {{ .Values.timeZone | quote }}
+    DATE_FORMAT: {{ .Values.dateFormat | quote }}
+    SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}
+    TIME_FORMAT: {{ .Values.timeFormat | quote }}
+    SHORT_TIME_FORMAT: {{ .Values.shortTimeFormat | quote }}
+    DATETIME_FORMAT: {{ .Values.dateTimeFormat | quote }}
+    SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
+
+  nginx.conf: |
+    worker_processes 1;
+
+    error_log /dev/stderr info;
+
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      include              /etc/nginx/mime.types;
+      default_type         application/octet-stream;
+      sendfile             on;
+      tcp_nopush           on;
+      keepalive_timeout    65;
+      gzip                 on;
+      server_tokens        off;
+      client_max_body_size 10M;
+
+      server {
+        listen      80;
+        access_log  off;
+
+        location /static/ {
+          alias /opt/netbox/netbox/static/;
+        }
+
+        location / {
+          proxy_pass http://localhost:8001;
+          proxy_set_header X-Forwarded-Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+        }
+      }
+    }

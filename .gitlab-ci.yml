@@ -7,6 +7,8 @@ lint:
   stage: test
   image: gcr.io/kubernetes-helm/tiller:v2.14.1
   script:
+    - /helm init --client-only
+    - /helm dep up
     - /helm lint .
 
 release-chart:

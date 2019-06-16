@@ -276,3 +276,33 @@ updateStrategy: {}
   # type: RollingUpdate
 
 affinity: {}
+
+## Additional environment variables to set
+extraEnvs: []
+#  - name: FOO
+#    valueFrom:
+#      secretKeyRef:
+#        key: FOO
+#        name: secret-resource
+
+## Additional volumes to mount
+extraVolumeMounts: []
+#  - name: extra-volume
+#    mountPath: /run/secrets/super-secret
+#    readOnly: true
+
+extraVolumes: []
+#  - name: extra-volume
+#    secret:
+#      secretName: super-secret
+
+## Additional containers to be added to the NetBox pod.
+extraContainers: []
+#  - name: my-sidecar
+#    image: nginx:latest
+
+## Containers which are run before the NetBox containers are started.
+extraInitContainers: []
+#  - name: init-myservice
+#    image: busybox
+#    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']

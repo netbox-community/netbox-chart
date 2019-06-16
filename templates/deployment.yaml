@@ -35,6 +35,9 @@ spec:
               value: {{ .Values.superuser.email | quote }}
             - name: SKIP_STARTUP_SCRIPTS
               value: {{ .Values.skipStartupScripts | quote }}
+            {{- with .Values.extraEnvs }}
+            {{ toYaml . | indent 12 | trim }}
+            {{- end }}
           ports:
             - name: netbox
               containerPort: 8001
@@ -82,6 +85,9 @@ spec:
               mountPath: /run/secrets/superuser_api_token
               subPath: superuser_api_token
               readOnly: true
+            {{- with .Values.extraVolumeMounts }}
+            {{ toYaml . | indent 12 | trim }}
+            {{- end }}
           {{- if .Values.resources }}
           resources:
             {{ toYaml .Values.resources | indent 12 | trim }}
@@ -109,6 +115,13 @@ spec:
           resources:
             {{ toYaml .Values.nginx.resources | indent 12 | trim }}
           {{- end }}
+        {{- with .Values.extraContainers }}
+        {{ toYaml . | indent 8 | trim }}
+        {{- end }}
+      {{- with .Values.extraInitContainers }}
+      initContainers:
+        {{ toYaml . | indent 8 | trim }}
+      {{- end }}
       volumes:
         - name: config
           configMap:
@@ -147,6 +160,9 @@ spec:
             {{- else }}
             secretName: {{ .Values.externalRedis.existingSecretName | quote }}
             {{- end }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{ toYaml . | indent 8 | trim }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

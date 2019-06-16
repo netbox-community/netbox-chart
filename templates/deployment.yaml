@@ -33,6 +33,8 @@ spec:
               value: {{ .Values.superuser.name | quote }}
             - name: SUPERUSER_EMAIL
               value: {{ .Values.superuser.email | quote }}
+            - name: SKIP_STARTUP_SCRIPTS
+              value: {{ .Values.skipStartupScripts | quote }}
           ports:
             - name: netbox
               containerPort: 8001

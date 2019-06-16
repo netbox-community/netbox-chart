@@ -28,6 +28,11 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SUPERUSER_NAME
+              value: {{ .Values.superuser.name | quote }}
+            - name: SUPERUSER_EMAIL
+              value: {{ .Values.superuser.email | quote }}
           ports:
             - name: netbox
               containerPort: 8001
@@ -67,6 +72,14 @@ spec:
               mountPath: /run/secrets/redis
               readOnly: true
             {{- end }}
+            - name: secrets
+              mountPath: /run/secrets/superuser_password
+              subPath: superuser_password
+              readOnly: true
+            - name: secrets
+              mountPath: /run/secrets/superuser_api_token
+              subPath: superuser_api_token
+              readOnly: true
           {{- if .Values.resources }}
           resources:
             {{ toYaml .Values.resources | indent 12 | trim }}

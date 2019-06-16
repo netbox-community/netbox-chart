@@ -9,6 +9,12 @@ image:
   tag: v2.5.13
   pullPolicy: IfNotPresent
 
+superuser:
+  name: admin
+  email: admin@example.com
+  password: admin
+  apiToken: 0123456789abcdef0123456789abcdef01234567
+
 # This is a list of valid fully-qualified domain names (FQDNs) for the NetBox
 # server. NetBox will not permit write access to the server via any other
 # hostnames. The first FQDN in the list will be treated as the preferred name.

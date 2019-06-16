@@ -263,7 +263,7 @@ resources: {}
 nginx:
   image:
     repository: nginx
-    tag: 1.16.0
+    tag: 1.16.0-alpine
     pullPolicy: IfNotPresent
 
   resources: {}

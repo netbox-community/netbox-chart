@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.5.13
+  tag: v2.6.1
   pullPolicy: IfNotPresent
 
 superuser:
@@ -46,6 +46,10 @@ banner:
 # installed at http://example.com/netbox/, set to 'netbox/'
 basePath: ''
 
+# Cache timeout in seconds. Set to 0 to disable caching. Defaults to 900
+# (15 minutes).
+cacheTimeout: 900
+
 # API Cross-Origin Resource Sharing (CORS) settings. If originAllowAll
 # is set to true, all origins will be allowed. Otherwise, define a list of
 # allowed origins using either originWhitelist or originRegexWhitelist. For
@@ -75,6 +79,14 @@ email:
 # unique IP space within the global table (all prefixes and IP addresses not
 # assigned to a VRF), set enforceGlobalUnique to True.
 enforceGlobalUnique: false
+
+# Exempt certain models from the enforcement of view permissions. Models listed
+# here will be viewable by all users and by anonymous users. List models in the
+# form `<app>.<model>`. Add '*' to this list to exempt all models.
+exemptViewPermissions: []
+#  - dcim.site
+#  - dcim.region
+#  - ipam.prefix
 
 # Enable custom logging. Please see the Django documentation for detailed
 # guidance on configuring custom logs:
@@ -115,6 +127,9 @@ paginateCount: 50
 # When determining the primary IP address for a device, IPv6 is preferred over
 # IPv4 by default. Set this to True to prefer IPv4 instead.
 preferIPv4: false
+
+# Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
+metricsEnabled: false
 
 # Webhooks can be disabled to remove the dependency on Redis.
 webhooksEnabled: true
@@ -167,6 +182,7 @@ externalDatabase:
   existingSecretKey: postgresql-password
 
 redisDatabase: 0
+redisCacheDatabase: 1
 redisTimeout: 300
 redisSsl: false
 

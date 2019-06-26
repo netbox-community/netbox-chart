@@ -65,6 +65,7 @@ data:
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
     BASE_PATH: {{ .Values.basePath | quote }}
+    CACHE_TIMEOUT: {{ int .Values.cacheTimeout }}
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
@@ -78,11 +79,13 @@ data:
       FROM_EMAIL: {{ toJson .Values.email.from }}
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
+    EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
+    METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
     NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
     NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
     NAPALM_ARGS: {{ toJson .Values.napalm.args }}
@@ -99,6 +102,7 @@ data:
       PORT: {{ .Values.externalRedis.port | int}}
       {{- end }}
       DATABASE: {{ int .Values.redisDatabase }}
+      CACHE_DATABASE: {{ int .Values.redisCacheDatabase }}
       DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
       SSL: {{ toJson .Values.redisSsl }}
 

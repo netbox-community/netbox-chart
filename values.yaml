@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.6.3
+  tag: v2.6.6
   pullPolicy: IfNotPresent
 
 superuser:

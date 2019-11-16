@@ -34,6 +34,15 @@ To delete the chart:
 $ helm delete my-release
 ```
 
+## Upgrading
+
+### From 0.x to 1.x
+
+The chart dependencies on PostgreSQL and Redis have been upgraded, so you may
+need to take action depending on how you have configured the chart. The
+PostgreSQL chart was upgraded from 5.x.x to 7.x.x, and Redis from 8.x.x to
+9.x.x.
+
 ## Configuration
 
 The following table lists the configurable parameters for this chart and their default values.

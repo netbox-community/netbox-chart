@@ -34,6 +34,15 @@ To delete the chart:
 $ helm delete my-release
 ```
 
+## Upgrading
+
+### From 0.x to 1.x
+
+The chart dependencies on PostgreSQL and Redis have been upgraded, so you may
+need to take action depending on how you have configured the chart. The
+PostgreSQL chart was upgraded from 5.x.x to 7.x.x, and Redis from 8.x.x to
+9.x.x.
+
 ## Configuration
 
 The following table lists the configurable parameters for this chart and their default values.
@@ -42,7 +51,7 @@ The following table lists the configurable parameters for this chart and their d
 | --------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
 | `replicaCount`                        | The desired number of NetBox pods                                   | `1`                                          |
 | `image.repository`                    | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
-| `image.tag`                           | NetBox container image tag                                          | `v2.6.6`                                     |
+| `image.tag`                           | NetBox container image tag                                          | `v2.6.7`                                     |
 | `image.pullPolicy`                    | NetBox container image pull policy                                  | `IfNotPresent`                               |
 | `superuser.name`                      | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                     | Email address for the initial super-user account                    | `admin@example.com`                          |

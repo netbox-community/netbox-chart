@@ -5,7 +5,7 @@ stages:
 
 lint:
   stage: test
-  image: gcr.io/kubernetes-helm/tiller:v2.14.1
+  image: gcr.io/kubernetes-helm/tiller:v2.16.1
   script:
     - /helm init --client-only
     - /helm dep up

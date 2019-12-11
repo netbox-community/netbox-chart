@@ -1,0 +1,36 @@
+# debug: true
+
+ingress:
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+  enabled: true
+  hosts:
+  - host: netbox-test.k8s.boo.tc
+    paths:
+    - /
+  tls:
+  - hosts:
+    - netbox-test.k8s.boo.tc
+    secretName: netbox-test-tls
+
+persistence:
+  storageClass: rook-ceph-block
+
+postgresql:
+  persistence:
+    storageClass: rook-ceph-block
+  postgresqlPassword: 4xPXwvWx3MHw3iuX
+
+redis:
+  cluster:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+  password: dCsoP3PUCqdvsaRj
+
+updateStrategy:
+  rollingUpdate: null
+  type: Recreate
+

@@ -146,7 +146,7 @@ spec:
         {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
         - name: db-secret
           secret:
-            {{- if .Values.redis.enabled }}
+            {{- if .Values.postgresql.enabled }}
             secretName: {{ include "netbox.postgresql.fullname" . | quote }}
             {{- else }}
             secretName: {{ .Values.externalDatabase.existingSecretName | quote }}

@@ -32,7 +32,17 @@ data:
       {{- end -}}
       {{- end -}})
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['PASSWORD'] = _load_secret(
+    REDIS['caching']['PASSWORD'] = _load_secret(
+      {{- if .Values.redis.enabled -}}
+      'redis', 'redis-password'
+      {{- else -}}
+      {{- if .Values.externalRedis.existingSecretName -}}
+      'redis', {{ .Values.externalRedis.existingSecretKey | squote }}
+      {{- else -}}
+      'netbox', 'redis_password'
+      {{- end -}}
+      {{- end -}})
+    REDIS['webhooks']['PASSWORD'] = _load_secret(
       {{- if .Values.redis.enabled -}}
       'redis', 'redis-password'
       {{- else -}}
@@ -91,20 +101,30 @@ data:
     NAPALM_ARGS: {{ toJson .Values.napalm.args }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
-    WEBHOOKS_ENABLED: {{ toJson .Values.webhooksEnabled }}
 
     REDIS:
-      {{ if .Values.redis.enabled -}}
-      HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-      PORT: {{ .Values.redis.redisPort | int }}
-      {{- else -}}
-      HOST: {{ .Values.externalRedis.host | quote }}
-      PORT: {{ .Values.externalRedis.port | int}}
-      {{- end }}
-      DATABASE: {{ int .Values.redisDatabase }}
-      CACHE_DATABASE: {{ int .Values.redisCacheDatabase }}
-      DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
-      SSL: {{ toJson .Values.redisSsl }}
+      caching:
+        {{ if .Values.redis.enabled -}}
+        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
+        PORT: {{ .Values.redis.redisPort | int }}
+        {{- else -}}
+        HOST: {{ .Values.externalRedis.host | quote }}
+        PORT: {{ .Values.externalRedis.port | int}}
+        {{- end }}
+        DATABASE: {{ int .Values.redisCacheDatabase }}
+        DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
+        SSL: {{ toJson .Values.redisSsl }}
+      webhooks:
+        {{ if .Values.redis.enabled -}}
+        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
+        PORT: {{ .Values.redis.redisPort | int }}
+        {{- else -}}
+        HOST: {{ .Values.externalRedis.host | quote }}
+        PORT: {{ .Values.externalRedis.port | int}}
+        {{- end }}
+        DATABASE: {{ int .Values.redisDatabase }}
+        DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
+        SSL: {{ toJson .Values.redisSsl }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
     TIME_ZONE: {{ .Values.timeZone | quote }}

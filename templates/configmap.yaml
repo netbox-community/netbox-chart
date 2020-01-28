@@ -6,6 +6,7 @@ metadata:
 {{ include "netbox.labels" . | indent 4 }}
 data:
   configuration.py: |
+    import re
     import yaml
 
     def _load_yaml():
@@ -32,17 +33,31 @@ data:
       {{- end -}}
       {{- end -}})
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['PASSWORD'] = _load_secret(
+    REDIS['webhooks']['PASSWORD'] = _load_secret(
       {{- if .Values.redis.enabled -}}
       'redis', 'redis-password'
       {{- else -}}
-      {{- if .Values.externalRedis.existingSecretName -}}
-      'redis', {{ .Values.externalRedis.existingSecretKey | squote }}
+      {{- if .Values.webhooksRedis.existingSecretName -}}
+      'redis_webhooks', {{ .Values.webhooksRedis.existingSecretKey | squote }}
       {{- else -}}
       'netbox', 'redis_password'
       {{- end -}}
       {{- end -}})
+    REDIS['caching']['PASSWORD'] = _load_secret(
+      {{- if .Values.redis.enabled -}}
+      'redis', 'redis-password'
+      {{- else -}}
+      {{- if .Values.cachingRedis.existingSecretName -}}
+      'redis_caching', {{ .Values.cachingRedis.existingSecretKey | squote }}
+      {{- else -}}
+      'netbox', 'redis_cache_password'
+      {{- end -}}
+      {{- end -}})
     SECRET_KEY = _load_secret('netbox', 'secret_key')
+
+    # Post-process certain values
+    CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r
+                                   in CORS_ORIGIN_REGEX_WHITELIST]
 
   netbox.yaml: |
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
@@ -57,8 +72,11 @@ data:
       HOST: {{ .Values.externalDatabase.host | quote }}
       USER: {{ .Values.externalDatabase.username | quote }}
       NAME: {{ .Values.externalDatabase.database | quote }}
-      PORT: {{ .Values.externalDatabase.port | int}}
+      PORT: {{ .Values.externalDatabase.port | int }}
       {{- end }}
+      OPTIONS:
+        sslmode: {{ .Values.externalDatabase.sslMode | quote }}
+      CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
 
     ADMINS: {{ toJson .Values.admins }}
     BANNER_TOP: {{ .Values.banner.top | quote }}
@@ -66,6 +84,7 @@ data:
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
     BASE_PATH: {{ .Values.basePath | quote }}
     CACHE_TIMEOUT: {{ int .Values.cacheTimeout }}
+    CHANGELOG_RETENTION: {{ int .Values.changelogRetention }}
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
@@ -91,22 +110,33 @@ data:
     NAPALM_ARGS: {{ toJson .Values.napalm.args }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
-    WEBHOOKS_ENABLED: {{ toJson .Values.webhooksEnabled }}
 
     REDIS:
-      {{ if .Values.redis.enabled -}}
-      HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-      PORT: {{ .Values.redis.redisPort | int }}
-      {{- else -}}
-      HOST: {{ .Values.externalRedis.host | quote }}
-      PORT: {{ .Values.externalRedis.port | int}}
-      {{- end }}
-      DATABASE: {{ int .Values.redisDatabase }}
-      CACHE_DATABASE: {{ int .Values.redisCacheDatabase }}
-      DEFAULT_TIMEOUT: {{ int .Values.redisTimeout }}
-      SSL: {{ toJson .Values.redisSsl }}
+      webhooks:
+        {{ if .Values.redis.enabled -}}
+        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
+        PORT: {{ .Values.redis.redisPort | int }}
+        {{- else -}}
+        HOST: {{ .Values.webhooksRedis.host | quote }}
+        PORT: {{ .Values.webhooksRedis.port | int}}
+        {{- end }}
+        DATABASE: {{ int .Values.webhooksRedis.database }}
+        DEFAULT_TIMEOUT: {{ int .Values.webhooksRedis.timeout }}
+        SSL: {{ toJson .Values.webhooksRedis.ssl }}
+      caching:
+        {{ if .Values.redis.enabled -}}
+        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
+        PORT: {{ .Values.redis.redisPort | int }}
+        {{- else -}}
+        HOST: {{ .Values.cachingRedis.host | quote }}
+        PORT: {{ .Values.cachingRedis.port | int}}
+        {{- end }}
+        DATABASE: {{ int .Values.cachingRedis.database }}
+        DEFAULT_TIMEOUT: {{ int .Values.cachingRedis.timeout }}
+        SSL: {{ toJson .Values.cachingRedis.ssl }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
+    SCRIPTS_ROOT: /opt/netbox/netbox/scripts
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}
     SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}

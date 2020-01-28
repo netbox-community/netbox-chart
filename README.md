@@ -36,6 +36,14 @@ $ helm delete my-release
 
 ## Upgrading
 
+### From 1.x to 2.x
+
+If you use an external Redis you will need to update your configuration values
+due to the chart reflecting upstream changes in how it uses Redis. There are
+now separate Redis configuration blocks for webhooks and for caching, though
+they can both point at the same Redis instance as long as the database numbers
+are different.
+
 ### From 0.x to 1.x
 
 The chart dependencies on PostgreSQL and Redis have been upgraded, so you may
@@ -51,7 +59,7 @@ The following table lists the configurable parameters for this chart and their d
 | --------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
 | `replicaCount`                        | The desired number of NetBox pods                                   | `1`                                          |
 | `image.repository`                    | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
-| `image.tag`                           | NetBox container image tag                                          | `v2.6.12`                                    |
+| `image.tag`                           | NetBox container image tag                                          | `v2.7.6`                                     |
 | `image.pullPolicy`                    | NetBox container image pull policy                                  | `IfNotPresent`                               |
 | `superuser.name`                      | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                     | Email address for the initial super-user account                    | `admin@example.com`                          |
@@ -65,6 +73,7 @@ The following table lists the configurable parameters for this chart and their d
 | `banner.login`                        | Banner text to display on the login page                            | `""`                                         |
 | `basePath`                            | Base URL path if accessing NetBox within a directory                | `""`                                         |
 | `cacheTimeout`                        | Cached object time-to-live, in seconds                              | `900` (15 minutes)                           |
+| `changelogRetention`                  | Maximum number of days to retain logged changes (0 = forever)       | `90`                                         |
 | `cors.originAllowAll`                 | [CORS]: allow all origins                                           | `false`                                      |
 | `cors.originWhitelist`                | [CORS]: list of origins authorised to make cross-site HTTP requests | `[]`                                         |
 | `cors.originRegexWhitelist`           | [CORS]: list of regex strings matching authorised origins           | `[]`                                         |
@@ -88,7 +97,6 @@ The following table lists the configurable parameters for this chart and their d
 | `paginateCount`                       | The default number of objects to display per page in the web UI     | `50`                                         |
 | `preferIPv4`                          | Prefer devices' IPv4 address when determining their primary address | `false`                                      |
 | `metricsEnabled`                      | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
-| `webhooksEnabled`                     | Enable NetBox's outgoing webhook functionality                      | `true`                                       |
 | `timeZone`                            | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                          | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                     | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
@@ -109,17 +117,24 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.password`           | Password for external PostgreSQL (see also `existingSecret`)        | `""`                                         |
 | `externalDatabase.existingSecretName` | Fetch password for external PostgreSQL from a different `Secret`    | `""`                                         |
 | `externalDatabase.existingSecretKey`  | Key to fetch the password in the above `Secret`                     | `postgresql-password`                        |
-| `redisDatabase`                       | Redis database number used for NetBox webhooks queue                | `0`                                          |
-| `redisCacheDatabase`                  | Redis database number used for caching views, etc...                | `1`                                          |
-| `redisTimeout`                        | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
-| `redisSsl`                            | Enable SSL when connecting to Redis                                 | `false`                                      |
 | `redis.enabled`                       | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
 | `redis.*`                             | Values under this key are passed to the bundled Redis chart         | n/a                                          |
-| `externalRedis.host`                  | Redis host to use when `redis.enabled` is `false`                   | `localhost`                                  |
-| `externalRedis.port`                  | Port number for external Redis                                      | `6379`                                       |
-| `externalRedis.password`              | Password for external Redis (see also `existingSecret`)             | `""`                                         |
-| `externalRedis.existingSecretName`    | Fetch password for external Redis from a different `Secret`         | `""`                                         |
-| `externalRedis.existingSecretKey`     | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
+| `webhooksRedis.database`              | Redis database number used for NetBox webhooks queue                | `0`                                          |
+| `webhooksRedis.timeout`               | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
+| `webhooksRedis.ssl`                   | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `webhooksRedis.host`                  | Redis host to use when `redis.enabled` is `false`                   | `""`                                         |
+| `webhooksRedis.port`                  | Port number for external Redis                                      | `6379`                                       |
+| `webhooksRedis.password`              | Password for external Redis (see also `existingSecret`)             | `""`                                         |
+| `webhooksRedis.existingSecretName`    | Fetch password for external Redis from a different `Secret`         | `""`                                         |
+| `webhooksRedis.existingSecretKey`     | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
+| `cachingRedis.database`               | Redis database number used for caching views                        | `1`                                          |
+| `cachingRedis.timeout`                | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
+| `cachingRedis.ssl`                    | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `cachingRedis.host`                   | Redis host to use when `redis.enabled` is `false`                   | `""`                                         |
+| `cachingRedis.port`                   | Port number for external Redis                                      | `6379`                                       |
+| `cachingRedis.password`               | Password for external Redis (see also `existingSecret`)             | `""`                                         |
+| `cachingRedis.existingSecretName`     | Fetch password for external Redis from a different `Secret`         | `""`                                         |
+| `cachingRedis.existingSecretKey`      | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `imagePullSecrets`                    | List of `Secret` names containing private registry credentials      | `[]`                                         |
 | `nameOverride`                        | Override the application name (`netbox`) used throughout the chart  | `""`                                         |
 | `fullnameOverride`                    | Override the full name of resources created as part of the release  | `""`                                         |

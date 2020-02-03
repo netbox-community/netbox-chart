@@ -51,6 +51,12 @@ spec:
               mountPath: /etc/netbox/config/configuration.py
               subPath: configuration.py
               readOnly: true
+            {{- if or true .Values.ldap.enabled }}
+            - name: ldap-config
+              mountPath: /etc/netbox/config/ldap_config.py
+              subPath: ldap_config.py
+              readOnly: true
+            {{- end }}
             - name: config
               mountPath: /run/config/netbox
               readOnly: true
@@ -126,6 +132,11 @@ spec:
         - name: config
           configMap:
             name: {{ include "netbox.fullname" . }}
+        {{ if or true .Values.ldap.enabled }}
+        - name: ldap-config
+          secret:
+            secretName: {{ include "netbox.fullname" . }}-ldap-config
+        {{ end }}
         - name: secrets
           secret:
             secretName: {{ include "netbox.fullname" . }}

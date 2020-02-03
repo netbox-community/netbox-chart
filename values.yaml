@@ -322,3 +322,20 @@ extraInitContainers: []
 #  - name: init-myservice
 #    image: busybox
 #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+
+## LDAP configuration settings
+ldap:
+  enabled: false
+  server_uri: ldaps://dc.example.com
+  bind_dn: "DN=user,OU=users,DC=example,DC=com"
+  bind_password: "Passw0rd!"
+  ignore_certificate_errors: True
+  auth_user_search_scope: "ou=Users,dc=example,dc=com"
+  auth_user_dn_template: "uid=%(user)s,ou=users,dc=example,dc=com"
+  auth_group_search_scope: "dc=example,dc=com"
+  auth_group_type: "GroupOfNamesType"
+  auth_require_group: "CN=NETBOX_USERS,DC=example,DC=com"
+  auth_user_flags_by_group:
+    is_active: "cn=active,ou=groups,dc=example,dc=com"
+    is_staff: "cn=staff,ou=groups,dc=example,dc=com"
+    is_superuser: "cn=superuser,ou=groups,dc=example,dc=com"

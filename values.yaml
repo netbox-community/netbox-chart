@@ -330,9 +330,14 @@ ldap:
   bind_dn: "DN=user,OU=users,DC=example,DC=com"
   bind_password: "Passw0rd!"
   ignore_certificate_errors: True
-  auth_user_search_scope: "ou=Users,dc=example,dc=com"
+  # The search scope can be of type BASE, LEVEL, or SUBTREE
+  auth_user_search_scope: "SUBTREE"
+  auth_group_search_scope: "SUBTREE"
+  auth_user_search_base: "ou=Users,dc=example,dc=com"
   auth_user_dn_template: "uid=%(user)s,ou=users,dc=example,dc=com"
-  auth_group_search_scope: "dc=example,dc=com"
+  auth_group_search_base: "dc=example,dc=com"
+  # The group type can be of values GroupOfNamesType and NestedGroupOfNamesType
+  # The Nested type is needed for Windows Domain Controllers
   auth_group_type: "GroupOfNamesType"
   auth_require_group: "CN=NETBOX_USERS,DC=example,DC=com"
   auth_user_flags_by_group:

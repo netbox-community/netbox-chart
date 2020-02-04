@@ -22,8 +22,8 @@ LDAP_IGNORE_CERT_ERRORS = {{ .Values.ldap.ignore_certificate_errors }}
 
 # This search matches users with the sAMAccountName equal to the provided username. This is required if the user's
 # username is not in their DN (Active Directory).
-AUTH_LDAP_USER_SEARCH = LDAPSearch({{ .Values.ldap.auth_user_search_scope | quote }},
-                                    ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)")
+AUTH_LDAP_USER_SEARCH = LDAPSearch({{ .Values.ldap.auth_user_search_base | quote }},
+                                    ldap.SCOPE_{{ .Values.ldap.auth_user_search_scope }}, "(sAMAccountName=%(user)s)")
 
 # If a user's DN is producible from their username, we don't need to search.
 AUTH_LDAP_USER_DN_TEMPLATE = {{ .Values.ldap.auth_user_dn_template | quote }}
@@ -37,7 +37,7 @@ AUTH_LDAP_USER_ATTR_MAP = {
 
 # This search ought to return all groups to which the user belongs. django_auth_ldap uses this to determine group
 # hierarchy.
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch({{ .Values.ldap.auth_group_search_scope | quote }}, ldap.SCOPE_SUBTREE,
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch({{ .Values.ldap.auth_group_search_base | quote }}, ldap.SCOPE_{{ .Values.ldap.auth_group_search_scope }},
                                     "(objectClass=group)")
 
 AUTH_LDAP_GROUP_TYPE = {{ .Values.ldap.auth_group_type }}()

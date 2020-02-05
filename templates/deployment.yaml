@@ -53,7 +53,7 @@ spec:
               readOnly: true
             {{- if or true .Values.ldap.enabled }}
             - name: ldap-config
-              mountPath: /etc/netbox/config/ldap_config.py
+              mountPath: /opt/netbox/netbox/netbox/ldap_config.py
               subPath: ldap_config.py
               readOnly: true
             {{- end }}

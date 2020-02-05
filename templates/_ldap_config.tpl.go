@@ -17,7 +17,7 @@ AUTH_LDAP_BIND_PASSWORD = {{ .Values.ldap.bind_password | quote }}
 # Include this setting if you want to ignore certificate errors. This might be needed to accept a self-signed cert.
 # Note that this is a NetBox-specific setting which sets:
 #     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
-LDAP_IGNORE_CERT_ERRORS = {{ .Values.ldap.ignore_certificate_errors }}
+LDAP_IGNORE_CERT_ERRORS = {{ .Values.ldap.ignore_certificate_errors | title }}
 
 
 # This search matches users with the sAMAccountName equal to the provided username. This is required if the user's
@@ -26,7 +26,7 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch({{ .Values.ldap.auth_user_search_base | quote
                                     ldap.SCOPE_{{ .Values.ldap.auth_user_search_scope }}, "(sAMAccountName=%(user)s)")
 
 # If a user's DN is producible from their username, we don't need to search.
-AUTH_LDAP_USER_DN_TEMPLATE = {{ .Values.ldap.auth_user_dn_template | quote }}
+AUTH_LDAP_USER_DN_TEMPLATE = {{ eq .Values.ldap.auth_user_dn_template "None" | ternary "None" (.Values.ldap.auth_user_dn_template | quote) }}
 
 # You can map user attributes to Django attributes as so.
 AUTH_LDAP_USER_ATTR_MAP = {

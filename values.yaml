@@ -329,7 +329,7 @@ ldap:
   server_uri: ldaps://dc.example.com
   bind_dn: "DN=user,OU=users,DC=example,DC=com"
   bind_password: "Passw0rd!"
-  ignore_certificate_errors: True
+  ignore_certificate_errors: "True"
   # The search scope can be of type BASE, LEVEL, or SUBTREE
   auth_user_search_scope: "SUBTREE"
   auth_group_search_scope: "SUBTREE"

@@ -1,3 +1,6 @@
 *.tgz
 .*.swp
 requirements.lock
+
+# IDE Settings
+.idea/

@@ -72,10 +72,21 @@ spec:
               mountPath: /run/secrets/database
               readOnly: true
             {{- end }}
-            {{- if or .Values.redis.enabled .Values.externalRedis.existingSecretName }}
+            {{- if .Values.redis.enabled }}
             - name: redis-secret
               mountPath: /run/secrets/redis
               readOnly: true
+            {{- else }}
+            {{- if .Values.webhooksRedis.existingSecretName }}
+            - name: redis-webhooks-secret
+              mountPath: /run/secrets/redis_webhooks
+              readOnly: true
+            {{- end }}
+            {{- if .Values.cachingRedis.existingSecretName }}
+            - name: redis-caching-secret
+              mountPath: /run/secrets/redis_caching
+              readOnly: true
+            {{- end }}
             {{- end }}
             - name: secrets
               mountPath: /run/secrets/superuser_password
@@ -152,14 +163,21 @@ spec:
             secretName: {{ .Values.externalDatabase.existingSecretName | quote }}
             {{- end }}
         {{- end }}
-        {{- if or .Values.redis.enabled .Values.externalRedis.existingSecretName }}
+        {{- if .Values.redis.enabled }}
         - name: redis-secret
           secret:
-            {{- if .Values.redis.enabled }}
             secretName: {{ include "netbox.redis.fullname" . | quote }}
-            {{- else }}
-            secretName: {{ .Values.externalRedis.existingSecretName | quote }}
-            {{- end }}
+        {{- else }}
+        {{- if .Values.webhooksRedis.existingSecretName }}
+        - name: redis-webhooks-secret
+          secret:
+            secretName: {{ .Values.webhooksRedis.existingSecretName | quote }}
+        {{- end }}
+        {{- if .Values.cachingRedis.existingSecretName }}
+        - name: redis-caching-secret
+          secret:
+            secretName: {{ .Values.cachingRedis.existingSecretName | quote }}
+        {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
         {{ toYaml . | indent 8 | trim }}

@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.7.6
+  tag: v2.7.7
   pullPolicy: IfNotPresent
 
 superuser:
@@ -265,6 +265,8 @@ reportsPersistence:
 service:
   type: ClusterIP
   port: 80
+  loadBalancerSourceRanges: []
+  # - 10.0.0.0/8
 
 ingress:
   enabled: false

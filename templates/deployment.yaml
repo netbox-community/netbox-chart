@@ -26,7 +26,11 @@ spec:
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- if .Values.ldap.enabled }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}-ldap"
+          {{- else }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SUPERUSER_NAME
@@ -51,7 +55,7 @@ spec:
               mountPath: /etc/netbox/config/configuration.py
               subPath: configuration.py
               readOnly: true
-            {{- if or true .Values.ldap.enabled }}
+            {{- if .Values.ldap.enabled }}
             - name: ldap-config
               mountPath: /opt/netbox/netbox/netbox/ldap_config.py
               subPath: ldap_config.py
@@ -132,11 +136,11 @@ spec:
         - name: config
           configMap:
             name: {{ include "netbox.fullname" . }}
-        {{ if or true .Values.ldap.enabled }}
+        {{- if .Values.ldap.enabled }}
         - name: ldap-config
           secret:
             secretName: {{ include "netbox.fullname" . }}-ldap-config
-        {{ end }}
+        {{- end }}
         - name: secrets
           secret:
             secretName: {{ include "netbox.fullname" . }}

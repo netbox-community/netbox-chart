@@ -324,23 +324,43 @@ extraInitContainers: []
 #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
 
 ## LDAP configuration settings
+# enabled       - toggle to en- or disable LDAP support for netbox
+# server_uri    - contains an URL that points to a LDAP server
+#                 can begin with ldap:// or ldaps://
+# bind_dn       - the path to the user for netbox to login into the LDAP server
+# bind_password - the password for the above user
+# ignore_certificate_errors - toggle for strict checking of TLS certificates when
+#                             using the ldaps:// scheme in the server_uri setting
+#                             with selfsigned or custom certificate authorities that
+#                             cannot be verified by the container. Use with caution!
 ldap:
   enabled: false
-  server_uri: ldaps://dc.example.com
+  server_url: ldaps://dc.example.com
   bind_dn: "DN=user,OU=users,DC=example,DC=com"
   bind_password: "Passw0rd!"
   ignore_certificate_errors: "True"
-  # The search scope can be of type BASE, LEVEL, or SUBTREE
+
+  # The search scope can be of type BASE, LEVEL, or SUBTREE. This determines if the LDAP
+  # search request will be recursive (SUBTREE), at the OU level (LEVEL) or the specific
+  # entry (BASE) of the search base will be considered.
   auth_user_search_scope: "SUBTREE"
   auth_group_search_scope: "SUBTREE"
-  auth_user_search_base: "ou=Users,dc=example,dc=com"
-  auth_user_dn_template: "uid=%(user)s,ou=users,dc=example,dc=com"
-  auth_group_search_base: "dc=example,dc=com"
+
+  # Search bases for users and groups in directory tree
+  auth_user_search_base: "OU=Users,DC=example,DC=com"
+  auth_group_search_base: "OU=Groups,DC=example,DC=com"
+
+  # If the user DN can be derived from their username no template is necessary
+  # and a value of None can and should be used
+  auth_user_dn_template: "uid=%(user)s,OU=users,DC=example,DC=com"
+
   # The group type can be of values GroupOfNamesType and NestedGroupOfNamesType
   # The Nested type is needed for Windows Domain Controllers
   auth_group_type: "GroupOfNamesType"
-  auth_require_group: "CN=NETBOX_USERS,DC=example,DC=com"
+
+  # Permission groups for netbox users
+  auth_require_group: "CN=active,OU=groups,DC=example,DC=com"
   auth_user_flags_by_group:
-    is_active: "cn=active,ou=groups,dc=example,dc=com"
-    is_staff: "cn=staff,ou=groups,dc=example,dc=com"
-    is_superuser: "cn=superuser,ou=groups,dc=example,dc=com"
+    is_active: "cn=active,OU=groups,DC=example,DC=com"
+    is_staff: "cn=staff,OU=groups,DC=example,DC=com"
+    is_superuser: "cn=superuser,OU=groups,DC=example,DC=com"

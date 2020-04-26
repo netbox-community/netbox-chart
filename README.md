@@ -97,7 +97,17 @@ The following table lists the configurable parameters for this chart and their d
 | `napalm.timeout`                      | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
 | `napalm.args`                         | A dictionary of optional arguments to pass to NAPALM                | `{}`                                         |
 | `paginateCount`                       | The default number of objects to display per page in the web UI     | `50`                                         |
+| `plugins`                             | Additional plugins to load into NetBox                              | `[]`                                         |
+| `pluginsConfig`                       | Configuration for the additional plugins                            | `{}`                                         |
 | `preferIPv4`                          | Prefer devices' IPv4 address when determining their primary address | `false`                                      |
+| `remoteAuth.enabled`                  | Enable remote authentication support                                | `false`                                      |
+| `remoteAuth.backend`                  | Remote authentication backend class                                 | `utilities.auth_backends.RemoteUserBackend`  |
+| `remoteAuth.header`                   | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
+| `remoteAuth.autoCreateUser`           | Enables the automatic creation of new users                         | `true`                                       |
+| `remoteAuth.defaultGroups`            | A list of groups to assign to newly created users                   | `[]`                                         |
+| `remoteAuth.defaultPermissions`       | A list of permissions to assign newly created users                 | `[]`                                         |
+| `releaseCheck.timeout`                | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
+| `releaseCheck.url`                    | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `metricsEnabled`                      | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `timeZone`                            | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                          | Django date format for long-form date strings                       | `"N j, Y"`                                   |

@@ -303,6 +303,8 @@ nginx:
 
   resources: {}
 
+podAnnotations: {}
+
 nodeSelector: {}
 
 tolerations: []

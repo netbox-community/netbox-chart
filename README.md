@@ -164,6 +164,7 @@ The following table lists the configurable parameters for this chart and their d
 | `nginx.image.tag`                     | NGINX container image tag                                           | `1.16.0-alpine`                              |
 | `nginx.image.pullPolicy`              | NGINX container image pull policy                                   | `IfNotPresent`                               |
 | `nginx.resources`                     | Configure resource requests or limits for NGINX                     | `{}`                                         |
+| `podAnnotations`                      | Additional annotations for NetBox pods                              | `{}`                                         |
 | `nodeSelector`                        | Node labels for pod assignment                                      | `{}`                                         |
 | `tolerations`                         | Toleration labels for pod assignment                                | `[]`                                         |
 | `updateStrategy`                      | Configure deployment update strategy                                | `{}` (defaults to `RollingUpdate`)           |

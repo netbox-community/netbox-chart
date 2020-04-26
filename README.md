@@ -13,6 +13,8 @@ $ helm install bootc/netbox
 ## Prerequisites
 
 - This chart has only been tested on Kubernetes 1.12+, but should work on older versions
+- This chart works with NetBox 2.7.11+
+- Recent versions of Helm 2 or 3 are supported
 
 ## Installing the Chart
 
@@ -59,7 +61,7 @@ The following table lists the configurable parameters for this chart and their d
 | --------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
 | `replicaCount`                        | The desired number of NetBox pods                                   | `1`                                          |
 | `image.repository`                    | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
-| `image.tag`                           | NetBox container image tag                                          | `v2.7.7`                                     |
+| `image.tag`                           | NetBox container image tag                                          | `v2.8.1`                                     |
 | `image.pullPolicy`                    | NetBox container image pull policy                                  | `IfNotPresent`                               |
 | `superuser.name`                      | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                     | Email address for the initial super-user account                    | `admin@example.com`                          |
@@ -95,7 +97,17 @@ The following table lists the configurable parameters for this chart and their d
 | `napalm.timeout`                      | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
 | `napalm.args`                         | A dictionary of optional arguments to pass to NAPALM                | `{}`                                         |
 | `paginateCount`                       | The default number of objects to display per page in the web UI     | `50`                                         |
+| `plugins`                             | Additional plugins to load into NetBox                              | `[]`                                         |
+| `pluginsConfig`                       | Configuration for the additional plugins                            | `{}`                                         |
 | `preferIPv4`                          | Prefer devices' IPv4 address when determining their primary address | `false`                                      |
+| `remoteAuth.enabled`                  | Enable remote authentication support                                | `false`                                      |
+| `remoteAuth.backend`                  | Remote authentication backend class                                 | `utilities.auth_backends.RemoteUserBackend`  |
+| `remoteAuth.header`                   | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
+| `remoteAuth.autoCreateUser`           | Enables the automatic creation of new users                         | `true`                                       |
+| `remoteAuth.defaultGroups`            | A list of groups to assign to newly created users                   | `[]`                                         |
+| `remoteAuth.defaultPermissions`       | A list of permissions to assign newly created users                 | `[]`                                         |
+| `releaseCheck.timeout`                | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
+| `releaseCheck.url`                    | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `metricsEnabled`                      | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `timeZone`                            | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                          | Django date format for long-form date strings                       | `"N j, Y"`                                   |
@@ -162,6 +174,7 @@ The following table lists the configurable parameters for this chart and their d
 | `nginx.image.tag`                     | NGINX container image tag                                           | `1.16.0-alpine`                              |
 | `nginx.image.pullPolicy`              | NGINX container image pull policy                                   | `IfNotPresent`                               |
 | `nginx.resources`                     | Configure resource requests or limits for NGINX                     | `{}`                                         |
+| `podAnnotations`                      | Additional annotations for NetBox pods                              | `{}`                                         |
 | `nodeSelector`                        | Node labels for pod assignment                                      | `{}`                                         |
 | `tolerations`                         | Toleration labels for pod assignment                                | `[]`                                         |
 | `updateStrategy`                      | Configure deployment update strategy                                | `{}` (defaults to `RollingUpdate`)           |
@@ -187,10 +200,11 @@ Rather than specifying passwords and secrets as part of the Helm release values,
 you may pass these to NetBox using a pre-existing `Secret` resource. When using
 this, the `Secret` must contain the following keys:
 
-| Key               | Description                                            | Required? |
-| ------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `db_password`     | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
-| `email_password`  | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
-| `napalm_password` | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
-| `redis_password`  | Password for the external Redis databases              | If `redis.enabled` is `false` and `externalRedis.existingSecretName` is unset         |
-| `secret_key`      | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+| Key                    | Description                                            | Required? |
+| -----------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
+| `db_password`          | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
+| `email_password`       | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
+| `napalm_password`      | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
+| `redis_password`       | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `webhooksRedis.existingSecretName` is unset         |
+| `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
+| `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |

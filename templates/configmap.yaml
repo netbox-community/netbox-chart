@@ -33,7 +33,7 @@ data:
       {{- end -}}
       {{- end -}})
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['webhooks']['PASSWORD'] = _load_secret(
+    REDIS['tasks']['PASSWORD'] = _load_secret(
       {{- if .Values.redis.enabled -}}
       'redis', 'redis-password'
       {{- else -}}
@@ -109,10 +109,20 @@ data:
     NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
     NAPALM_ARGS: {{ toJson .Values.napalm.args }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
+    PLUGINS: {{ toJson .Values.plugins }}
+    PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
+    REMOTE_AUTH_ENABLED: {{ toJson .Values.remoteAuth.enabled }}
+    REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
+    REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}
+    REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
+    REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}
+    REMOTE_AUTH_DEFAULT_PERMISSIONS: {{ toJson .Values.remoteAuth.defaultPermissions }}
+    RELEASE_CHECK_TIMEOUT: {{ .Values.releaseCheck.timeout | int }}
+    RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:
-      webhooks:
+      tasks:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.redisPort | int }}

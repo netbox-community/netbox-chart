@@ -19,6 +19,14 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "netbox.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if (not .Values.existingSecret) }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -46,6 +54,11 @@ spec:
             httpGet:
               path: /login/
               port: netbox
+              {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.allowedHosts 0) | quote }}
+              {{- end }}
           volumeMounts:
             - name: config
               mountPath: /etc/netbox/config/configuration.py
@@ -139,7 +152,11 @@ spec:
             name: {{ include "netbox.fullname" . }}
         - name: secrets
           secret:
+            {{- if .Values.existingSecret }}
+            secretName: {{ .Values.existingSecret | quote }}
+            {{- else }}
             secretName: {{ include "netbox.fullname" . }}
+            {{- end }}
         - name: media
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

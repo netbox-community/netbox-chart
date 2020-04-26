@@ -16,5 +16,5 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}
   {{ if .Values.service.loadBalancerSourceRanges -}}
   loadBalancerSourceRanges:
-    {{ toYaml .Values.service.loadBalancerSourceRanges | nindent 4 }}
+    {{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 | trim }}
   {{- end }}

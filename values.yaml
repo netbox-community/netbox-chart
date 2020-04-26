@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.7.7
+  tag: v2.8.1
   pullPolicy: IfNotPresent
 
 superuser:
@@ -128,9 +128,37 @@ napalm:
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50
 
+# Enable installed plugins. Add the name of each plugin to the list.
+plugins: []
+
+# Plugins configuration settings. These settings are used by various plugins
+# that the user may have installed. Each key in the dictionary is the name of
+# an installed plugin and its value is a dictionary of settings.
+pluginsConfig: {}
+
 # When determining the primary IP address for a device, IPv6 is preferred over
 # IPv4 by default. Set this to True to prefer IPv4 instead.
 preferIPv4: false
+
+# Remote authentication support
+remoteAuth:
+  enabled: false
+  backend: utilities.auth_backends.RemoteUserBackend
+  header: HTTP_REMOTE_USER
+  autoCreateUser: true
+  defaultGroups: []
+  defaultPermissions: []
+
+releaseCheck:
+  # This determines how often the GitHub API is called to check the latest
+  # release of NetBox. Must be at least 1 hour.
+  timeout: 86400
+
+  # This repository is used to check whether there is a new release of NetBox
+  # available. Set to null to disable the version check or use the URL below to
+  # check for release in the official NetBox repository.
+  url: null
+  # url: https://api.github.com/repos/netbox-community/netbox/releases
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 metricsEnabled: false
@@ -298,10 +326,12 @@ resources: {}
 nginx:
   image:
     repository: nginx
-    tag: 1.16.1-alpine
+    tag: 1.18.0-alpine
     pullPolicy: IfNotPresent
 
   resources: {}
+
+podAnnotations: {}
 
 nodeSelector: {}
 

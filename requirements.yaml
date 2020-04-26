@@ -5,5 +5,5 @@ dependencies:
   condition: postgresql.enabled
 - name: redis
   version: 10.x.x
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled

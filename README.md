@@ -200,10 +200,11 @@ Rather than specifying passwords and secrets as part of the Helm release values,
 you may pass these to NetBox using a pre-existing `Secret` resource. When using
 this, the `Secret` must contain the following keys:
 
-| Key               | Description                                            | Required? |
-| ------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `db_password`     | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
-| `email_password`  | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
-| `napalm_password` | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
-| `redis_password`  | Password for the external Redis databases              | If `redis.enabled` is `false` and `externalRedis.existingSecretName` is unset         |
-| `secret_key`      | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+| Key                    | Description                                            | Required? |
+| -----------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
+| `db_password`          | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
+| `email_password`       | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
+| `napalm_password`      | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
+| `redis_password`       | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `webhooksRedis.existingSecretName` is unset         |
+| `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
+| `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |

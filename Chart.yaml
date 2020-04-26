@@ -3,4 +3,4 @@ appVersion: 2.8.1
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
 icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo.png
 name: netbox
-version: 2.0.1
+version: 2.1.0

@@ -144,7 +144,11 @@ spec:
             name: {{ include "netbox.fullname" . }}
         - name: secrets
           secret:
+            {{- if .Values.existingSecret }}
+            secretName: {{ .Values.existingSecret | quote }}
+            {{- else }}
             secretName: {{ include "netbox.fullname" . }}
+            {{- end }}
         - name: media
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

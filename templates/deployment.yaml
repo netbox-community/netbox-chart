@@ -46,6 +46,11 @@ spec:
             httpGet:
               path: /login/
               port: netbox
+              {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.allowedHosts 0) | quote }}
+              {{- end }}
           volumeMounts:
             - name: config
               mountPath: /etc/netbox/config/configuration.py

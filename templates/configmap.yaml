@@ -33,7 +33,7 @@ data:
       {{- end -}}
       {{- end -}})
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['webhooks']['PASSWORD'] = _load_secret(
+    REDIS['tasks']['PASSWORD'] = _load_secret(
       {{- if .Values.redis.enabled -}}
       'redis', 'redis-password'
       {{- else -}}
@@ -112,7 +112,7 @@ data:
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
 
     REDIS:
-      webhooks:
+      tasks:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.redisPort | int }}

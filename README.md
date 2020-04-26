@@ -13,6 +13,8 @@ $ helm install bootc/netbox
 ## Prerequisites
 
 - This chart has only been tested on Kubernetes 1.12+, but should work on older versions
+- This chart works with NetBox 2.7.11+
+- Recent versions of Helm 2 or 3 are supported
 
 ## Installing the Chart
 
@@ -59,7 +61,7 @@ The following table lists the configurable parameters for this chart and their d
 | --------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
 | `replicaCount`                        | The desired number of NetBox pods                                   | `1`                                          |
 | `image.repository`                    | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
-| `image.tag`                           | NetBox container image tag                                          | `v2.7.7`                                     |
+| `image.tag`                           | NetBox container image tag                                          | `v2.8.1`                                     |
 | `image.pullPolicy`                    | NetBox container image pull policy                                  | `IfNotPresent`                               |
 | `superuser.name`                      | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                     | Email address for the initial super-user account                    | `admin@example.com`                          |

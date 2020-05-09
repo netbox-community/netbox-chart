@@ -226,9 +226,13 @@ webhooksRedis:
   timeout: 300
   ssl: false
 
-  # Used only when redis.enabled is false
-  host: localhost
+  # Used only when redis.enabled is false. host and port are not used if
+  # sentinels are given.
+  host: netbox-redis
   port: 6379
+  sentinels: []
+  #  - mysentinel:26379
+  sentinelService: netbox-redis
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password
@@ -238,9 +242,13 @@ cachingRedis:
   timeout: 300
   ssl: false
 
-  # Used only when redis.enabled is false
-  host: ""
+  # Used only when redis.enabled is false. host and port are not used if
+  # sentinels are given.
+  host: netbox-redis
   port: 6379
+  sentinels: []
+  #  - mysentinel:26379
+  sentinelService: netbox-redis
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password

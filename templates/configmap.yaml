@@ -178,11 +178,11 @@ data:
         listen      80;
         access_log  off;
 
-        location /static/ {
+        location /{{ .Values.basePath }}static/ {
           alias /opt/netbox/netbox/static/;
         }
 
-        location / {
+        location /{{ .Values.basePath }} {
           proxy_pass http://localhost:8001;
           proxy_set_header X-Forwarded-Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;

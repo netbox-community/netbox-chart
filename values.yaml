@@ -43,7 +43,8 @@ banner:
   login: ''
 
 # Base URL path if accessing NetBox within a directory. For example, if
-# installed at http://example.com/netbox/, set to 'netbox/'
+# installed at http://example.com/netbox/, set to 'netbox/'. If using
+# Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
 basePath: ''
 
 # Cache timeout in seconds. Set to 0 to disable caching. Defaults to 900
@@ -304,6 +305,7 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
+        # NB: You may also want to set the basePath above
         - /
 
   tls: []

@@ -52,7 +52,7 @@ spec:
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /login/
+              path: /{{ .Values.basePath }}login/
               port: netbox
               {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
               httpHeaders:
@@ -125,7 +125,7 @@ spec:
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /
+              path: /{{ .Values.basePath }}
               port: http
           volumeMounts:
             - name: config

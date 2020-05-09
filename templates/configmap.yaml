@@ -58,6 +58,14 @@ data:
     # Post-process certain values
     CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r
                                    in CORS_ORIGIN_REGEX_WHITELIST]
+    {{- if and (not .Values.redis.enabled) .Values.webhooksRedis.sentinels }}
+    REDIS['tasks']['SENTINELS'] = [tuple(x.split(r":")) for x
+                                   in REDIS['tasks']['SENTINELS']]
+    {{- end }}
+    {{- if and (not .Values.redis.enabled) .Values.cachingRedis.sentinels }}
+    REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x
+                                     in REDIS['caching']['SENTINELS']]
+    {{- end }}
 
   netbox.yaml: |
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
@@ -126,6 +134,9 @@ data:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.redisPort | int }}
+        {{- else if .Values.webhooksRedis.sentinels -}}
+        SENTINELS: {{ toJson .Values.webhooksRedis.sentinels }}
+        SENTINEL_SERVICE: {{ .Values.webhooksRedis.sentinelService | quote }}
         {{- else -}}
         HOST: {{ .Values.webhooksRedis.host | quote }}
         PORT: {{ .Values.webhooksRedis.port | int}}
@@ -137,6 +148,9 @@ data:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.redisPort | int }}
+        {{- else if .Values.cachingRedis.sentinels -}}
+        SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
+        SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}
         {{- else -}}
         HOST: {{ .Values.cachingRedis.host | quote }}
         PORT: {{ .Values.cachingRedis.port | int}}
@@ -178,11 +192,11 @@ data:
         listen      80;
         access_log  off;
 
-        location /static/ {
+        location /{{ .Values.basePath }}static/ {
           alias /opt/netbox/netbox/static/;
         }
 
-        location / {
+        location /{{ .Values.basePath }} {
           proxy_pass http://localhost:8001;
           proxy_set_header X-Forwarded-Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;

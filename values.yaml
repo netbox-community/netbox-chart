@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.8.1
+  tag: v2.8.3
   pullPolicy: IfNotPresent
 
 superuser:
@@ -43,7 +43,8 @@ banner:
   login: ''
 
 # Base URL path if accessing NetBox within a directory. For example, if
-# installed at http://example.com/netbox/, set to 'netbox/'
+# installed at http://example.com/netbox/, set to 'netbox/'. If using
+# Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
 basePath: ''
 
 # Cache timeout in seconds. Set to 0 to disable caching. Defaults to 900
@@ -225,9 +226,13 @@ webhooksRedis:
   timeout: 300
   ssl: false
 
-  # Used only when redis.enabled is false
-  host: localhost
+  # Used only when redis.enabled is false. host and port are not used if
+  # sentinels are given.
+  host: netbox-redis
   port: 6379
+  sentinels: []
+  #  - mysentinel:26379
+  sentinelService: netbox-redis
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password
@@ -237,9 +242,13 @@ cachingRedis:
   timeout: 300
   ssl: false
 
-  # Used only when redis.enabled is false
-  host: ""
+  # Used only when redis.enabled is false. host and port are not used if
+  # sentinels are given.
+  host: netbox-redis
   port: 6379
+  sentinels: []
+  #  - mysentinel:26379
+  sentinelService: netbox-redis
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password
@@ -304,6 +313,7 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
+        # NB: You may also want to set the basePath above
         - /
 
   tls: []

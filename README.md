@@ -61,7 +61,7 @@ The following table lists the configurable parameters for this chart and their d
 | --------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
 | `replicaCount`                        | The desired number of NetBox pods                                   | `1`                                          |
 | `image.repository`                    | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
-| `image.tag`                           | NetBox container image tag                                          | `v2.8.1`                                     |
+| `image.tag`                           | NetBox container image tag                                          | `v2.8.3`                                     |
 | `image.pullPolicy`                    | NetBox container image pull policy                                  | `IfNotPresent`                               |
 | `superuser.name`                      | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                     | Email address for the initial super-user account                    | `admin@example.com`                          |
@@ -134,16 +134,20 @@ The following table lists the configurable parameters for this chart and their d
 | `webhooksRedis.database`              | Redis database number used for NetBox webhooks queue                | `0`                                          |
 | `webhooksRedis.timeout`               | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
 | `webhooksRedis.ssl`                   | Enable SSL when connecting to Redis                                 | `false`                                      |
-| `webhooksRedis.host`                  | Redis host to use when `redis.enabled` is `false`                   | `""`                                         |
+| `webhooksRedis.host`                  | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `webhooksRedis.port`                  | Port number for external Redis                                      | `6379`                                       |
+| `webhooksRedis.sentinels`             | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
+| `webhooksRedis.sentinelService`       | Sentinel master service name                                        | `"netbox-redis"`                             |
 | `webhooksRedis.password`              | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `webhooksRedis.existingSecretName`    | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `webhooksRedis.existingSecretKey`     | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`               | Redis database number used for caching views                        | `1`                                          |
 | `cachingRedis.timeout`                | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
 | `cachingRedis.ssl`                    | Enable SSL when connecting to Redis                                 | `false`                                      |
-| `cachingRedis.host`                   | Redis host to use when `redis.enabled` is `false`                   | `""`                                         |
+| `cachingRedis.host`                   | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `cachingRedis.port`                   | Port number for external Redis                                      | `6379`                                       |
+| `cachingRedis.sentinels`              | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
+| `cachingRedis.sentinelService`        | Sentinel master service name                                        | `"netbox-redis"`                             |
 | `cachingRedis.password`               | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `cachingRedis.existingSecretName`     | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `cachingRedis.existingSecretKey`      | Key to fetch the password in the above `Secret`                     | `redis-password`                             |

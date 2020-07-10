@@ -113,6 +113,10 @@ maintenanceMode: false
 # all objects by specifying "?limit=0".
 maxPageSize: 1000
 
+# Enable a sidecar django worker for plugins such as ntc-netbox-plugin-onboarding.
+# The worker has access to the redis and pulls worker jobs directly from the queue.
+sidecarWorker: false
+
 napalm:
   # Credentials that NetBox will use to access live devices.
   username: ''

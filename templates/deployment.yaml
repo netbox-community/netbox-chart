@@ -116,6 +116,71 @@ spec:
           resources:
             {{ toYaml .Values.resources | indent 12 | trim }}
           {{- end }}
+        {{- if .Values.sidecarWorker }}
+        - name: {{ .Chart.Name }}-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SKIP_STARTUP_SCRIPTS
+              value: {{ .Values.skipStartupScripts | quote }}
+            {{- with .Values.extraEnvs }}
+            {{ toYaml . | indent 12 | trim }}
+            {{- end }}
+          command:
+            - python3
+            - -u
+            - /opt/netbox/netbox/manage.py
+          args:
+            - rqworker
+          readinessProbe:
+            exec:
+              command:
+                - pgrep
+                - python3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /etc/netbox/config/configuration.py
+              subPath: configuration.py
+              readOnly: true
+            - name: config
+              mountPath: /run/config/netbox
+              readOnly: true
+            - name: secrets
+              mountPath: /run/secrets/netbox
+              readOnly: true
+            - name: static
+              mountPath: /opt/netbox/netbox/static
+            {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
+            - name: db-secret
+              mountPath: /run/secrets/database
+              readOnly: true
+            {{- end }}
+            {{- if .Values.redis.enabled }}
+            - name: redis-secret
+              mountPath: /run/secrets/redis
+              readOnly: true
+            {{- else }}
+            {{- if .Values.webhooksRedis.existingSecretName }}
+            - name: redis-webhooks-secret
+              mountPath: /run/secrets/redis_webhooks
+              readOnly: true
+            {{- end }}
+            {{- if .Values.cachingRedis.existingSecretName }}
+            - name: redis-caching-secret
+              mountPath: /run/secrets/redis_caching
+              readOnly: true
+            {{- end }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{ toYaml . | indent 12 | trim }}
+            {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{ toYaml .Values.resources | indent 12 | trim }}
+          {{- end }}
+        {{- end }}
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}

@@ -246,6 +246,10 @@ reportsPersistence:
   size: 1Gi
 
 service:
+  annotations: {}
+    # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <acm_cert_arn>
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: http
   type: ClusterIP
   port: 80
 

@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "netbox.labels" . | nindent 4 }}
 spec:
+{{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+{{- end }}
   selector:
     matchLabels:
       {{- include "netbox.selectorLabels" . | nindent 6 }}

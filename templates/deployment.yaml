@@ -13,7 +13,7 @@ spec:
       {{- include "netbox.selectorLabels" . | nindent 6 }}
   {{ if .Values.updateStrategy -}}
   strategy:
-    {{ toYaml .Values.updateStrategy | indent 4 | trim }}
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{ end -}}
   template:
     metadata:
@@ -22,16 +22,16 @@ spec:
         {{- if (not .Values.existingSecret) }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- range $key, $value := .Values.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
         {{- include "netbox.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{ toYaml . | indent 8 | trim }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
@@ -45,7 +45,7 @@ spec:
             - name: SKIP_STARTUP_SCRIPTS
               value: {{ .Values.skipStartupScripts | quote }}
             {{- with .Values.extraEnvs }}
-            {{ toYaml . | indent 12 | trim }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - name: netbox
@@ -111,11 +111,11 @@ spec:
               subPath: superuser_api_token
               readOnly: true
             {{- with .Values.extraVolumeMounts }}
-            {{ toYaml . | indent 12 | trim }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.resources }}
           resources:
-            {{ toYaml .Values.resources | indent 12 | trim }}
+            {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
@@ -138,14 +138,14 @@ spec:
               readOnly: true
           {{- if .Values.nginx.resources }}
           resources:
-            {{ toYaml .Values.nginx.resources | indent 12 | trim }}
+            {{- toYaml .Values.nginx.resources | nindent 12 }}
           {{- end }}
         {{- with .Values.extraContainers }}
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.extraInitContainers }}
       initContainers:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
         - name: config
@@ -198,17 +198,17 @@ spec:
         {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}

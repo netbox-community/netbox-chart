@@ -6,8 +6,9 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.8.3
   pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 
 superuser:
   name: admin

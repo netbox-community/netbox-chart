@@ -87,6 +87,7 @@ data:
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
 
     ADMINS: {{ toJson .Values.admins }}
+    ALLOWED_URL_SCHEMES: {{ toJson .Values.allowedUrlSchemes }}
     BANNER_TOP: {{ .Values.banner.top | quote }}
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
@@ -102,16 +103,23 @@ data:
       SERVER: {{ .Values.email.server | quote }}
       PORT: {{ .Values.email.port | int }}
       USERNAME: {{ .Values.email.username | quote }}
+      USE_SSL: {{ toJson .Values.email.useSSL }}
+      USE_TLS: {{ toJson .Values.email.useTLS }}
       TIMEOUT: {{ .Values.email.timeout | int }}
       FROM_EMAIL: {{ toJson .Values.email.from }}
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
+    HTTP_PROXIES: {{ toJson .Values.httpProxies }}
+    INTERNAL_IPS: {{ toJson .Values.internalIPs }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
+    LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
+    STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
+    STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
     METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
     NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
     NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
@@ -120,6 +128,8 @@ data:
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
+    RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: {{ int .Values.rackElevationDefaultUnitHeight }}
+    RACK_ELEVATION_DEFAULT_UNIT_WIDTH: {{ int .Values.rackElevationDefaultUnitWidth }}
     REMOTE_AUTH_ENABLED: {{ toJson .Values.remoteAuth.enabled }}
     REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
     REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}
@@ -170,7 +180,7 @@ data:
     SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
 
   nginx.conf: |
-    worker_processes 1;
+    worker_processes 3;
 
     error_log /dev/stderr info;
 
@@ -189,7 +199,7 @@ data:
       client_max_body_size 10M;
 
       server {
-        listen      80;
+        listen      8000;
         access_log  off;
 
         location /{{ .Values.basePath }}static/ {
@@ -201,7 +211,6 @@ data:
           proxy_set_header X-Forwarded-Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-Proto $scheme;
-          add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
         }
       }
     }

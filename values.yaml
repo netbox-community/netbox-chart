@@ -6,8 +6,9 @@ replicaCount: 1
 
 image:
   repository: netboxcommunity/netbox
-  tag: v2.8.3
   pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 
 superuser:
   name: admin
@@ -32,6 +33,10 @@ allowedHosts:
 # correct email settings are provided).
 admins: []
   # - ['John Doe', 'jdoe@example.com']
+
+# URL schemes that are allowed within links in NetBox
+allowedUrlSchemes: [file, ftp, ftps, http, https, irc, mailto, sftp, ssh, tel,
+                    telnet, tftp, vnc, xmpp]
 
 banner:
   # Optionally display a persistent banner at the top and/or bottom of every
@@ -77,6 +82,8 @@ email:
   port: 25
   username: ''
   password: ''
+  useSSL: false
+  useTLS: false
   timeout: 10  # seconds
   from: ''
 
@@ -93,6 +100,14 @@ exemptViewPermissions: []
 #  - dcim.region
 #  - ipam.prefix
 
+# HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
+# webhooks).
+httpProxies: null
+
+# IP addresses recognized as internal to the system. The debugging toolbar will
+# be available only to clients accessing NetBox from an internal IP.
+internalIPs: ['127.0.0.1', '::1']
+
 # Enable custom logging. Please see the Django documentation for detailed
 # guidance on configuring custom logs:
 # https://docs.djangoproject.com/en/1.11/topics/logging/
@@ -103,6 +118,10 @@ logging: {}
 # NetBox (excluding secrets) but not make any changes.
 loginRequired: false
 
+# The length of time (in seconds) for which a user will remain logged into the
+# web UI before being prompted to re-authenticate.
+loginTimeout: 1209600  # 14 days
+
 # Setting this to True will display a "maintenance mode" banner at the top of
 # every page.
 maintenanceMode: false
@@ -112,6 +131,16 @@ maintenanceMode: false
 # maximum limit. Setting it to 0 or None will allow an API consumer to request
 # all objects by specifying "?limit=0".
 maxPageSize: 1000
+
+# By default uploaded media is stored in an attached volume. Using
+# Django-storages is also supported. Provide the class path of the storage
+# driver in storageBackend and any configuration options in storageConfig.
+storageBackend: null  # storages.backends.s3boto3.S3Boto3Storage
+storageConfig: {}
+  # AWS_ACCESS_KEY_ID: 'Key ID'
+  # AWS_SECRET_ACCESS_KEY: 'Secret'
+  # AWS_STORAGE_BUCKET_NAME: 'netbox'
+  # AWS_S3_REGION_NAME: 'eu-west-1'
 
 napalm:
   # Credentials that NetBox will use to access live devices.
@@ -141,14 +170,19 @@ pluginsConfig: {}
 # IPv4 by default. Set this to True to prefer IPv4 instead.
 preferIPv4: false
 
+# Rack elevation size defaults, in pixels. For best results, the ratio of width
+# to height should be roughly 10:1.
+rackElevationDefaultUnitHeight: 22
+rackElevationDefaultUnitWidth: 220
+
 # Remote authentication support
 remoteAuth:
   enabled: false
-  backend: utilities.auth_backends.RemoteUserBackend
+  backend: netbox.authentication.RemoteUserBackend
   header: HTTP_REMOTE_USER
   autoCreateUser: true
   defaultGroups: []
-  defaultPermissions: []
+  defaultPermissions: {}
 
 releaseCheck:
   # This determines how often the GitHub API is called to check the latest
@@ -212,6 +246,8 @@ externalDatabase:
   password: ""
   existingSecretName: ""
   existingSecretKey: postgresql-password
+
+  # The following settings apply when using the bundled PostgreSQL chart, too:
   sslMode: prefer
   connMaxAge: 300
 
@@ -257,6 +293,15 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
 ## Storage configuration for media
 persistence:
   enabled: true
@@ -298,6 +343,23 @@ reportsPersistence:
   ##
   ## Persistant storage size request
   size: 1Gi
+
+podAnnotations: {}
+
+podSecurityContext:
+  # fsGroup: 1000
+  runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
 
 service:
   annotations: {}
@@ -345,7 +407,21 @@ nginx:
 
   resources: {}
 
-podAnnotations: {}
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

@@ -3,38 +3,43 @@ kind: Deployment
 metadata:
   name: {{ include "netbox.fullname" . }}
   labels:
-{{ include "netbox.labels" . | indent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
 spec:
+{{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+{{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "netbox.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "netbox.selectorLabels" . | nindent 6 }}
   {{ if .Values.updateStrategy -}}
   strategy:
-    {{ toYaml .Values.updateStrategy | indent 4 | trim }}
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{ end -}}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "netbox.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if (not .Values.existingSecret) }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- range $key, $value := .Values.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
+      labels:
+        {{- include "netbox.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{ toYaml . | indent 8 | trim }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "netbox.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SUPERUSER_NAME
@@ -44,7 +49,7 @@ spec:
             - name: SKIP_STARTUP_SCRIPTS
               value: {{ .Values.skipStartupScripts | quote }}
             {{- with .Values.extraEnvs }}
-            {{ toYaml . | indent 12 | trim }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - name: netbox
@@ -70,6 +75,8 @@ spec:
             - name: secrets
               mountPath: /run/secrets/netbox
               readOnly: true
+            - name: netbox-tmp
+              mountPath: /tmp
             - name: media
               mountPath: /opt/netbox/netbox/media
               subPath: {{ .Values.persistence.subPath | default "" | quote }}
@@ -110,18 +117,21 @@ spec:
               subPath: superuser_api_token
               readOnly: true
             {{- with .Values.extraVolumeMounts }}
-            {{ toYaml . | indent 12 | trim }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.resources }}
           resources:
-            {{ toYaml .Values.resources | indent 12 | trim }}
+            {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
         - name: nginx
+          securityContext:
+            {{- toYaml .Values.nginx.securityContext | nindent 12 }}
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          command: [nginx, -g, 'daemon off;']
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8000
               protocol: TCP
           readinessProbe:
             httpGet:
@@ -135,16 +145,20 @@ spec:
             - name: static
               mountPath: /opt/netbox/netbox/static
               readOnly: true
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /run
           {{- if .Values.nginx.resources }}
           resources:
-            {{ toYaml .Values.nginx.resources | indent 12 | trim }}
+            {{- toYaml .Values.nginx.resources | nindent 12 }}
           {{- end }}
         {{- with .Values.extraContainers }}
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.extraInitContainers }}
       initContainers:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
         - name: config
@@ -157,6 +171,14 @@ spec:
             {{- else }}
             secretName: {{ include "netbox.fullname" . }}
             {{- end }}
+        - name: netbox-tmp
+          emptyDir:
+            medium: Memory
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir:
+            medium: Memory
         - name: media
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
@@ -197,17 +219,17 @@ spec:
         {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
-        {{ toYaml . | indent 8 | trim }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}

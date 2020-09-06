@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "netbox.fullname" . }}
   labels:
-{{ include "netbox.labels" . | indent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
   {{- with .Values.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -16,9 +16,8 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "netbox.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-  {{ if .Values.service.loadBalancerSourceRanges -}}
+    {{- include "netbox.selectorLabels" . | nindent 4 }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 | trim }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}

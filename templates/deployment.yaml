@@ -30,6 +30,7 @@ spec:
       imagePullSecrets:
         {{ toYaml . | indent 8 | trim }}
     {{- end }}
+      serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

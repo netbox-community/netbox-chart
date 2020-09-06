@@ -74,3 +74,14 @@ Selector labels
 app.kubernetes.io/name: {{ include "netbox.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "netbox.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "netbox.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}

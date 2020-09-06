@@ -235,3 +235,22 @@ this, the `Secret` must contain the following keys:
 | `redis_password`       | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `webhooksRedis.existingSecretName` is unset         |
 | `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
 | `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+
+## License
+
+> The following notice applies to all files contained within this Helm Chart and
+> the Git repository which contains it:
+>
+> Copyright 2019-2020 Chris Boot
+>
+> Licensed under the Apache License, Version 2.0 (the "License");
+> you may not use this file except in compliance with the License.
+> You may obtain a copy of the License at
+>
+>     http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.

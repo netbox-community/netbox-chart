@@ -180,7 +180,7 @@ data:
     SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
 
   nginx.conf: |
-    worker_processes 1;
+    worker_processes 3;
 
     error_log /dev/stderr info;
 
@@ -211,7 +211,6 @@ data:
           proxy_set_header X-Forwarded-Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-Proto $scheme;
-          add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
         }
       }
     }

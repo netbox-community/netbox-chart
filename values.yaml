@@ -308,6 +308,23 @@ reportsPersistence:
   ## Persistant storage size request
   size: 1Gi
 
+podAnnotations: {}
+
+podSecurityContext:
+  # fsGroup: 1000
+  runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
 service:
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
@@ -354,7 +371,14 @@ nginx:
 
   resources: {}
 
-podAnnotations: {}
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
 
 autoscaling:
   enabled: false

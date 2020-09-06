@@ -189,7 +189,7 @@ data:
       client_max_body_size 10M;
 
       server {
-        listen      80;
+        listen      8000;
         access_log  off;
 
         location /{{ .Values.basePath }}static/ {

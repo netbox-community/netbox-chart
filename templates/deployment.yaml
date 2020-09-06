@@ -33,8 +33,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -71,6 +75,8 @@ spec:
             - name: secrets
               mountPath: /run/secrets/netbox
               readOnly: true
+            - name: netbox-tmp
+              mountPath: /tmp
             - name: media
               mountPath: /opt/netbox/netbox/media
               subPath: {{ .Values.persistence.subPath | default "" | quote }}
@@ -118,11 +124,14 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
         - name: nginx
+          securityContext:
+            {{- toYaml .Values.nginx.securityContext | nindent 12 }}
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          command: [nginx, -g, 'daemon off;']
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8000
               protocol: TCP
           readinessProbe:
             httpGet:
@@ -136,6 +145,10 @@ spec:
             - name: static
               mountPath: /opt/netbox/netbox/static
               readOnly: true
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /run
           {{- if .Values.nginx.resources }}
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
@@ -158,6 +171,14 @@ spec:
             {{- else }}
             secretName: {{ include "netbox.fullname" . }}
             {{- end }}
+        - name: netbox-tmp
+          emptyDir:
+            medium: Memory
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir:
+            medium: Memory
         - name: media
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

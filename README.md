@@ -169,6 +169,9 @@ The following table lists the configurable parameters for this chart and their d
 | `reportsPersistence.storageClass`               | Set the storage class of the PVC (use `-` to disable provisioning)  | `""`                                         |
 | `reportsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `reportsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
+| `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |
+| `podSecurityContext`                            | Security context for NetBox pods                                    | *see `values.yaml`*                          |
+| `securityContext`                               | Security context for NetBox containers                              | *see `values.yaml`*                          |
 | `service.type`                                  | Type of `Service` resource to create                                | `ClusterIP`                                  |
 | `service.port`                                  | Port number for the service                                         | `80`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
@@ -181,7 +184,7 @@ The following table lists the configurable parameters for this chart and their d
 | `nginx.image.tag`                               | NGINX container image tag                                           | `1.16.0-alpine`                              |
 | `nginx.image.pullPolicy`                        | NGINX container image pull policy                                   | `IfNotPresent`                               |
 | `nginx.resources`                               | Configure resource requests or limits for NGINX                     | `{}`                                         |
-| `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |
+| `nginx.securityContext`                         | Security context for NGINX sidecar containers                       | *see values.yaml*                            |
 | `autoscaling.enabled`                           | Whether to enable the HorizontalPodAutoscaler                       | `false`                                      |
 | `autoscaling.minReplicas`                       | Minimum number of replicas when autoscaling is enabled              | `1`                                          |
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |

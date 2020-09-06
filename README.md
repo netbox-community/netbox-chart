@@ -85,6 +85,8 @@ The following table lists the configurable parameters for this chart and their d
 | `email.port`                                    | TCP port to connect to the SMTP server on                           | `25`                                         |
 | `email.username`                                | Optional username for SMTP authentication                           | `""`                                         |
 | `email.password`                                | Password for SMTP authentication (see also `existingSecret`)        | `""`                                         |
+| `email.useSSL`                                  | Use SSL when connecting to the server                               | `false`                                      |
+| `email.useTLS`                                  | Use TLS when connecting to the server                               | `false`                                      |
 | `email.timeout`                                 | Timeout for SMTP connections, in seconds                            | `10`                                         |
 | `email.from`                                    | Sender address for emails sent by NetBox                            | `""`                                         |
 | `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
@@ -93,8 +95,11 @@ The following table lists the configurable parameters for this chart and their d
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
+| `loginTimeout`                                  | How often to re-authenticate users                                  | `1209600` (14 days)                          |
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
+| `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
+| `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
 | `napalm.username`                               | Username used by the NAPALM library to access network devices       | `""`                                         |
 | `napalm.password`                               | Password used by the NAPALM library (see also `existingSecret`)     | `""`                                         |
 | `napalm.timeout`                                | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
@@ -134,6 +139,8 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.password`                     | Password for external PostgreSQL (see also `existingSecret`)        | `""`                                         |
 | `externalDatabase.existingSecretName`           | Fetch password for external PostgreSQL from a different `Secret`    | `""`                                         |
 | `externalDatabase.existingSecretKey`            | Key to fetch the password in the above `Secret`                     | `postgresql-password`                        |
+| `externalDatabase.sslMode`                      | PostgreSQL client SSL Mode setting                                  | `prefer`                                     |
+| `externalDatabase.connMaxAge`                   | The lifetime of a database connection, as an integer of seconds     | `300`                                        |
 | `redis.enabled`                                 | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
 | `webhooksRedis.database`                        | Redis database number used for NetBox webhooks queue                | `0`                                          |

@@ -103,6 +103,8 @@ data:
       SERVER: {{ .Values.email.server | quote }}
       PORT: {{ .Values.email.port | int }}
       USERNAME: {{ .Values.email.username | quote }}
+      USE_SSL: {{ toJson .Values.email.useSSL }}
+      USE_TLS: {{ toJson .Values.email.useTLS }}
       TIMEOUT: {{ .Values.email.timeout | int }}
       FROM_EMAIL: {{ toJson .Values.email.from }}
 
@@ -112,9 +114,12 @@ data:
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
+    LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
+    STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
+    STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
     METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
     NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
     NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}

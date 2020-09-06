@@ -82,6 +82,8 @@ email:
   port: 25
   username: ''
   password: ''
+  useSSL: false
+  useTLS: false
   timeout: 10  # seconds
   from: ''
 
@@ -116,6 +118,10 @@ logging: {}
 # NetBox (excluding secrets) but not make any changes.
 loginRequired: false
 
+# The length of time (in seconds) for which a user will remain logged into the
+# web UI before being prompted to re-authenticate.
+loginTimeout: 1209600  # 14 days
+
 # Setting this to True will display a "maintenance mode" banner at the top of
 # every page.
 maintenanceMode: false
@@ -125,6 +131,16 @@ maintenanceMode: false
 # maximum limit. Setting it to 0 or None will allow an API consumer to request
 # all objects by specifying "?limit=0".
 maxPageSize: 1000
+
+# By default uploaded media is stored in an attached volume. Using
+# Django-storages is also supported. Provide the class path of the storage
+# driver in storageBackend and any configuration options in storageConfig.
+storageBackend: null  # storages.backends.s3boto3.S3Boto3Storage
+storageConfig: {}
+  # AWS_ACCESS_KEY_ID: 'Key ID'
+  # AWS_SECRET_ACCESS_KEY: 'Secret'
+  # AWS_STORAGE_BUCKET_NAME: 'netbox'
+  # AWS_S3_REGION_NAME: 'eu-west-1'
 
 napalm:
   # Credentials that NetBox will use to access live devices.
@@ -230,6 +246,8 @@ externalDatabase:
   password: ""
   existingSecretName: ""
   existingSecretKey: postgresql-password
+
+  # The following settings apply when using the bundled PostgreSQL chart, too:
   sslMode: prefer
   connMaxAge: 300
 

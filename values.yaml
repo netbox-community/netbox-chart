@@ -34,6 +34,10 @@ allowedHosts:
 admins: []
   # - ['John Doe', 'jdoe@example.com']
 
+# URL schemes that are allowed within links in NetBox
+allowedUrlSchemes: [file, ftp, ftps, http, https, irc, mailto, sftp, ssh, tel,
+                    telnet, tftp, vnc, xmpp]
+
 banner:
   # Optionally display a persistent banner at the top and/or bottom of every
   # page. HTML is allowed.
@@ -94,6 +98,14 @@ exemptViewPermissions: []
 #  - dcim.region
 #  - ipam.prefix
 
+# HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
+# webhooks).
+httpProxies: null
+
+# IP addresses recognized as internal to the system. The debugging toolbar will
+# be available only to clients accessing NetBox from an internal IP.
+internalIPs: ['127.0.0.1', '::1']
+
 # Enable custom logging. Please see the Django documentation for detailed
 # guidance on configuring custom logs:
 # https://docs.djangoproject.com/en/1.11/topics/logging/
@@ -141,6 +153,11 @@ pluginsConfig: {}
 # When determining the primary IP address for a device, IPv6 is preferred over
 # IPv4 by default. Set this to True to prefer IPv4 instead.
 preferIPv4: false
+
+# Rack elevation size defaults, in pixels. For best results, the ratio of width
+# to height should be roughly 10:1.
+rackElevationDefaultUnitHeight: 22
+rackElevationDefaultUnitWidth: 220
 
 # Remote authentication support
 remoteAuth:

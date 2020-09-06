@@ -87,6 +87,7 @@ data:
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
 
     ADMINS: {{ toJson .Values.admins }}
+    ALLOWED_URL_SCHEMES: {{ toJson .Values.allowedUrlSchemes }}
     BANNER_TOP: {{ .Values.banner.top | quote }}
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
@@ -107,6 +108,8 @@ data:
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
+    HTTP_PROXIES: {{ toJson .Values.httpProxies }}
+    INTERNAL_IPS: {{ toJson .Values.internalIPs }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
@@ -120,6 +123,8 @@ data:
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
+    RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: {{ int .Values.rackElevationDefaultUnitHeight }}
+    RACK_ELEVATION_DEFAULT_UNIT_WIDTH: {{ int .Values.rackElevationDefaultUnitWidth }}
     REMOTE_AUTH_ENABLED: {{ toJson .Values.remoteAuth.enabled }}
     REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
     REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}

@@ -70,6 +70,7 @@ The following table lists the configurable parameters for this chart and their d
 | `skipStartupScripts`                            | Skip [netbox-docker startup scripts]                                | `true`                                       |
 | `allowedHosts`                                  | List of valid FQDNs for this NetBox instance                        | `["*"]`                                      |
 | `admins`                                        | List of admins to email about critical errors                       | `[]`                                         |
+| `allowedUrlSchemes`                             | URL schemes that are allowed within links in NetBox                 | *see `values.yaml`*                          |
 | `banner.top`                                    | Banner text to display at the top of every page                     | `""`                                         |
 | `banner.bottom`                                 | Banner text to display at the bottom of every page                  | `""`                                         |
 | `banner.login`                                  | Banner text to display on the login page                            | `""`                                         |
@@ -88,6 +89,8 @@ The following table lists the configurable parameters for this chart and their d
 | `email.from`                                    | Sender address for emails sent by NetBox                            | `""`                                         |
 | `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
 | `exemptViewPermissions`                         | A list of models to exempt from the enforcement of view permissions | `[]`                                         |
+| `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
+| `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
@@ -100,6 +103,8 @@ The following table lists the configurable parameters for this chart and their d
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
 | `preferIPv4`                                    | Prefer devices' IPv4 address when determining their primary address | `false`                                      |
+| `rackElevationDefaultUnitHeight`                | Rack elevation default height in pixels                             | `22`                                         |
+| `rackElevationDefaultUnitWidth`                 | Rack elevation default width in pixels                              | `220`                                        |
 | `remoteAuth.enabled`                            | Enable remote authentication support                                | `false`                                      |
 | `remoteAuth.backend`                            | Remote authentication backend class                                 | `utilities.auth_backends.RemoteUserBackend`  |
 | `remoteAuth.header`                             | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |

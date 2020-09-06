@@ -162,11 +162,11 @@ rackElevationDefaultUnitWidth: 220
 # Remote authentication support
 remoteAuth:
   enabled: false
-  backend: utilities.auth_backends.RemoteUserBackend
+  backend: netbox.authentication.RemoteUserBackend
   header: HTTP_REMOTE_USER
   autoCreateUser: true
   defaultGroups: []
-  defaultPermissions: []
+  defaultPermissions: {}
 
 releaseCheck:
   # This determines how often the GitHub API is called to check the latest

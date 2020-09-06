@@ -106,11 +106,11 @@ The following table lists the configurable parameters for this chart and their d
 | `rackElevationDefaultUnitHeight`                | Rack elevation default height in pixels                             | `22`                                         |
 | `rackElevationDefaultUnitWidth`                 | Rack elevation default width in pixels                              | `220`                                        |
 | `remoteAuth.enabled`                            | Enable remote authentication support                                | `false`                                      |
-| `remoteAuth.backend`                            | Remote authentication backend class                                 | `utilities.auth_backends.RemoteUserBackend`  |
+| `remoteAuth.backend`                            | Remote authentication backend class                                 | `netbox.authentication.RemoteUserBackend`    |
 | `remoteAuth.header`                             | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
 | `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `true`                                       |
 | `remoteAuth.defaultGroups`                      | A list of groups to assign to newly created users                   | `[]`                                         |
-| `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `[]`                                         |
+| `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
 | `releaseCheck.timeout`                          | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |

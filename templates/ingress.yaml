@@ -37,10 +37,7 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: http
           {{- else }}
-          - path: {{ .path }}
-            backend:
-              serviceName: {{ .serviceName | default $fullName }}
-              servicePort: {{ .servicePort | default "http" }}
+          - {{ . | toYaml | indent 12 | trim }}
           {{- end }}
           {{- end }}
     {{- end }}

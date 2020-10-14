@@ -388,7 +388,7 @@ ingress:
         # Or you can let the template to set it for you.
         # Both rules can be combined.
         # NB: You may also want to set the basePath above
-        - path: /
+        - /
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

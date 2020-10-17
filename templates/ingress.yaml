@@ -31,10 +31,14 @@ spec:
       http:
         paths:
           {{- range .paths }}
+          {{- if kindIs "string" . }}
           - path: {{ . }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
+          {{- else }}
+          - {{ . | toYaml | indent 12 | trim }}
+          {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}

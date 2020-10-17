@@ -379,16 +379,20 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
-        # You can manually specify the service name and service port if required.
-        # (For exemple if you're using AWS ALB ingress controller and want to set up automatic SSL redirect (https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/tasks/ssl_redirect/#redirect-traffic-from-http-to-https))
+        # You can manually specify the service name and service port if
+        # required. This could be useful if for exemple you are using the AWS
+        # ALB Ingress Controller and want to set up automatic SSL redirect.
+        # https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/tasks/ssl_redirect/#redirect-traffic-from-http-to-https
         # - path: /*
-        #  serviceName: ssl-redirect
-        #  servicePort: use-annotation
-        
-        # Or you can let the template to set it for you.
-        # Both rules can be combined.
+        #   backend:
+        #     serviceName: ssl-redirect
+        #     servicePort: use-annotation
+        #
+        # Or you can let the template set it for you.
+        # Both types of rule can be combined.
         # NB: You may also want to set the basePath above
         - /
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "netbox.fullname" . }}-reports
+  name: {{ printf "%s-reports" (include "netbox.fullname" .) }}
   labels:
 {{ include "netbox.labels" . | indent 4 }}
 spec:
@@ -17,5 +17,8 @@ spec:
 {{- else }}
   storageClassName: {{ .Values.reportsPersistence.storageClass | quote }}
 {{- end }}
+{{- end }}
+{{- if .Values.reportsPersistence.selector }}
+  selector: {{ toYaml .Values.reportsPersistence.selector | nindent 4 }}
 {{- end }}
 {{- end -}}

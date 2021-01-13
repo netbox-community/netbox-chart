@@ -18,4 +18,7 @@ spec:
   storageClassName: {{ .Values.persistence.storageClass | quote }}
 {{- end }}
 {{- end }}
+{{- if .Values.persistence.selector }}
+  selector: {{ toYaml .Values.persistence.selector | nindent 4 }}
+{{- end }}
 {{- end -}}

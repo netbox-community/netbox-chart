@@ -211,6 +211,7 @@ The following table lists the configurable parameters for this chart and their d
 | `extraVolumes`                                  | Additional volumes to reference in pods                             | `[]`                                         |
 | `extraContainers`                               | Additional sidecar containers to be added to pods                   | `[]`                                         |
 | `extraInitContainers`                           | Additional init containers to run before starting main containers   | `[]`                                         |
+| `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
 
 [netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers

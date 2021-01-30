@@ -173,12 +173,14 @@ The following table lists the configurable parameters for this chart and their d
 | `persistence.existingClaim`                     | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |
 | `persistence.subPath`                           | Mount a sub-path of the volume into the container, not the root     | `""`                                         |
 | `persistence.storageClass`                      | Set the storage class of the PVC (use `-` to disable provisioning)  | `""`                                         |
+| `persistence.selector`                          | Set the selector for PVs, if desired                                | `{}`                                         |
 | `persistence.accessMode`                        | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `persistence.size`                              | Size of persistent volume to request                                | `1Gi`                                        |
 | `reportsPersistence.enabled`                    | Enable storage persistence for NetBox reports                       | `false`                                      |
 | `reportsPersistence.existingClaim`              | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |
 | `reportsPersistence.subPath`                    | Mount a sub-path of the volume into the container, not the root     | `""`                                         |
 | `reportsPersistence.storageClass`               | Set the storage class of the PVC (use `-` to disable provisioning)  | `""`                                         |
+| `reportsPersistence.selector`                   | Set the selector for PVs, if desired                                | `{}`                                         |
 | `reportsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `reportsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
 | `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |

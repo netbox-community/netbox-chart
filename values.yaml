@@ -318,6 +318,11 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   storageClass: ""
+  ## Persistent Volume Selector
+  ## if enabled, define any Selectors for choosing existing Persistent Volumes here
+  # selector:
+  #   matchLabel:
+  #     netbox-storage: media
   accessMode: ReadWriteOnce
   ##
   ## Persistant storage size request
@@ -339,6 +344,11 @@ reportsPersistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   storageClass: ""
+  ## Persistent Volume Selector
+  ## if enabled, define any Selectors for choosing existing Persistent Volumes here
+  # selector:
+  #   matchLabel:
+  #     netbox-storage: reports
   accessMode: ReadWriteOnce
   ##
   ## Persistant storage size request

@@ -13,7 +13,7 @@ $ helm install netbox bootc/netbox
 ## Prerequisites
 
 - This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
-- This chart works with NetBox 2.7.11+
+- This chart works with NetBox 2.10.4+
 - Recent versions of Helm 3 are supported
 
 ## Installing the Chart
@@ -40,8 +40,9 @@ $ helm delete my-release
 
 ### From 2.x to 3.x
 
+* NetBox 2.10.4 or above is required
 * Kubernetes 1.14 or above is required
-* Helm v3 is now required
+* Helm v3 or above is now required
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x
 * The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x
 
@@ -201,11 +202,11 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
-| `nginx.image.repository`                        | NGINX container image repository for proxy and static file serving  | `nginx`                                      |
-| `nginx.image.tag`                               | NGINX container image tag                                           | `1.16.0-alpine`                              |
-| `nginx.image.pullPolicy`                        | NGINX container image pull policy                                   | `IfNotPresent`                               |
-| `nginx.resources`                               | Configure resource requests or limits for NGINX                     | `{}`                                         |
-| `nginx.securityContext`                         | Security context for NGINX sidecar containers                       | *see values.yaml*                            |
+| `init.image.repository`                         | Init container image repository                                     | `busybox`                                    |
+| `init.image.tag`                                | Init container image tag                                            | `1.32.1`                                     |
+| `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |
+| `init.resources`                                | Configure resource requests or limits for init container            | `{}`                                         |
+| `init.securityContext`                          | Security context for init container                                 | *see `values.yaml`*                          |
 | `autoscaling.enabled`                           | Whether to enable the HorizontalPodAutoscaler                       | `false`                                      |
 | `autoscaling.minReplicas`                       | Minimum number of replicas when autoscaling is enabled              | `1`                                          |
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |

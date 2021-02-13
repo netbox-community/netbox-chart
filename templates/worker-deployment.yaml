@@ -45,8 +45,8 @@ spec:
             {{- toYaml .Values.worker.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           command:
-            - python3
-            - manage.py
+            - /opt/netbox/venv/bin/python
+            - /opt/netbox/netbox/manage.py
             - rqworker
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:

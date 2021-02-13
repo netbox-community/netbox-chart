@@ -37,6 +37,20 @@ spec:
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-dirs
+          image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+          imagePullPolicy: {{ .Values.init.image.pullPolicy }}
+          command: [/bin/sh, -c, mkdir -p /opt/unit/state /opt/unit/tmp]
+          {{- if .Values.init.resources }}
+          resources:
+            {{- toYaml .Values.init.resources | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.init.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: optunit
+              mountPath: /opt/unit
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -54,13 +68,13 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
-            - name: netbox
-              containerPort: 8001
+            - name: http
+              containerPort: 8080
               protocol: TCP
           readinessProbe:
             httpGet:
               path: /{{ .Values.basePath }}login/
-              port: netbox
+              port: http
               {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
               httpHeaders:
                 - name: Host
@@ -87,8 +101,8 @@ spec:
               mountPath: /opt/netbox/netbox/reports
               subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
             {{- end }}
-            - name: static
-              mountPath: /opt/netbox/netbox/static
+            - name: optunit
+              mountPath: /opt/unit
             {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
             - name: db-secret
               mountPath: /run/secrets/database
@@ -125,36 +139,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
-        - name: nginx
-          securityContext:
-            {{- toYaml .Values.nginx.securityContext | nindent 12 }}
-          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
-          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
-          command: [nginx, -g, 'daemon off;']
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /{{ .Values.basePath }}
-              port: http
-          volumeMounts:
-            - name: config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-              readOnly: true
-            - name: static
-              mountPath: /opt/netbox/netbox/static
-              readOnly: true
-            - name: nginx-cache
-              mountPath: /var/cache/nginx
-            - name: nginx-run
-              mountPath: /run
-          {{- if .Values.nginx.resources }}
-          resources:
-            {{- toYaml .Values.nginx.resources | nindent 12 }}
-          {{- end }}
         {{- with .Values.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -176,9 +160,7 @@ spec:
         - name: netbox-tmp
           emptyDir:
             medium: Memory
-        - name: nginx-cache
-          emptyDir: {}
-        - name: nginx-run
+        - name: optunit
           emptyDir:
             medium: Memory
         - name: media
@@ -193,8 +175,6 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
         {{- end }}
-        - name: static
-          emptyDir: {}
         {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
         - name: db-secret
           secret:

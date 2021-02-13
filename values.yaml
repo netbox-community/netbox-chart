@@ -420,10 +420,10 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-nginx:
+init:
   image:
-    repository: nginx
-    tag: 1.18.0-alpine
+    repository: busybox
+    tag: 1.32.1
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -434,7 +434,7 @@ nginx:
         - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
-    runAsUser: 101
+    runAsUser: 1000
     runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
 
 autoscaling:

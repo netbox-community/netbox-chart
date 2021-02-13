@@ -5,15 +5,19 @@ stages:
 
 lint:
   stage: test
-  image: gcr.io/kubernetes-helm/tiller:v2.16.1
+  image:
+    name: alpine/helm:latest
+    entrypoint: [""]
   script:
-    - /helm init --client-only
-    - /helm dep up
-    - /helm lint .
+    - helm version
+    - helm dependency update
+    - helm lint --strict
 
 release-chart:
   stage: release
-  image: tigercomputing/cloud-tools:latest
+  image:
+    name: curlimages/curl:latest
+    entrypoint: [""]
   script:
     - >-
       curl -X POST -F token=${CHARTS_TRIGGER_TOKEN} -F ref=master

@@ -192,11 +192,6 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
-| `nginx.image.repository`                        | NGINX container image repository for proxy and static file serving  | `nginx`                                      |
-| `nginx.image.tag`                               | NGINX container image tag                                           | `1.16.0-alpine`                              |
-| `nginx.image.pullPolicy`                        | NGINX container image pull policy                                   | `IfNotPresent`                               |
-| `nginx.resources`                               | Configure resource requests or limits for NGINX                     | `{}`                                         |
-| `nginx.securityContext`                         | Security context for NGINX sidecar containers                       | *see values.yaml*                            |
 | `autoscaling.enabled`                           | Whether to enable the HorizontalPodAutoscaler                       | `false`                                      |
 | `autoscaling.minReplicas`                       | Minimum number of replicas when autoscaling is enabled              | `1`                                          |
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |

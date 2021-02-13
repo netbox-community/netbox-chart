@@ -410,23 +410,6 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-nginx:
-  image:
-    repository: nginx
-    tag: 1.18.0-alpine
-    pullPolicy: IfNotPresent
-
-  resources: {}
-
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 101
-    runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
-
 autoscaling:
   enabled: false
   minReplicas: 1

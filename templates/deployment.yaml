@@ -53,7 +53,7 @@ spec:
             {{- end }}
           ports:
             - name: netbox
-              containerPort: 8001
+              containerPort: 8080
               protocol: TCP
           readinessProbe:
             httpGet:
@@ -80,13 +80,13 @@ spec:
             - name: media
               mountPath: /opt/netbox/netbox/media
               subPath: {{ .Values.persistence.subPath | default "" | quote }}
+            - name: nginx-unit
+              mountPath: /opt/unit
             {{- if .Values.reportsPersistence.enabled }}
             - name: reports
               mountPath: /opt/netbox/netbox/reports
               subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
             {{- end }}
-            - name: static
-              mountPath: /opt/netbox/netbox/static
             {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
             - name: db-secret
               mountPath: /run/secrets/database
@@ -123,36 +123,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
-        - name: nginx
-          securityContext:
-            {{- toYaml .Values.nginx.securityContext | nindent 12 }}
-          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
-          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
-          command: [nginx, -g, 'daemon off;']
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /{{ .Values.basePath }}
-              port: http
-          volumeMounts:
-            - name: config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-              readOnly: true
-            - name: static
-              mountPath: /opt/netbox/netbox/static
-              readOnly: true
-            - name: nginx-cache
-              mountPath: /var/cache/nginx
-            - name: nginx-run
-              mountPath: /run
-          {{- if .Values.nginx.resources }}
-          resources:
-            {{- toYaml .Values.nginx.resources | nindent 12 }}
-          {{- end }}
         {{- with .Values.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -174,25 +144,20 @@ spec:
         - name: netbox-tmp
           emptyDir:
             medium: Memory
-        - name: nginx-cache
-          emptyDir: {}
-        - name: nginx-run
-          emptyDir:
-            medium: Memory
         - name: media
-        {{- if .Values.persistence.enabled }}
+          {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
-        {{- else }}
+          {{- else }}
           emptyDir: {}
-        {{- end }}
+          {{- end }}
+        - name: nginx-unit
+          emptyDir: {}
         {{- if .Values.reportsPersistence.enabled }}
         - name: reports
           persistentVolumeClaim:
             claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
         {{- end }}
-        - name: static
-          emptyDir: {}
         {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
         - name: db-secret
           secret:

@@ -12,9 +12,9 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: netbox
       protocol: TCP
-      name: http
+      name: netbox
   selector:
     {{- include "netbox.selectorLabels" . | nindent 4 }}
   {{- with .Values.service.loadBalancerSourceRanges }}

@@ -35,7 +35,7 @@ spec:
           - path: {{ . }}
             backend:
               serviceName: {{ $fullName }}
-              servicePort: http
+              servicePort: netbox
           {{- else }}
           - {{ . | toYaml | indent 12 | trim }}
           {{- end }}

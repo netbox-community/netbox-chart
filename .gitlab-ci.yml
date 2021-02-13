@@ -3,7 +3,7 @@ stages:
   - test
   - release
 
-lint:
+helm-lint:
   stage: test
   image:
     name: alpine/helm:latest
@@ -12,6 +12,13 @@ lint:
     - helm version
     - helm dependency update
     - helm lint --strict
+
+yamllint:
+  stage: test
+  image: pipelinecomponents/yamllint:latest
+  script:
+    - yamllint --version
+    - yamllint --strict .
 
 release-chart:
   stage: release

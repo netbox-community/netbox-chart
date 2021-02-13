@@ -1,0 +1,15 @@
+---
+extends: default
+
+rules:
+  comments-indentation: disable
+  document-start: disable
+  line-length: disable
+
+  indentation:
+    indent-sequences: consistent
+
+ignore: |
+  /templates/
+
+# vim: ts=2 sw=2 et sts=2 ft=yaml

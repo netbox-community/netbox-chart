@@ -178,39 +178,3 @@ data:
     SHORT_TIME_FORMAT: {{ .Values.shortTimeFormat | quote }}
     DATETIME_FORMAT: {{ .Values.dateTimeFormat | quote }}
     SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
-
-  nginx.conf: |
-    worker_processes 3;
-
-    error_log /dev/stderr info;
-
-    events {
-      worker_connections 1024;
-    }
-
-    http {
-      include              /etc/nginx/mime.types;
-      default_type         application/octet-stream;
-      sendfile             on;
-      tcp_nopush           on;
-      keepalive_timeout    65;
-      gzip                 on;
-      server_tokens        off;
-      client_max_body_size 10M;
-
-      server {
-        listen      8000;
-        access_log  off;
-
-        location /{{ .Values.basePath }}static/ {
-          alias /opt/netbox/netbox/static/;
-        }
-
-        location /{{ .Values.basePath }} {
-          proxy_pass http://localhost:8001;
-          proxy_set_header X-Forwarded-Host $http_host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-Proto $scheme;
-        }
-      }
-    }

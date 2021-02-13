@@ -7,14 +7,14 @@ data center infrastructure management (DCIM) tool.
 
 ```shell
 $ helm repo add bootc https://charts.boo.tc
-$ helm install bootc/netbox
+$ helm install netbox bootc/netbox
 ```
 
 ## Prerequisites
 
-- This chart has only been tested on Kubernetes 1.12+, but should work on older versions
+- This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
 - This chart works with NetBox 2.7.11+
-- Recent versions of Helm 2 or 3 are supported
+- Recent versions of Helm 3 are supported
 
 ## Installing the Chart
 
@@ -22,7 +22,7 @@ To install the chart with the release name `my-release` and default configuratio
 
 ```shell
 $ helm repo add bootc https://charts.boo.tc
-$ helm install --name my-release bootc/netbox
+$ helm install my-release bootc/netbox
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
@@ -37,6 +37,13 @@ $ helm delete my-release
 ```
 
 ## Upgrading
+
+### From 2.x to 3.x
+
+* Kubernetes 1.14 or above is required
+* Helm v3 is now required
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x
 
 ### From 1.x to 2.x
 

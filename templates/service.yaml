@@ -17,6 +17,7 @@ spec:
       name: http
   selector:
     {{- include "netbox.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: netbox
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{- toYaml . | nindent 4 }}

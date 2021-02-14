@@ -7,7 +7,10 @@ data center infrastructure management (DCIM) tool.
 
 ```shell
 $ helm repo add bootc https://charts.boo.tc
-$ helm install netbox bootc/netbox
+$ helm install netbox \
+  --set postgresql.postgresqlPostgresPassword=[password1] \
+  --set postgresql.postgresqlPassword=[password2] \
+  bootc/netbox
 ```
 
 ## Prerequisites
@@ -22,7 +25,10 @@ To install the chart with the release name `my-release` and default configuratio
 
 ```shell
 $ helm repo add bootc https://charts.boo.tc
-$ helm install my-release bootc/netbox
+$ helm install my-release \
+  --set postgresql.postgresqlPostgresPassword=[password1] \
+  --set postgresql.postgresqlPassword=[password2] \
+  bootc/netbox
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
@@ -37,6 +43,15 @@ $ helm delete my-release
 ```
 
 ## Upgrading
+
+### Bundled PostgreSQL
+
+When upgrading or changing settings and using the bundled Bitnami PostgreSQL
+sub-chart, you **must** provide the `postgresql.postgresqlPassword` at minimum.
+Ideally you should also upply the `postgresql.postgresqlPostgresPassword` and,
+if using replication, the `postgresql.replication.password`. Please see the
+[upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
+for further information.
 
 ### From 2.x to 3.x
 

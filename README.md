@@ -154,22 +154,22 @@ The following table lists the configurable parameters for this chart and their d
 | `redis.enabled`                                 | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
 | `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
-| `tasksRedis.timeout`                            | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
 | `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
 | `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
 | `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
 | `tasksRedis.sentinelService`                    | Sentinel master service name                                        | `"netbox-redis"`                             |
+| `tasksRedis.sentinelTimeout`                    | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
 | `tasksRedis.password`                           | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `tasksRedis.existingSecretName`                 | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
-| `cachingRedis.timeout`                          | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
 | `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
 | `cachingRedis.host`                             | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `cachingRedis.port`                             | Port number for external Redis                                      | `6379`                                       |
 | `cachingRedis.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
 | `cachingRedis.sentinelService`                  | Sentinel master service name                                        | `"netbox-redis"`                             |
+| `cachingRedis.sentinelTimeout`                  | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
 | `cachingRedis.password`                         | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `cachingRedis.existingSecretName`               | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `cachingRedis.existingSecretKey`                | Key to fetch the password in the above `Secret`                     | `redis-password`                             |

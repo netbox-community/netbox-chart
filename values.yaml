@@ -198,6 +198,9 @@ releaseCheck:
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 metricsEnabled: false
 
+# Maximum execution time for background tasks, in seconds.
+rqDefaultTimeout: 300  # 5 mins
+
 # Time zone (default: UTC)
 timeZone: UTC
 
@@ -259,7 +262,6 @@ redis:
 
 tasksRedis:
   database: 0
-  timeout: 300
   ssl: false
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -269,13 +271,13 @@ tasksRedis:
   sentinels: []
   #  - mysentinel:26379
   sentinelService: netbox-redis
+  sentinelTimeout: 300
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password
 
 cachingRedis:
   database: 1
-  timeout: 300
   ssl: false
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -285,6 +287,7 @@ cachingRedis:
   sentinels: []
   #  - mysentinel:26379
   sentinelService: netbox-redis
+  sentinelTimeout: 300
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password

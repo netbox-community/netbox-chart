@@ -147,12 +147,12 @@ data:
         {{- else if .Values.tasksRedis.sentinels -}}
         SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.tasksRedis.sentinelTimeout | int }}
         {{- else -}}
         HOST: {{ .Values.tasksRedis.host | quote }}
         PORT: {{ .Values.tasksRedis.port | int}}
         {{- end }}
         DATABASE: {{ int .Values.tasksRedis.database }}
-        DEFAULT_TIMEOUT: {{ int .Values.tasksRedis.timeout }}
         SSL: {{ toJson .Values.tasksRedis.ssl }}
       caching:
         {{ if .Values.redis.enabled -}}
@@ -161,15 +161,16 @@ data:
         {{- else if .Values.cachingRedis.sentinels -}}
         SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.cachingRedis.sentinelTimeout | int }}
         {{- else -}}
         HOST: {{ .Values.cachingRedis.host | quote }}
         PORT: {{ .Values.cachingRedis.port | int}}
         {{- end }}
         DATABASE: {{ int .Values.cachingRedis.database }}
-        DEFAULT_TIMEOUT: {{ int .Values.cachingRedis.timeout }}
         SSL: {{ toJson .Values.cachingRedis.ssl }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
+    RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}

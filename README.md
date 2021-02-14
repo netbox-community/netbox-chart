@@ -43,8 +43,10 @@ $ helm delete my-release
 * NetBox 2.10.4 or above is required
 * Kubernetes 1.14 or above is required
 * Helm v3 or above is now required
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x
+* The `netbox` Deployment selectors are changed, so the Deployment **must** be deleted on upgrades
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled Redis
+* The NGINX container is removed, on account of upstream's migration from Gunicorn to NGINX Unit
 * The `webhooksRedis` configuration key in `values.yaml` has been renamed to `tasksRedis` to match the upstream name
 * The `redis_password` key in the Secret has been renamed to `redis_tasks_password`
 

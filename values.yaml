@@ -103,6 +103,8 @@ exemptViewPermissions: []
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
 # webhooks).
 httpProxies: null
+  # http: http://10.10.1.10:3128
+  # https: http://10.10.1.10:1080
 
 # IP addresses recognized as internal to the system. The debugging toolbar will
 # be available only to clients accessing NetBox from an internal IP.
@@ -141,6 +143,9 @@ storageConfig: {}
   # AWS_SECRET_ACCESS_KEY: 'Secret'
   # AWS_STORAGE_BUCKET_NAME: 'netbox'
   # AWS_S3_REGION_NAME: 'eu-west-1'
+
+# Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
+metricsEnabled: false
 
 napalm:
   # Credentials that NetBox will use to access live devices.
@@ -194,9 +199,6 @@ releaseCheck:
   # check for release in the official NetBox repository.
   url: null
   # url: https://api.github.com/repos/netbox-community/netbox/releases
-
-# Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
-metricsEnabled: false
 
 # Maximum execution time for background tasks, in seconds.
 rqDefaultTimeout: 300  # 5 mins

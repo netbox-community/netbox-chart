@@ -110,6 +110,7 @@ The following table lists the configurable parameters for this chart and their d
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
+| `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `napalm.username`                               | Username used by the NAPALM library to access network devices       | `""`                                         |
 | `napalm.password`                               | Password used by the NAPALM library (see also `existingSecret`)     | `""`                                         |
 | `napalm.timeout`                                | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
@@ -128,7 +129,6 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
 | `releaseCheck.timeout`                          | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
-| `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |

@@ -38,13 +38,15 @@ $ helm delete my-release
 
 ## Upgrading
 
-### From 2.x to 3.x
+### From 2.x to 3.x
 
 * NetBox 2.10.4 or above is required
 * Kubernetes 1.14 or above is required
 * Helm v3 or above is now required
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x
 * The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x
+* The `webhooksRedis` configuration key in `values.yaml` has been renamed to `tasksRedis` to match the upstream name
+* The `redis_password` key in the Secret has been renamed to `redis_tasks_password`
 
 ### From 1.x to 2.x
 
@@ -151,16 +153,16 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.connMaxAge`                   | The lifetime of a database connection, as an integer of seconds     | `300`                                        |
 | `redis.enabled`                                 | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
-| `webhooksRedis.database`                        | Redis database number used for NetBox webhooks queue                | `0`                                          |
-| `webhooksRedis.timeout`                         | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
-| `webhooksRedis.ssl`                             | Enable SSL when connecting to Redis                                 | `false`                                      |
-| `webhooksRedis.host`                            | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
-| `webhooksRedis.port`                            | Port number for external Redis                                      | `6379`                                       |
-| `webhooksRedis.sentinels`                       | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
-| `webhooksRedis.sentinelService`                 | Sentinel master service name                                        | `"netbox-redis"`                             |
-| `webhooksRedis.password`                        | Password for external Redis (see also `existingSecret`)             | `""`                                         |
-| `webhooksRedis.existingSecretName`              | Fetch password for external Redis from a different `Secret`         | `""`                                         |
-| `webhooksRedis.existingSecretKey`               | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
+| `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
+| `tasksRedis.timeout`                            | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
+| `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
+| `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
+| `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
+| `tasksRedis.sentinelService`                    | Sentinel master service name                                        | `"netbox-redis"`                             |
+| `tasksRedis.password`                           | Password for external Redis (see also `existingSecret`)             | `""`                                         |
+| `tasksRedis.existingSecretName`                 | Fetch password for external Redis from a different `Secret`         | `""`                                         |
+| `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
 | `cachingRedis.timeout`                          | Redis connection timeout, in seconds                                | `300` (5 minutes)                            |
 | `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
@@ -243,7 +245,7 @@ this, the `Secret` must contain the following keys:
 | `db_password`          | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
 | `email_password`       | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
 | `napalm_password`      | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
-| `redis_password`       | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `webhooksRedis.existingSecretName` is unset         |
+| `redis_tasks_password` | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset            |
 | `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
 | `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
 

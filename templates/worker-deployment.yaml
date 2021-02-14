@@ -86,9 +86,9 @@ spec:
               mountPath: /run/secrets/redis
               readOnly: true
             {{- else }}
-            {{- if .Values.webhooksRedis.existingSecretName }}
-            - name: redis-webhooks-secret
-              mountPath: /run/secrets/redis_webhooks
+            {{- if .Values.tasksRedis.existingSecretName }}
+            - name: redis-tasks-secret
+              mountPath: /run/secrets/redis_tasks
               readOnly: true
             {{- end }}
             {{- if .Values.cachingRedis.existingSecretName }}
@@ -151,10 +151,10 @@ spec:
           secret:
             secretName: {{ include "netbox.redis.fullname" . | quote }}
         {{- else }}
-        {{- if .Values.webhooksRedis.existingSecretName }}
-        - name: redis-webhooks-secret
+        {{- if .Values.tasksRedis.existingSecretName }}
+        - name: redis-tasks-secret
           secret:
-            secretName: {{ .Values.webhooksRedis.existingSecretName | quote }}
+            secretName: {{ .Values.tasksRedis.existingSecretName | quote }}
         {{- end }}
         {{- if .Values.cachingRedis.existingSecretName }}
         - name: redis-caching-secret

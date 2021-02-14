@@ -37,10 +37,10 @@ data:
       {{- if .Values.redis.enabled -}}
       'redis', 'redis-password'
       {{- else -}}
-      {{- if .Values.webhooksRedis.existingSecretName -}}
-      'redis_webhooks', {{ .Values.webhooksRedis.existingSecretKey | squote }}
+      {{- if .Values.tasksRedis.existingSecretName -}}
+      'redis_tasks', {{ .Values.tasksRedis.existingSecretKey | squote }}
       {{- else -}}
-      'netbox', 'redis_password'
+      'netbox', 'redis_tasks_password'
       {{- end -}}
       {{- end -}})
     REDIS['caching']['PASSWORD'] = _load_secret(
@@ -58,7 +58,7 @@ data:
     # Post-process certain values
     CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r
                                    in CORS_ORIGIN_REGEX_WHITELIST]
-    {{- if and (not .Values.redis.enabled) .Values.webhooksRedis.sentinels }}
+    {{- if and (not .Values.redis.enabled) .Values.tasksRedis.sentinels }}
     REDIS['tasks']['SENTINELS'] = [tuple(x.split(r":")) for x
                                    in REDIS['tasks']['SENTINELS']]
     {{- end }}
@@ -144,16 +144,16 @@ data:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.redisPort | int }}
-        {{- else if .Values.webhooksRedis.sentinels -}}
-        SENTINELS: {{ toJson .Values.webhooksRedis.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.webhooksRedis.sentinelService | quote }}
+        {{- else if .Values.tasksRedis.sentinels -}}
+        SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
+        SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
         {{- else -}}
-        HOST: {{ .Values.webhooksRedis.host | quote }}
-        PORT: {{ .Values.webhooksRedis.port | int}}
+        HOST: {{ .Values.tasksRedis.host | quote }}
+        PORT: {{ .Values.tasksRedis.port | int}}
         {{- end }}
-        DATABASE: {{ int .Values.webhooksRedis.database }}
-        DEFAULT_TIMEOUT: {{ int .Values.webhooksRedis.timeout }}
-        SSL: {{ toJson .Values.webhooksRedis.ssl }}
+        DATABASE: {{ int .Values.tasksRedis.database }}
+        DEFAULT_TIMEOUT: {{ int .Values.tasksRedis.timeout }}
+        SSL: {{ toJson .Values.tasksRedis.ssl }}
       caching:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}

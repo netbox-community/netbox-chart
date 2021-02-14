@@ -220,8 +220,8 @@ secretKey: ""
 #     externalDatabase.existingSecretName is blank)
 # - email_password: SMTP user password
 # - napalm_password: NAPALM user password
-# - redis_password: Redis password for webhooks Redis instance (if
-#     redis.enabled is false and webhooksRedis.existingSecretName is blank)
+# - redis_tasks_password: Redis password for tasks Redis instance (if
+#     redis.enabled is false and tasksRedis.existingSecretName is blank)
 # - redis_cache_password: Redis password for caching Redis instance (if
 #     redis.enabled is false and cachingRedis.existingSecretName is blank)
 # - secret_key: session encryption token (50+ random characters)
@@ -254,10 +254,10 @@ externalDatabase:
 redis:
   ## Deploy Redis using bundled chart
   # To use an external Redis instance, set this to false and configure the
-  # settings under *both* webhooksRedis *and* cachingRedis
+  # settings under *both* tasksRedis *and* cachingRedis
   enabled: true
 
-webhooksRedis:
+tasksRedis:
   database: 0
   timeout: 300
   ssl: false

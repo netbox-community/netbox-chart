@@ -179,3 +179,67 @@ data:
     SHORT_TIME_FORMAT: {{ .Values.shortTimeFormat | quote }}
     DATETIME_FORMAT: {{ .Values.dateTimeFormat | quote }}
     SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
+
+  {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+  ldap_config.py: |
+    import yaml
+    import ldap
+    from django_auth_ldap.config import LDAPSearch
+    from importlib import import_module
+    def _load_yaml():
+      with open('/run/config/netbox/ldap.yaml', 'r') as f:
+        config = yaml.safe_load(f)
+      globals().update(config)
+    def _load_secret(name, key):
+      path = "/run/secrets/{name}/{key}".format(name=name, key=key)
+      with open(path, 'r') as f:
+        return f.read()
+    # Import and return the group type based on string name
+    def _import_group_type(group_type_name):
+        mod = import_module('django_auth_ldap.config')
+        try:
+            return getattr(mod, group_type_name)()
+        except:
+            return None
+    _load_yaml()
+    AUTH_LDAP_BIND_PASSWORD = _load_secret('netbox', 'ldap_bind_password')
+    # The following may be needed if you are binding to Active Directory.
+    AUTH_LDAP_CONNECTION_OPTIONS = {
+        ldap.OPT_REFERRALS: 0
+    }
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(AUTH_LDAP_USER_SEARCH_BASEDN,
+                                      ldap.SCOPE_SUBTREE,
+                                      "(" + AUTH_LDAP_USER_SEARCH_ATTR + "=%(user)s)")
+    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_SEARCH_BASEDN, ldap.SCOPE_SUBTREE,
+                                  "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")")
+    AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
+    # Define special user types using groups. Exercise great caution when assigning superuser status.
+    AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+        "is_active": AUTH_LDAP_REQUIRE_GROUP,
+        "is_staff": {{ .Values.remoteAuth.ldap.isAdminDn | quote }},
+        "is_superuser": {{ .Values.remoteAuth.ldap.isSuperUserDn | quote }}
+    }
+    # Populate the Django user from the LDAP directory.
+    AUTH_LDAP_USER_ATTR_MAP = {
+        "first_name": {{ .Values.remoteAuth.ldap.attrFirstName | quote }},
+        "last_name": {{ .Values.remoteAuth.ldap.attrLastName | quote }},
+        "email": {{ .Values.remoteAuth.ldap.attrMail | quote }}
+    }
+
+  ldap.yaml: |
+    AUTH_LDAP_SERVER_URI: {{ .Values.remoteAuth.ldap.serverUri | quote }}
+    AUTH_LDAP_BIND_DN: {{ .Values.remoteAuth.ldap.bindDn | quote }}
+    AUTH_LDAP_START_TLS: {{ toJson .Values.remoteAuth.ldap.startTls }}
+    LDAP_IGNORE_CERT_ERRORS: {{ toJson .Values.remoteAuth.ldap.ignoreCertErrors }}
+    AUTH_LDAP_USER_DN_TEMPLATE: {{ default nil .Values.remoteAuth.ldap.userDnTemplate }}
+    AUTH_LDAP_USER_SEARCH_BASEDN: {{ .Values.remoteAuth.ldap.userSearchBaseDn | quote }}
+    AUTH_LDAP_USER_SEARCH_ATTR: {{ .Values.remoteAuth.ldap.userSearchAttr | quote }}
+    AUTH_LDAP_GROUP_SEARCH_BASEDN: {{ .Values.remoteAuth.ldap.groupSearchBaseDn | quote }}
+    AUTH_LDAP_GROUP_SEARCH_CLASS: {{ .Values.remoteAuth.ldap.groupSearchClass | quote }}
+    AUTH_LDAP_GROUP_TYPE: {{ .Values.remoteAuth.ldap.groupType | quote }}
+    AUTH_LDAP_REQUIRE_GROUP: {{ .Values.remoteAuth.ldap.requireGroupDn | quote }}
+    AUTH_LDAP_FIND_GROUP_PERMS: {{ toJson .Values.remoteAuth.ldap.findGroupPerms }}
+    AUTH_LDAP_MIRROR_GROUPS: {{ toJson .Values.remoteAuth.ldap.mirrorGroups }}
+    AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson .Values.remoteAuth.ldap.mirrorGroupsExcept }}
+    AUTH_LDAP_CACHE_TIMEOUT: {{ int .Values.remoteAuth.ldap.cacheTimeout }}
+  {{- end }}

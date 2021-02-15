@@ -188,6 +188,31 @@ remoteAuth:
   autoCreateUser: true
   defaultGroups: []
   defaultPermissions: {}
+  # the following options are specific for backend "netbox.authentication.LDAPBackend"
+  # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
+  # see https://django-auth-ldap.readthedocs.io
+  # ldap:
+  #   serverUri: 'ldap://domain.com'
+  #   startTls: true
+  #   ignoreCertErrors: false
+  #   bindDn: 'CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=domain,dc=com'
+  #   bindPassword: 'TopSecretPassword'
+  #   userDnTemplate: null
+  #   userSearchBaseDn: 'OU=Users,OU=MyCompany,DC=domain,dc=com'
+  #   userSearchAttr: 'sAMAccountName'
+  #   groupSearchBaseDn: 'OU=Groups,OU=MyCompany,DC=domain,dc=com'
+  #   groupSearchClass: 'group'
+  #   groupType: 'GroupOfNamesType'
+  #   requireGroupDn: ''
+  #   findGroupPerms: true
+  #   mirrorGroups: true
+  #   mirrorGroupsExcept: null
+  #   cacheTimeout: 3600
+  #   isAdminDn: 'CN=Network Configuration Operators,CN=Builtin,DC=domain,dc=com'
+  #   isSuperUserDn: 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
+  #   attrFirstName: 'givenName'
+  #   attrLastName: 'sn'
+  #   attrMail: 'mail'
 
 releaseCheck:
   # This determines how often the GitHub API is called to check the latest

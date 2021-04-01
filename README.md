@@ -177,7 +177,7 @@ The following table lists the configurable parameters for this chart and their d
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
 | `postgresql.postgresqlUsername`                 | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
-| `postgresql.postgresqlDatabase`                 | Databaes to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
+| `postgresql.postgresqlDatabase`                 | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
 | `postgresql.*`                                  | Values under this key are passed to the bundled PostgreSQL chart    | n/a                                          |
 | `externalDatabase.host`                         | PostgreSQL host to use when `postgresql.enabled` is `false`         | `localhost`                                  |
 | `externalDatabase.port`                         | Port number for external PostgreSQL                                 | `5432`                                       |

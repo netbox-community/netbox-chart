@@ -128,6 +128,9 @@ loginTimeout: 1209600  # 14 days
 # every page.
 maintenanceMode: false
 
+# The URL to use when mapping physical addresses or GPS coordinates
+mapsUrl: 'https://maps.google.com/?q='
+
 # An API consumer can request an arbitrary number of objects by appending the
 # "limit" parameter to the URL (e.g. "?limit=1000"). This setting defines the
 # maximum limit. Setting it to 0 or None will allow an API consumer to request
@@ -290,6 +293,7 @@ redis:
 tasksRedis:
   database: 0
   ssl: false
+  insecureSkipTlsVerify: false
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.
@@ -306,6 +310,7 @@ tasksRedis:
 cachingRedis:
   database: 1
   ssl: false
+  insecureSkipTlsVerify: false
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.

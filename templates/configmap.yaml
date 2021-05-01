@@ -116,6 +116,7 @@ data:
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
+    MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
@@ -154,6 +155,7 @@ data:
         {{- end }}
         DATABASE: {{ int .Values.tasksRedis.database }}
         SSL: {{ toJson .Values.tasksRedis.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
       caching:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
@@ -168,6 +170,7 @@ data:
         {{- end }}
         DATABASE: {{ int .Values.cachingRedis.database }}
         SSL: {{ toJson .Values.cachingRedis.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.cachingRedis.insecureSkipTlsVerify }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}

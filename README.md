@@ -124,6 +124,7 @@ The following table lists the configurable parameters for this chart and their d
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
 | `loginTimeout`                                  | How often to re-authenticate users                                  | `1209600` (14 days)                          |
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
+| `mapsUrl`                                       | The URL to use when mapping physical addresses or GPS coordinates   | `https://maps.google.com/?q=`                |
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
@@ -192,6 +193,7 @@ The following table lists the configurable parameters for this chart and their d
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
 | `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
 | `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `tasksRedis.insecureSkipTlsVerify`              | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
 | `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
 | `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
@@ -202,6 +204,7 @@ The following table lists the configurable parameters for this chart and their d
 | `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
 | `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `cachingRedis.insecureSkipTlsVerify`            | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
 | `cachingRedis.host`                             | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `cachingRedis.port`                             | Port number for external Redis                                      | `6379`                                       |
 | `cachingRedis.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |

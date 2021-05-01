@@ -386,6 +386,8 @@ reportsPersistence:
 
 podAnnotations: {}
 
+podLabels: {}
+
 podSecurityContext:
   # fsGroup: 1000
   runAsNonRoot: true
@@ -521,6 +523,8 @@ worker:
   replicaCount: 1
 
   podAnnotations: {}
+
+  podLabels: {}
 
   podSecurityContext:
     # fsGroup: 1000

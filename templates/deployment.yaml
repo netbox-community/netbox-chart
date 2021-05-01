@@ -29,6 +29,9 @@ spec:
       labels:
         {{- include "netbox.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: netbox
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

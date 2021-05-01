@@ -231,6 +231,7 @@ The following table lists the configurable parameters for this chart and their d
 | `reportsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `reportsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
 | `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |
+| `podLabels`                                     | Additional labels for NetBox pods                                   | `{}`                                         |
 | `podSecurityContext`                            | Security context for NetBox pods                                    | *see `values.yaml`*                          |
 | `securityContext`                               | Security context for NetBox containers                              | *see `values.yaml`*                          |
 | `service.type`                                  | Type of `Service` resource to create                                | `ClusterIP`                                  |

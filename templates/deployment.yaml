@@ -160,12 +160,27 @@ spec:
           configMap:
             name: {{ include "netbox.fullname" . }}
         - name: secrets
-          secret:
-            {{- if .Values.existingSecret }}
-            secretName: {{ .Values.existingSecret | quote }}
-            {{- else }}
-            secretName: {{ include "netbox.fullname" . }}
-            {{- end }}
+          projected:
+            sources:
+              - secret:
+                  name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
+                  items:
+                    # Used by netbox-docker entry scripts
+                    - key: superuser_password
+                      path: superuser_password
+                    - key: superuser_api_token
+                      path: superuser_api_token
+                    # Used by our configuration
+                    - key: email_password
+                      path: email_password
+                    - key: napalm_password
+                      path: napalm_password
+                    - key: secret_key
+                      path: secret_key
+                    {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
+                    - key: ldap_bind_password
+                      path: ldap_bind_password
+                    {{- end }}
         - name: netbox-tmp
           emptyDir:
             medium: Memory

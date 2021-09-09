@@ -32,6 +32,7 @@ data:
       'netbox', 'db_password'
       {{- end -}}
       {{- end -}})
+    EMAIL['PASSWORD'] = _load_secret('netbox', 'email_password')
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
     REDIS['tasks']['PASSWORD'] = _load_secret(
       {{- if .Values.redis.enabled -}}

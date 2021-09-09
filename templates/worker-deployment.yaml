@@ -55,7 +55,7 @@ spec:
           env:
             - name: SKIP_STARTUP_SCRIPTS
               value: 'True'
-            {{- with .Values.extraEnvs }}
+            {{- with .Values.worker.extraEnvs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           volumeMounts:
@@ -129,12 +129,12 @@ spec:
           emptyDir:
             medium: Memory
         - name: media
-        {{- if .Values.persistence.enabled }}
+          {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
-        {{- else }}
+          {{- else }}
           emptyDir: {}
-        {{- end }}
+          {{- end }}
         {{- if .Values.reportsPersistence.enabled }}
         - name: reports
           persistentVolumeClaim:
@@ -165,7 +165,7 @@ spec:
             secretName: {{ .Values.cachingRedis.existingSecretName | quote }}
         {{- end }}
         {{- end }}
-        {{- with .Values.extraVolumes }}
+        {{- with .Values.worker.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.worker.nodeSelector }}

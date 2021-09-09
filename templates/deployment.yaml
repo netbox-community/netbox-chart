@@ -112,22 +112,6 @@ spec:
             {{- end }}
             - name: optunit
               mountPath: /opt/unit
-            {{- if .Values.redis.enabled }}
-            - name: redis-secret
-              mountPath: /run/secrets/redis
-              readOnly: true
-            {{- else }}
-            {{- if .Values.tasksRedis.existingSecretName }}
-            - name: redis-tasks-secret
-              mountPath: /run/secrets/redis_tasks
-              readOnly: true
-            {{- end }}
-            {{- if .Values.cachingRedis.existingSecretName }}
-            - name: redis-caching-secret
-              mountPath: /run/secrets/redis_caching
-              readOnly: true
-            {{- end }}
-            {{- end }}
             - name: secrets
               mountPath: /run/secrets/superuser_password
               subPath: superuser_password
@@ -181,6 +165,16 @@ spec:
                   items:
                     - key: {{ include "netbox.postgresql.secretKey" . | quote }}
                       path: db_password
+              - secret:
+                  name: {{ include "netbox.tasksRedis.secret" . | quote }}
+                  items:
+                    - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
+                      path: redis_tasks_password
+              - secret:
+                  name: {{ include "netbox.cacheRedis.secret" . | quote }}
+                  items:
+                    - key: {{ include "netbox.cacheRedis.secretKey" . | quote }}
+                      path: redis_cache_password
         - name: netbox-tmp
           emptyDir:
             medium: Memory
@@ -198,22 +192,6 @@ spec:
         - name: reports
           persistentVolumeClaim:
             claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
-        {{- end }}
-        {{- if .Values.redis.enabled }}
-        - name: redis-secret
-          secret:
-            secretName: {{ include "netbox.redis.fullname" . | quote }}
-        {{- else }}
-        {{- if .Values.tasksRedis.existingSecretName }}
-        - name: redis-tasks-secret
-          secret:
-            secretName: {{ .Values.tasksRedis.existingSecretName | quote }}
-        {{- end }}
-        {{- if .Values.cachingRedis.existingSecretName }}
-        - name: redis-caching-secret
-          secret:
-            secretName: {{ .Values.cachingRedis.existingSecretName | quote }}
-        {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}

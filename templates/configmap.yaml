@@ -25,26 +25,8 @@ data:
     DATABASE['PASSWORD'] = _load_secret('netbox', 'db_password')
     EMAIL['PASSWORD'] = _load_secret('netbox', 'email_password')
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['tasks']['PASSWORD'] = _load_secret(
-      {{- if .Values.redis.enabled -}}
-      'redis', 'redis-password'
-      {{- else -}}
-      {{- if .Values.tasksRedis.existingSecretName -}}
-      'redis_tasks', {{ .Values.tasksRedis.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'redis_tasks_password'
-      {{- end -}}
-      {{- end -}})
-    REDIS['caching']['PASSWORD'] = _load_secret(
-      {{- if .Values.redis.enabled -}}
-      'redis', 'redis-password'
-      {{- else -}}
-      {{- if .Values.cachingRedis.existingSecretName -}}
-      'redis_caching', {{ .Values.cachingRedis.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'redis_cache_password'
-      {{- end -}}
-      {{- end -}})
+    REDIS['tasks']['PASSWORD'] = _load_secret('netbox', 'redis_tasks_password')
+    REDIS['caching']['PASSWORD'] = _load_secret('netbox', 'redis_cache_password')
     SECRET_KEY = _load_secret('netbox', 'secret_key')
 
     # Post-process certain values

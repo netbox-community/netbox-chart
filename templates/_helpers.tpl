@@ -111,3 +111,55 @@ postgresql-password
 db_password
 {{- end -}}
 {{- end }}
+
+{{/*
+Name of the Secret that contains the Redis tasks password
+*/}}
+{{- define "netbox.tasksRedis.secret" -}}
+{{- if .Values.redis.enabled -}}
+{{ include "netbox.redis.fullname" . }}
+{{- else if .Values.tasksRedis.existingSecretName -}}
+{{ .Values.tasksRedis.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the Redis tasks password
+*/}}
+{{- define "netbox.tasksRedis.secretKey" -}}
+{{- if .Values.redis.enabled -}}
+redis-password
+{{- else if .Values.tasksRedis.existingSecretName -}}
+{{ .Values.tasksRedis.existingSecretKey }}
+{{- else -}}
+redis_tasks_password
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the Secret that contains the Redis cache password
+*/}}
+{{- define "netbox.cacheRedis.secret" -}}
+{{- if .Values.redis.enabled -}}
+{{ include "netbox.redis.fullname" . }}
+{{- else if .Values.cacheRedis.existingSecretName -}}
+{{ .Values.cacheRedis.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the Redis cache password
+*/}}
+{{- define "netbox.cacheRedis.secretKey" -}}
+{{- if .Values.redis.enabled -}}
+redis-password
+{{- else if .Values.cacheRedis.existingSecretName -}}
+{{ .Values.cacheRedis.existingSecretKey }}
+{{- else -}}
+redis_cache_password
+{{- end -}}
+{{- end }}

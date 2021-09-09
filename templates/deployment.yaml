@@ -112,11 +112,6 @@ spec:
             {{- end }}
             - name: optunit
               mountPath: /opt/unit
-            {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
-            - name: db-secret
-              mountPath: /run/secrets/database
-              readOnly: true
-            {{- end }}
             {{- if .Values.redis.enabled }}
             - name: redis-secret
               mountPath: /run/secrets/redis
@@ -181,6 +176,11 @@ spec:
                     - key: ldap_bind_password
                       path: ldap_bind_password
                     {{- end }}
+              - secret:
+                  name: {{ include "netbox.postgresql.secret" . | quote }}
+                  items:
+                    - key: {{ include "netbox.postgresql.secretKey" . | quote }}
+                      path: db_password
         - name: netbox-tmp
           emptyDir:
             medium: Memory
@@ -198,15 +198,6 @@ spec:
         - name: reports
           persistentVolumeClaim:
             claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
-        {{- end }}
-        {{- if or .Values.postgresql.enabled .Values.externalDatabase.existingSecretName }}
-        - name: db-secret
-          secret:
-            {{- if .Values.postgresql.enabled }}
-            secretName: {{ include "netbox.postgresql.fullname" . | quote }}
-            {{- else }}
-            secretName: {{ .Values.externalDatabase.existingSecretName | quote }}
-            {{- end }}
         {{- end }}
         {{- if .Values.redis.enabled }}
         - name: redis-secret

@@ -22,16 +22,7 @@ data:
 
     _load_yaml()
 
-    DATABASE['PASSWORD'] = _load_secret(
-      {{- if .Values.postgresql.enabled -}}
-      'database', 'postgresql-password'
-      {{- else -}}
-      {{- if .Values.externalDatabase.existingSecretName -}}
-      'database', {{ .Values.externalDatabase.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'db_password'
-      {{- end -}}
-      {{- end -}})
+    DATABASE['PASSWORD'] = _load_secret('netbox', 'db_password')
     EMAIL['PASSWORD'] = _load_secret('netbox', 'email_password')
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
     REDIS['tasks']['PASSWORD'] = _load_secret(

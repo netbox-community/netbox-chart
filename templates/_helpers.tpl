@@ -85,3 +85,29 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Name of the Secret that contains the PostgreSQL password
+*/}}
+{{- define "netbox.postgresql.secret" -}}
+{{- if .Values.postgresql.enabled -}}
+{{ include "netbox.postgresql.fullname" . }}
+{{- else if .Values.externalDatabase.existingSecretName -}}
+{{ .Values.externalDatabase.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the PostgreSQL password
+*/}}
+{{- define "netbox.postgresql.secretKey" -}}
+{{- if .Values.postgresql.enabled -}}
+postgresql-password
+{{- else if .Values.externalDatabase.existingSecretName -}}
+{{ .Values.externalDatabase.existingSecretKey }}
+{{- else -}}
+db_password
+{{- end -}}
+{{- end }}

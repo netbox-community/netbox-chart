@@ -10,6 +10,7 @@ $ helm repo add bootc https://charts.boo.tc
 $ helm install netbox \
   --set postgresql.postgresqlPostgresPassword=[password1] \
   --set postgresql.postgresqlPassword=[password2] \
+  --set redis.auth.password=[password3] \
   bootc/netbox
 ```
 
@@ -28,6 +29,7 @@ $ helm repo add bootc https://charts.boo.tc
 $ helm install my-release \
   --set postgresql.postgresqlPostgresPassword=[password1] \
   --set postgresql.postgresqlPassword=[password2] \
+  --set redis.auth.password=[password3] \
   bootc/netbox
 ```
 
@@ -52,6 +54,10 @@ Ideally you should also upply the `postgresql.postgresqlPostgresPassword` and,
 if using replication, the `postgresql.replication.password`. Please see the
 [upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
 for further information.
+
+### From 3.x to 4.x
+
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 12.x to 15.x; please read the upstream upgrade notes if you are using the bundled Redis
 
 ### From 2.x to 3.x
 

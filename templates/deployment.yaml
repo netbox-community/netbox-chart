@@ -4,6 +4,7 @@ metadata:
   name: {{ include "netbox.fullname" . }}
   labels:
     {{- include "netbox.labels" . | nindent 4 }}
+    app.kubernetes.io/component: netbox
 spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}

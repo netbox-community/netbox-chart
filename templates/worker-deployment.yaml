@@ -6,6 +6,7 @@ metadata:
   name: {{ include "netbox.fullname" . }}-worker
   labels:
     {{- include "netbox.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
 spec:
 {{- if not .Values.worker.autoscaling.enabled }}
   replicas: {{ .Values.worker.replicaCount }}

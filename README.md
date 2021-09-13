@@ -241,6 +241,7 @@ The following table lists the configurable parameters for this chart and their d
 | `service.port`                                  | Port number for the service                                         | `80`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
 | `ingress.enabled`                               | Create an `Ingress` resource for accessing NetBox                   | `false`                                      |
+| `ingress.className`                             | Use a named IngressClass                                            | `""`                                         |
 | `ingress.annotations`                           | Extra annotations to apply to the `Ingress` resource                | `{}`                                         |
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |

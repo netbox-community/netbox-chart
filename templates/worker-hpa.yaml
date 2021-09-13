@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "netbox.fullname" . }}-worker
   labels:
-    {{- include "netbox.worker.labels" . | nindent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

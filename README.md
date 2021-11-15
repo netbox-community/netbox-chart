@@ -144,6 +144,13 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `true`                                       |
 | `remoteAuth.defaultGroups`                      | A list of groups to assign to newly created users                   | `[]`                                         |
 | `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
+| `remoteAuth.groupSyncEnabled`                   | Sync remote user groups from an HTTP header set by a reverse proxy  | `false`                                      |
+| `remoteAuth.groupHeader`                        | The name of the HTTP header which conveys the groups to which the user belongs | `HTTP_REMOTE_USER_GROUP`          |
+| `remoteAuth.superuserGroups`                    | The list of groups that promote an remote User to Superuser on login| `[]`                                         |
+| `remoteAuth.superusers`                         | The list of users that get promoted to Superuser on login           | `[]`                                         |
+| `remoteAuth.staffGroups`                        | The list of groups that promote an remote User to Staff on login    | `[]`                                         |
+| `remoteAuth.staffUsers`                         | The list of users that get promoted to Staff on login               | `[]`                                         |
+| `remoteAuth.groupSeparator`                     | The Seperator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
 | `remoteAuth.ldap.serverUri`                     | see [django-auth-ldap](https://django-auth-ldap.readthedocs.io)     | `""`                                         |
 | `remoteAuth.ldap.startTls`                      | if StarTLS should be used                                           | *see values.yaml*                            |
 | `remoteAuth.ldap.ignoreCertErrors`              | if Certificate errors should be ignored                             | *see values.yaml*                            |

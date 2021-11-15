@@ -188,6 +188,14 @@ remoteAuth:
   autoCreateUser: true
   defaultGroups: []
   defaultPermissions: {}
+  groupSyncEnabled: false
+  groupHeader: HTTP_REMOTE_USER_GROUP
+  superuserGroups: []
+  superusers: []
+  staffGroups: []
+  staffUsers: []
+  groupSeparator: '|'
+
   # the following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io

@@ -521,6 +521,17 @@ extraInitContainers: []
 #    image: busybox
 #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
 
+
+# Configuration of Cron settings
+housekeeping:
+  enabled: true
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  restartPolicy: OnFailure
+  schedule: '0 0 * * *'
+  successfulJobsHistoryLimit: 5
+  suspend: false
+
 # Worker for Netbox
 # Only required for Netbox Jobs, e.g. Webhooks
 worker:

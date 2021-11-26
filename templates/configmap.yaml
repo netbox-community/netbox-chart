@@ -66,7 +66,6 @@ data:
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
     BASE_PATH: {{ .Values.basePath | quote }}
-    CACHE_TIMEOUT: {{ int .Values.cacheTimeout }}
     CHANGELOG_RETENTION: {{ int .Values.changelogRetention }}
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
@@ -111,7 +110,6 @@ data:
     REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
     REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}
     REMOTE_AUTH_DEFAULT_PERMISSIONS: {{ toJson .Values.remoteAuth.defaultPermissions }}
-    RELEASE_CHECK_TIMEOUT: {{ .Values.releaseCheck.timeout | int }}
     RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:

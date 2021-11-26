@@ -108,7 +108,6 @@ The following table lists the configurable parameters for this chart and their d
 | `banner.bottom`                                 | Banner text to display at the bottom of every page                  | `""`                                         |
 | `banner.login`                                  | Banner text to display on the login page                            | `""`                                         |
 | `basePath`                                      | Base URL path if accessing NetBox within a directory                | `""`                                         |
-| `cacheTimeout`                                  | Cached object time-to-live, in seconds                              | `900` (15 minutes)                           |
 | `changelogRetention`                            | Maximum number of days to retain logged changes (0 = forever)       | `90`                                         |
 | `cors.originAllowAll`                           | [CORS]: allow all origins                                           | `false`                                      |
 | `cors.originWhitelist`                          | [CORS]: list of origins authorised to make cross-site HTTP requests | `[]`                                         |
@@ -171,7 +170,6 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.ldap.attrFirstName`                 | first name attribute of users, "first_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `givenName` |
 | `remoteAuth.ldap.attrLastName`                  | last name attribute of users, "last_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `sn` |
 | `remoteAuth.ldap.attrMail`                      | mail attribute of users, "email_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `mail` |
-| `releaseCheck.timeout`                          | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |

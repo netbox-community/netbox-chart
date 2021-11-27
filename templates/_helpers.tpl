@@ -63,6 +63,9 @@ helm.sh/chart: {{ include "netbox.chart" . }}
 {{ include "netbox.selectorLabels" . }}
 app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*

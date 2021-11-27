@@ -3,6 +3,10 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "netbox.fullname" . }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "netbox.labels" . | nindent 4 }}
     app.kubernetes.io/component: netbox

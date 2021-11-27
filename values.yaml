@@ -403,6 +403,10 @@ reportsPersistence:
   ## Persistant storage size request
   size: 1Gi
 
+commonLabels: {}
+
+commonAnnotations: {}
+
 podAnnotations: {}
 
 podLabels: {}

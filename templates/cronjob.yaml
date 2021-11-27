@@ -7,6 +7,10 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ include "netbox.fullname" . }}-housekeeping
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
 {{ include "netbox.labels" . | indent 4 }}
 spec:

@@ -316,16 +316,22 @@ this, the `Secret` must contain the following keys:
 
 ## Using LDAP Authentication
 
-For using LDAP for authentication, specify the ldap-docker image tag of netbox, e.g. "v2.10.3-ldap".
+In order to enable LDAP authentication, please carry out the following steps:
 
-Configuration is done via Helm release values. `remoteAuth` should be enabled and configured for LDAP, e.g.:
+1. Set `image.tag` in your values to an image with LDAP support (e.g. `v3.0.11-ldap`)
+2. Configure the `remoteAuth` settings to enable the LDAP backend (see below)
+3. Make sure you set *all* of the `remoteAuth.ldap` settings shown in the `values.yaml` file
+
+For example:
 
 ```yaml
 remoteAuth:
   enabled: true
-  backend: 'netbox.authentication.LDAPBackend'
+  backend: netbox.authentication.LDAPBackend
   ldap:
-    # see Configuration variables
+    serverUri: 'ldap://domain.com'
+    startTls: true
+    # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
 
 ## License

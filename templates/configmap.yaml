@@ -83,9 +83,11 @@ data:
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
+    GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
     LOGGING: {{ toJson .Values.logging }}
+    LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
@@ -147,6 +149,7 @@ data:
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
+    SESSION_COOKIE_NAME: {{ .Values.sessionCookieName }}
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}
     SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}

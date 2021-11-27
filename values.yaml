@@ -66,6 +66,10 @@ cors:
   originRegexWhitelist: []
   #  - '^(https?://)?(\w+\.)?example\.com$'
 
+# Note: this is where the CUSTOM_VALIDATORS setting naturally fits in relation
+# to the upstream NetBox configuration, but the setting cannot be reflected in
+# YAML/JSON as it depends on creating instances of Python classes.
+
 # Set to True to enable server debugging. WARNING: Debugging introduces a
 # substantial performance penalty and may reveal sensitive information about
 # your installation. Only enable debugging while performing testing. Never
@@ -96,6 +100,9 @@ exemptViewPermissions: []
 #  - dcim.region
 #  - ipam.prefix
 
+# Enable the GraphQL API
+graphQlEnabled: true
+
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
 # webhooks).
 httpProxies: null
@@ -111,9 +118,13 @@ internalIPs: ['127.0.0.1', '::1']
 # https://docs.djangoproject.com/en/1.11/topics/logging/
 logging: {}
 
+# Automatically reset the lifetime of a valid session upon each authenticated
+# request. Enables users to remain authenticated to NetBox indefinitely.
+loginPersistence: false
+
 # Setting this to True will permit only authenticated users to access any part
 # of NetBox. By default, anonymous users are permitted to access most data in
-# NetBox (excluding secrets) but not make any changes.
+# NetBox but not make any changes.
 loginRequired: false
 
 # The length of time (in seconds) for which a user will remain logged into the
@@ -222,6 +233,9 @@ releaseCheck:
 
 # Maximum execution time for background tasks, in seconds.
 rqDefaultTimeout: 300  # 5 mins
+
+# The name to use for the session cookie.
+sessionCookieName: sessionid
 
 # Time zone (default: UTC)
 timeZone: UTC

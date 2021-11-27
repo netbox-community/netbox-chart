@@ -10,6 +10,7 @@ $ helm repo add bootc https://charts.boo.tc
 $ helm install netbox \
   --set postgresql.postgresqlPostgresPassword=[password1] \
   --set postgresql.postgresqlPassword=[password2] \
+  --set redis.auth.password=[password3] \
   bootc/netbox
 ```
 
@@ -28,6 +29,7 @@ $ helm repo add bootc https://charts.boo.tc
 $ helm install my-release \
   --set postgresql.postgresqlPostgresPassword=[password1] \
   --set postgresql.postgresqlPassword=[password2] \
+  --set redis.auth.password=[password3] \
   bootc/netbox
 ```
 
@@ -52,6 +54,10 @@ Ideally you should also upply the `postgresql.postgresqlPostgresPassword` and,
 if using replication, the `postgresql.replication.password`. Please see the
 [upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
 for further information.
+
+### From 3.x to 4.x
+
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 12.x to 15.x; please read the upstream upgrade notes if you are using the bundled Redis
 
 ### From 2.x to 3.x
 
@@ -102,7 +108,6 @@ The following table lists the configurable parameters for this chart and their d
 | `banner.bottom`                                 | Banner text to display at the bottom of every page                  | `""`                                         |
 | `banner.login`                                  | Banner text to display on the login page                            | `""`                                         |
 | `basePath`                                      | Base URL path if accessing NetBox within a directory                | `""`                                         |
-| `cacheTimeout`                                  | Cached object time-to-live, in seconds                              | `900` (15 minutes)                           |
 | `changelogRetention`                            | Maximum number of days to retain logged changes (0 = forever)       | `90`                                         |
 | `cors.originAllowAll`                           | [CORS]: allow all origins                                           | `false`                                      |
 | `cors.originWhitelist`                          | [CORS]: list of origins authorised to make cross-site HTTP requests | `[]`                                         |
@@ -118,12 +123,15 @@ The following table lists the configurable parameters for this chart and their d
 | `email.from`                                    | Sender address for emails sent by NetBox                            | `""`                                         |
 | `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
 | `exemptViewPermissions`                         | A list of models to exempt from the enforcement of view permissions | `[]`                                         |
+| `graphQlEnabled`                                | Enable the GraphQL API                                              | `true`                                       |
 | `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
+| `loginPersistence`                              | Enables users to remain authenticated to NetBox indefinitely        | `false`                                      |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
 | `loginTimeout`                                  | How often to re-authenticate users                                  | `1209600` (14 days)                          |
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
+| `mapsUrl`                                       | The URL to use when mapping physical addresses or GPS coordinates   | `https://maps.google.com/?q=`                |
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
@@ -171,8 +179,9 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.ldap.attrFirstName`                 | first name attribute of users, "first_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `givenName` |
 | `remoteAuth.ldap.attrLastName`                  | last name attribute of users, "last_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `sn` |
 | `remoteAuth.ldap.attrMail`                      | mail attribute of users, "email_name"-Attribute of [AUTH_LDAP_USER_ATTR_MAP](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-user-attr-map) | `mail` |
-| `releaseCheck.timeout`                          | How often NetBox queries GitHub for new releases, if enabled        | `86400`                                      |
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
+| `rqDefaultTimeout`                              | Maximum execution time for background tasks, in seconds             | `300` (5 minutes)                            |
+| `sessionCookieName`                             | The name to use for the session cookie                              | `"sessionid"`                                |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
@@ -199,6 +208,7 @@ The following table lists the configurable parameters for this chart and their d
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
 | `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
 | `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `tasksRedis.insecureSkipTlsVerify`              | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
 | `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
 | `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
@@ -209,6 +219,7 @@ The following table lists the configurable parameters for this chart and their d
 | `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
 | `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
+| `cachingRedis.insecureSkipTlsVerify`            | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
 | `cachingRedis.host`                             | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `cachingRedis.port`                             | Port number for external Redis                                      | `6379`                                       |
 | `cachingRedis.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
@@ -238,12 +249,14 @@ The following table lists the configurable parameters for this chart and their d
 | `reportsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `reportsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
 | `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |
+| `podLabels`                                     | Additional labels for NetBox pods                                   | `{}`                                         |
 | `podSecurityContext`                            | Security context for NetBox pods                                    | *see `values.yaml`*                          |
 | `securityContext`                               | Security context for NetBox containers                              | *see `values.yaml`*                          |
 | `service.type`                                  | Type of `Service` resource to create                                | `ClusterIP`                                  |
 | `service.port`                                  | Port number for the service                                         | `80`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
 | `ingress.enabled`                               | Create an `Ingress` resource for accessing NetBox                   | `false`                                      |
+| `ingress.className`                             | Use a named IngressClass                                            | `""`                                         |
 | `ingress.annotations`                           | Extra annotations to apply to the `Ingress` resource                | `{}`                                         |
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
@@ -268,9 +281,17 @@ The following table lists the configurable parameters for this chart and their d
 | `extraContainers`                               | Additional sidecar containers to be added to pods                   | `[]`                                         |
 | `extraInitContainers`                           | Additional init containers to run before starting main containers   | `[]`                                         |
 | `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
+| `housekeeping.enabled`                          | Whether the [Housekeeping][housekeeping] `CronJob` should be active | `true`                                       |
+| `housekeeping.concurrencyPolicy`                | ConcurrencyPolicy for the Housekeeping CronJob.                     | `Forbid`                                     |
+| `housekeeping.restartPolicy`                    | Restart Policy for the Housekeeping CronJob.                        | `OnFailure`                                  |
+| `housekeeping.failedJobsHistoryLimit`           | Number of failed jobs to keep in history                            | `5`                                          |
+| `housekeeping.successfulJobsHistoryLimit`       | Number of successful jobs to keep in history                        | `5`                                          |
+| `housekeeping.schedule`                         | Schedule for the CronJob in [Cron syntax][cron syntax].             | `0 0 * * *` (Midnight daily)                 |
 
 [netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers
+[housekeeping]: https://demo.netbox.dev/static/docs/administration/housekeeping/
+[cron syntax]: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-schedule-syntax
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install` or provide a YAML file containing the values for the above parameters:
 

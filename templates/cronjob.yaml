@@ -1,0 +1,159 @@
+{{- if .Values.housekeeping.enabled -}}
+{{- if semverCompare ">=1.21-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: batch/v1
+{{- else -}}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ include "netbox.fullname" . }}-housekeeping
+  labels:
+{{ include "netbox.labels" . | indent 4 }}
+spec:
+  concurrencyPolicy: {{ .Values.housekeeping.concurrencyPolicy }}
+  failedJobsHistoryLimit: {{ .Values.housekeeping.failedJobsHistoryLimit }}
+  schedule: {{ .Values.housekeeping.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.housekeeping.successfulJobsHistoryLimit }}
+  suspend: {{ .Values.housekeeping.suspend }}
+  jobTemplate:
+    metadata:
+      labels:
+{{ include "netbox.labels" . | indent 8 }}
+    spec:
+      template:
+        metadata:
+          labels:
+{{ include "netbox.labels" . | indent 12 }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "netbox.serviceAccountName" . }}
+          containers:
+            - name: {{ .Chart.Name }}-housekeeping
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - /opt/netbox/venv/bin/python
+                - /opt/netbox/netbox/manage.py
+                - housekeeping
+              {{- if .Values.resources }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              {{- end }}
+              volumeMounts:
+                - name: config
+                  mountPath: /etc/netbox/config/configuration.py
+                  subPath: configuration.py
+                  readOnly: true
+                {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+                - name: config
+                  mountPath: /etc/netbox/config/ldap/ldap_config.py
+                  subPath: ldap_config.py
+                  readOnly: true
+                {{- end }}
+                - name: config
+                  mountPath: /run/config/netbox
+                  readOnly: true
+                - name: secrets
+                  mountPath: /run/secrets/netbox
+                  readOnly: true
+                - name: netbox-tmp
+                  mountPath: /tmp
+                - name: media
+                  mountPath: /opt/netbox/netbox/media
+                  subPath: {{ .Values.persistence.subPath | default "" | quote }}
+                {{- if .Values.reportsPersistence.enabled }}
+                - name: reports
+                  mountPath: /opt/netbox/netbox/reports
+                  subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
+                {{- end }}
+                - name: optunit
+                  mountPath: /opt/unit
+                - name: secrets
+                  mountPath: /run/secrets/superuser_password
+                  subPath: superuser_password
+                  readOnly: true
+                - name: secrets
+                  mountPath: /run/secrets/superuser_api_token
+                  subPath: superuser_api_token
+                  readOnly: true
+                {{- with .Values.extraVolumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+          volumes:
+            - name: config
+              configMap:
+                name: {{ include "netbox.fullname" . }}
+            - name: secrets
+              projected:
+                sources:
+                  - secret:
+                      name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
+                      items:
+                        # Used by netbox-docker entry scripts
+                        - key: superuser_password
+                          path: superuser_password
+                        - key: superuser_api_token
+                          path: superuser_api_token
+                        # Used by our configuration
+                        - key: email_password
+                          path: email_password
+                        - key: napalm_password
+                          path: napalm_password
+                        - key: secret_key
+                          path: secret_key
+                        {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
+                        - key: ldap_bind_password
+                          path: ldap_bind_password
+                        {{- end }}
+                  - secret:
+                      name: {{ include "netbox.postgresql.secret" . | quote }}
+                      items:
+                        - key: {{ include "netbox.postgresql.secretKey" . | quote }}
+                          path: db_password
+                  - secret:
+                      name: {{ include "netbox.tasksRedis.secret" . | quote }}
+                      items:
+                        - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
+                          path: redis_tasks_password
+                  - secret:
+                      name: {{ include "netbox.cacheRedis.secret" . | quote }}
+                      items:
+                        - key: {{ include "netbox.cacheRedis.secretKey" . | quote }}
+                          path: redis_cache_password
+            - name: netbox-tmp
+              emptyDir:
+                medium: Memory
+            - name: optunit
+              emptyDir:
+                medium: Memory
+            - name: media
+              {{- if .Values.persistence.enabled }}
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
+              {{- else }}
+              emptyDir: {}
+              {{- end }}
+            {{- if .Values.reportsPersistence.enabled }}
+            - name: reports
+              persistentVolumeClaim:
+                claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+            {{- end }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: {{ .Values.housekeeping.restartPolicy }}
+{{- end -}}

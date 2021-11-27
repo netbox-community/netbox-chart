@@ -22,37 +22,11 @@ data:
 
     _load_yaml()
 
-    DATABASE['PASSWORD'] = _load_secret(
-      {{- if .Values.postgresql.enabled -}}
-      'database', 'postgresql-password'
-      {{- else -}}
-      {{- if .Values.externalDatabase.existingSecretName -}}
-      'database', {{ .Values.externalDatabase.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'db_password'
-      {{- end -}}
-      {{- end -}})
+    DATABASE['PASSWORD'] = _load_secret('netbox', 'db_password')
+    EMAIL['PASSWORD'] = _load_secret('netbox', 'email_password')
     NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['tasks']['PASSWORD'] = _load_secret(
-      {{- if .Values.redis.enabled -}}
-      'redis', 'redis-password'
-      {{- else -}}
-      {{- if .Values.tasksRedis.existingSecretName -}}
-      'redis_tasks', {{ .Values.tasksRedis.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'redis_tasks_password'
-      {{- end -}}
-      {{- end -}})
-    REDIS['caching']['PASSWORD'] = _load_secret(
-      {{- if .Values.redis.enabled -}}
-      'redis', 'redis-password'
-      {{- else -}}
-      {{- if .Values.cachingRedis.existingSecretName -}}
-      'redis_caching', {{ .Values.cachingRedis.existingSecretKey | squote }}
-      {{- else -}}
-      'netbox', 'redis_cache_password'
-      {{- end -}}
-      {{- end -}})
+    REDIS['tasks']['PASSWORD'] = _load_secret('netbox', 'redis_tasks_password')
+    REDIS['caching']['PASSWORD'] = _load_secret('netbox', 'redis_cache_password')
     SECRET_KEY = _load_secret('netbox', 'secret_key')
 
     # Post-process certain values
@@ -92,7 +66,6 @@ data:
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
     BASE_PATH: {{ .Values.basePath | quote }}
-    CACHE_TIMEOUT: {{ int .Values.cacheTimeout }}
     CHANGELOG_RETENTION: {{ int .Values.changelogRetention }}
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
@@ -110,12 +83,15 @@ data:
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
+    GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
     LOGGING: {{ toJson .Values.logging }}
+    LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
+    MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
@@ -143,14 +119,13 @@ data:
     REMOTE_AUTH_STAFF_GROUPS: {{ toJson .Values.remoteAuth.staffGroups }}
     REMOTE_AUTH_STAFF_USERS: {{ toJson .Values.remoteAuth.staffUsers }}
     REMOTE_AUTH_GROUP_SEPARATOR: {{ .Values.remoteAuth.groupSeparator | quote }}
-    RELEASE_CHECK_TIMEOUT: {{ .Values.releaseCheck.timeout | int }}
     RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:
       tasks:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-        PORT: {{ .Values.redis.redisPort | int }}
+        PORT: {{ .Values.redis.master.service.port | int }}
         {{- else if .Values.tasksRedis.sentinels -}}
         SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
@@ -161,10 +136,11 @@ data:
         {{- end }}
         DATABASE: {{ int .Values.tasksRedis.database }}
         SSL: {{ toJson .Values.tasksRedis.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
       caching:
         {{ if .Values.redis.enabled -}}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-        PORT: {{ .Values.redis.redisPort | int }}
+        PORT: {{ .Values.redis.master.service.port | int }}
         {{- else if .Values.cachingRedis.sentinels -}}
         SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}
@@ -175,10 +151,12 @@ data:
         {{- end }}
         DATABASE: {{ int .Values.cachingRedis.database }}
         SSL: {{ toJson .Values.cachingRedis.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.cachingRedis.insecureSkipTlsVerify }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
+    SESSION_COOKIE_NAME: {{ .Values.sessionCookieName }}
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}
     SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}

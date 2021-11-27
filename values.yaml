@@ -52,10 +52,6 @@ banner:
 # Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
 basePath: ''
 
-# Cache timeout in seconds. Set to 0 to disable caching. Defaults to 900
-# (15 minutes).
-cacheTimeout: 900
-
 # Maximum number of days to retain logged changes. Set to 0 to retain change
 # logs indefinitely. (Default: 90)
 changelogRetention: 90
@@ -218,10 +214,6 @@ remoteAuth:
   #   attrMail: 'mail'
 
 releaseCheck:
-  # This determines how often the GitHub API is called to check the latest
-  # release of NetBox. Must be at least 1 hour.
-  timeout: 86400
-
   # This repository is used to check whether there is a new release of NetBox
   # available. Set to null to disable the version check or use the URL below to
   # check for release in the official NetBox repository.

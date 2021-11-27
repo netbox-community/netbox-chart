@@ -112,6 +112,13 @@ data:
     REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
     REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}
     REMOTE_AUTH_DEFAULT_PERMISSIONS: {{ toJson .Values.remoteAuth.defaultPermissions }}
+    REMOTE_AUTH_GROUP_SYNC_ENABLED: {{ toJson .Values.remoteAuth.groupSyncEnabled }}
+    REMOTE_AUTH_GROUP_HEADER: {{ .Values.remoteAuth.groupHeader | quote }}
+    REMOTE_AUTH_SUPERUSER_GROUPS: {{ toJson .Values.remoteAuth.superuserGroups }}
+    REMOTE_AUTH_SUPERUSERS: {{ toJson .Values.remoteAuth.superusers }}
+    REMOTE_AUTH_STAFF_GROUPS: {{ toJson .Values.remoteAuth.staffGroups }}
+    REMOTE_AUTH_STAFF_USERS: {{ toJson .Values.remoteAuth.staffUsers }}
+    REMOTE_AUTH_GROUP_SEPARATOR: {{ .Values.remoteAuth.groupSeparator | quote }}
     RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:

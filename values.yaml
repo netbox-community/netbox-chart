@@ -554,6 +554,73 @@ housekeeping:
   successfulJobsHistoryLimit: 5
   suspend: false
 
+  podAnnotations: {}
+
+  podLabels: {}
+
+  podSecurityContext:
+    fsGroup: 1000
+    runAsNonRoot: true
+    # runAsUser: 1000
+    # runAsGroup: 1000
+
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  ## Additional environment variables to set
+  extraEnvs: []
+  #  - name: FOO
+  #    valueFrom:
+  #      secretKeyRef:
+  #        key: FOO
+  #        name: secret-resource
+
+  ## Additional volumes to mount
+  extraVolumeMounts: []
+  #  - name: extra-volume
+  #    mountPath: /run/secrets/super-secret
+  #    readOnly: true
+
+  extraVolumes: []
+  #  - name: extra-volume
+  #    secret:
+  #      secretName: super-secret
+
+  ## Additional containers to be added to the NetBox pod.
+  extraContainers: []
+  #  - name: my-sidecar
+  #    image: nginx:latest
+
+  ## Containers which are run before the NetBox containers are started.
+  extraInitContainers: []
+  #  - name: init-myservice
+  #    image: busybox
+  #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+
 # Worker for Netbox
 # Only required for Netbox Jobs, e.g. Webhooks
 worker:

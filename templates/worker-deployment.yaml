@@ -47,6 +47,10 @@ spec:
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
+      {{- with .Values.worker.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-worker
           securityContext:
@@ -57,17 +61,21 @@ spec:
             - /opt/netbox/netbox/manage.py
             - rqworker
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.worker.extraEnvs }}
           env:
-            - name: SKIP_STARTUP_SCRIPTS
-              value: 'True'
-            {{- with .Values.worker.extraEnvs }}
             {{- toYaml . | nindent 12 }}
-            {{- end }}
+          {{- end }}
           volumeMounts:
             - name: config
               mountPath: /etc/netbox/config/configuration.py
               subPath: configuration.py
               readOnly: true
+            {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+            - name: config
+              mountPath: /etc/netbox/config/ldap/ldap_config.py
+              subPath: ldap_config.py
+              readOnly: true
+            {{ end -}}
             - name: config
               mountPath: /run/config/netbox
               readOnly: true
@@ -94,10 +102,6 @@ spec:
         {{- with .Values.worker.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.worker.extraInitContainers }}
-      initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       volumes:
         - name: config
           configMap:

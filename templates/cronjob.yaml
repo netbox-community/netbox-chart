@@ -12,7 +12,8 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-{{ include "netbox.labels" . | indent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
+    app.kubernetes.io/component: housekeeping
 spec:
   concurrencyPolicy: {{ .Values.housekeeping.concurrencyPolicy }}
   failedJobsHistoryLimit: {{ .Values.housekeeping.failedJobsHistoryLimit }}
@@ -22,31 +23,45 @@ spec:
   jobTemplate:
     metadata:
       labels:
-{{ include "netbox.labels" . | indent 8 }}
+        {{- include "netbox.labels" . | nindent 8 }}
     spec:
       template:
         metadata:
+          {{- with .Values.housekeeping.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           labels:
-{{ include "netbox.labels" . | indent 12 }}
+            {{- include "netbox.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: housekeeping
+            {{- with .Values.housekeeping.podLabels }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.housekeeping.podSecurityContext | nindent 12 }}
+          {{- with .Values.housekeeping.extraInitContainers }}
+          initContainers:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           containers:
             - name: {{ .Chart.Name }}-housekeeping
               securityContext:
-                {{- toYaml .Values.securityContext | nindent 16 }}
+                {{- toYaml .Values.housekeeping.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-              imagePullPolicy: {{ .Values.image.pullPolicy }}
               command:
                 - /opt/netbox/venv/bin/python
                 - /opt/netbox/netbox/manage.py
                 - housekeeping
-              {{- if .Values.resources }}
-              resources:
-                {{- toYaml .Values.resources | nindent 16 }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              {{- with .Values.housekeeping.extraEnvs }}
+              env:
+                {{- toYaml . | nindent 16 }}
               {{- end }}
               volumeMounts:
                 - name: config
@@ -58,7 +73,7 @@ spec:
                   mountPath: /etc/netbox/config/ldap/ldap_config.py
                   subPath: ldap_config.py
                   readOnly: true
-                {{- end }}
+                {{ end -}}
                 - name: config
                   mountPath: /run/config/netbox
                   readOnly: true
@@ -75,19 +90,16 @@ spec:
                   mountPath: /opt/netbox/netbox/reports
                   subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
                 {{- end }}
-                - name: optunit
-                  mountPath: /opt/unit
-                - name: secrets
-                  mountPath: /run/secrets/superuser_password
-                  subPath: superuser_password
-                  readOnly: true
-                - name: secrets
-                  mountPath: /run/secrets/superuser_api_token
-                  subPath: superuser_api_token
-                  readOnly: true
-                {{- with .Values.extraVolumeMounts }}
+                {{- with .Values.housekeeping.extraVolumeMounts }}
                 {{- toYaml . | nindent 16 }}
                 {{- end }}
+              {{- if .Values.housekeeping.resources }}
+              resources:
+                {{- toYaml .Values.housekeeping.resources | nindent 16 }}
+              {{- end }}
+            {{- with .Values.housekeeping.extraContainers }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumes:
             - name: config
               configMap:
@@ -98,11 +110,6 @@ spec:
                   - secret:
                       name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
                       items:
-                        # Used by netbox-docker entry scripts
-                        - key: superuser_password
-                          path: superuser_password
-                        - key: superuser_api_token
-                          path: superuser_api_token
                         # Used by our configuration
                         - key: email_password
                           path: email_password
@@ -132,9 +139,6 @@ spec:
             - name: netbox-tmp
               emptyDir:
                 medium: Memory
-            - name: optunit
-              emptyDir:
-                medium: Memory
             - name: media
               {{- if .Values.persistence.enabled }}
               persistentVolumeClaim:
@@ -147,18 +151,18 @@ spec:
               persistentVolumeClaim:
                 claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
             {{- end }}
-            {{- with .Values.extraVolumes }}
+            {{- with .Values.housekeeping.extraVolumes }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- with .Values.nodeSelector }}
+          {{- with .Values.housekeeping.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 8 }}
           {{- end }}
-          {{- with .Values.affinity }}
+          {{- with .Values.housekeeping.affinity }}
           affinity:
             {{- toYaml . | nindent 8 }}
           {{- end }}
-          {{- with .Values.tolerations }}
+          {{- with .Values.housekeeping.tolerations }}
           tolerations:
             {{- toYaml . | nindent 8 }}
           {{- end }}

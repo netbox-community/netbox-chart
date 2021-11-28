@@ -59,6 +59,9 @@ spec:
           volumeMounts:
             - name: optunit
               mountPath: /opt/unit
+        {{- with .Values.extraInitContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -98,7 +101,7 @@ spec:
               mountPath: /etc/netbox/config/ldap/ldap_config.py
               subPath: ldap_config.py
               readOnly: true
-            {{- end }}
+            {{ end -}}
             - name: config
               mountPath: /run/config/netbox
               readOnly: true
@@ -135,10 +138,6 @@ spec:
         {{- with .Values.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.extraInitContainers }}
-      initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       volumes:
         - name: config
           configMap:

@@ -283,10 +283,24 @@ The following table lists the configurable parameters for this chart and their d
 | `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
 | `housekeeping.enabled`                          | Whether the [Housekeeping][housekeeping] `CronJob` should be active | `true`                                       |
 | `housekeeping.concurrencyPolicy`                | ConcurrencyPolicy for the Housekeeping CronJob.                     | `Forbid`                                     |
-| `housekeeping.restartPolicy`                    | Restart Policy for the Housekeeping CronJob.                        | `OnFailure`                                  |
 | `housekeeping.failedJobsHistoryLimit`           | Number of failed jobs to keep in history                            | `5`                                          |
-| `housekeeping.successfulJobsHistoryLimit`       | Number of successful jobs to keep in history                        | `5`                                          |
+| `housekeeping.restartPolicy`                    | Restart Policy for the Housekeeping CronJob.                        | `OnFailure`                                  |
 | `housekeeping.schedule`                         | Schedule for the CronJob in [Cron syntax][cron syntax].             | `0 0 * * *` (Midnight daily)                 |
+| `housekeeping.successfulJobsHistoryLimit`       | Number of successful jobs to keep in history                        | `5`                                          |
+| `housekeeping.suspend`                          | Whether to suspend the CronJob                                      | `false`                                      |
+| `housekeeping.podAnnotations`                   | Additional annotations for housekeeping CronJob pods                | `{}`                                         |
+| `housekeeping.podLabels`                        | Additional labels for housekeeping CronJob pods                     | `{}`                                         |
+| `housekeeping.podSecurityContext`               | Security context for housekeeping CronJob pods                      | *see `values.yaml`*                          |
+| `housekeeping.securityContext`                  | Security context for housekeeping CronJob containers                | *see `values.yaml`*                          |
+| `housekeeping.resources`                        | Configure resource requests or limits for housekeeping CronJob      | `{}`                                         |
+| `housekeeping.nodeSelector`                     | Node labels for housekeeping CronJob pod assignment                 | `{}`                                         |
+| `housekeeping.tolerations`                      | Toleration labels for housekeeping CronJob pod assignment           | `[]`                                         |
+| `housekeeping.affinity`                         | Affinity settings for housekeeping CronJob pod assignment           | `{}`                                         |
+| `housekeeping.extraEnvs`                        | Additional environment variables to set in housekeeping CronJob     | `[]`                                         |
+| `housekeeping.extraVolumeMounts`                | Additional volumes to mount in the housekeeping CronJob             | `[]`                                         |
+| `housekeeping.extraVolumes`                     | Additional volumes to reference in housekeeping CronJob pods        | `[]`                                         |
+| `housekeeping.extraContainers`                  | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
+| `housekeeping.extraInitContainers`              | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
 
 [netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers

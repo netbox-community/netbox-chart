@@ -331,8 +331,14 @@ remoteAuth:
   ldap:
     serverUri: 'ldap://domain.com'
     startTls: true
+    ignoreCertErrors: true
+    bindDn: ''
+    bindPassword: ''
     # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
+
+Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
+to an empty string as in the example above.
 
 ## License
 

@@ -17,7 +17,7 @@ $ helm install netbox \
 ## Prerequisites
 
 - This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
-- This chart works with NetBox 2.10.4+
+- This chart works with NetBox 3.0.0+ (3.0.11+ recommended)
 - Recent versions of Helm 3 are supported
 
 ## Installing the Chart
@@ -57,7 +57,9 @@ for further information.
 
 ### From 3.x to 4.x
 
+* NetBox 3.0.0 or above is required
 * The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 12.x to 15.x; please read the upstream upgrade notes if you are using the bundled Redis
+* The `cacheTimeout` and `releaseCheck.timeout` settings were removed
 
 ### From 2.x to 3.x
 

@@ -164,3 +164,36 @@ redis-password
 redis_cache_password
 {{- end -}}
 {{- end }}
+
+{{/*
+Volumes that need to be mounted for .Values.extraConfig entries
+*/}}
+{{- define "netbox.extraConfig.volumes" -}}
+{{- range $index, $config := .Values.extraConfig -}}
+- name: extra-config-{{ $index }}
+  {{- if $config.values }}
+  configMap:
+    name: {{ include "netbox.fullname" $ }}
+    items:
+      - key: extra-{{ $index }}.yaml
+        path: extra-{{ $index }}.yaml
+  {{- else if $config.configMap }}
+  configMap:
+    {{- toYaml $config.configMap | nindent 4 }}
+  {{- else if $config.secret }}
+  secret:
+    {{- toYaml $config.secret | nindent 4 }}
+  {{- end }}
+{{ end -}}
+{{- end }}
+
+{{/*
+Volume mounts for .Values.extraConfig entries
+*/}}
+{{- define "netbox.extraConfig.volumeMounts" -}}
+{{- range $index, $config := .Values.extraConfig -}}
+- name: extra-config-{{ $index }}
+  mountPath: /run/config/extra/{{ $index }}
+  readOnly: true
+{{ end -}}
+{{- end }}

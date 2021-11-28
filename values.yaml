@@ -261,6 +261,23 @@ shortTimeFormat: 'H:i:s'
 dateTimeFormat: 'N j, Y g:i a'
 shortDateTimeFormat: 'Y-m-d H:i'
 
+## Extra configuration settings
+# You can pass additional YAML files to be loaded into NetBox's configuration.
+# These can be passed as arbitrary configuration values set in the chart, or
+# you can load arbitrary *.yaml keys from ConfigMaps and Secrets.
+extraConfig: []
+  # - values:
+  #     EXTRA_SETTING_ONE: example
+  #     ANOTHER_SETTING: foobar
+  # - configMap: # pod.spec.volumes.configMap
+  #     name: netbox-extra
+  #     items: []
+  #     optional: false
+  # - secret: # same as pod.spec.volumes.secret
+  #     secretName: netbox-extra
+  #     items: []
+  #     optional: false
+
 # If provided, this should be a 50+ character string of random characters. It
 # will be randomly generated if left blank.
 secretKey: ""

@@ -13,11 +13,19 @@ data:
     import re
     import yaml
 
-    def _load_yaml():
-      with open('/run/config/netbox/netbox.yaml', 'r') as f:
-        config = yaml.safe_load(f)
+    from pathlib import Path
 
-      globals().update(config)
+    def _load_yaml():
+      extraConfigBase = Path('/run/config/extra')
+      configFiles = [Path('/run/config/netbox/netbox.yaml')]
+
+      configFiles.extend(sorted(extraConfigBase.glob('*/*.yaml')))
+
+      for configFile in configFiles:
+        with open(configFile, 'r') as f:
+          config = yaml.safe_load(f)
+
+        globals().update(config)
 
     def _load_secret(name, key):
       path = "/run/secrets/{name}/{key}".format(name=name, key=key)
@@ -169,7 +177,8 @@ data:
     DATETIME_FORMAT: {{ .Values.dateTimeFormat | quote }}
     SHORT_DATETIME_FORMAT: {{ .Values.shortDateTimeFormat | quote }}
 
-  {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+  {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
+
   ldap_config.py: |
     import yaml
     import ldap
@@ -232,3 +241,9 @@ data:
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson .Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int .Values.remoteAuth.ldap.cacheTimeout }}
   {{- end }}
+  {{ range $index, $config := .Values.extraConfig -}}
+  {{- if $config.values }}
+  extra-{{ $index }}.yaml: |
+    {{- toYaml $config.values | nindent 4 }}
+  {{- end }}
+  {{ end -}}

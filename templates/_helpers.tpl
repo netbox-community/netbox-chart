@@ -142,11 +142,11 @@ redis_tasks_password
 {{/*
 Name of the Secret that contains the Redis cache password
 */}}
-{{- define "netbox.cacheRedis.secret" -}}
+{{- define "netbox.cachingRedis.secret" -}}
 {{- if .Values.redis.enabled -}}
 {{ include "netbox.redis.fullname" . }}
-{{- else if .Values.cacheRedis.existingSecretName -}}
-{{ .Values.cacheRedis.existingSecretName }}
+{{- else if .Values.cachingRedis.existingSecretName -}}
+{{ .Values.cachingRedis.existingSecretName }}
 {{- else -}}
 {{ .Values.existingSecret | default (include "netbox.fullname" .) }}
 {{- end -}}
@@ -155,11 +155,11 @@ Name of the Secret that contains the Redis cache password
 {{/*
 Name of the key in Secret that contains the Redis cache password
 */}}
-{{- define "netbox.cacheRedis.secretKey" -}}
+{{- define "netbox.cachingRedis.secretKey" -}}
 {{- if .Values.redis.enabled -}}
 redis-password
-{{- else if .Values.cacheRedis.existingSecretName -}}
-{{ .Values.cacheRedis.existingSecretKey }}
+{{- else if .Values.cachingRedis.existingSecretName -}}
+{{ .Values.cachingRedis.existingSecretKey }}
 {{- else -}}
 redis_cache_password
 {{- end -}}

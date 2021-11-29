@@ -176,9 +176,9 @@ spec:
                     - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
                       path: redis_tasks_password
               - secret:
-                  name: {{ include "netbox.cacheRedis.secret" . | quote }}
+                  name: {{ include "netbox.cachingRedis.secret" . | quote }}
                   items:
-                    - key: {{ include "netbox.cacheRedis.secretKey" . | quote }}
+                    - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
                       path: redis_cache_password
         {{- include "netbox.extraConfig.volumes" . | nindent 8 -}}
         - name: netbox-tmp

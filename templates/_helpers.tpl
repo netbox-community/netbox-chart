@@ -61,10 +61,11 @@ Common labels
 {{- define "netbox.labels" -}}
 helm.sh/chart: {{ include "netbox.chart" . }}
 {{ include "netbox.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -84,4 +85,115 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+{{/*
+Name of the Secret that contains the PostgreSQL password
+*/}}
+{{- define "netbox.postgresql.secret" -}}
+{{- if .Values.postgresql.enabled -}}
+{{ include "netbox.postgresql.fullname" . }}
+{{- else if .Values.externalDatabase.existingSecretName -}}
+{{ .Values.externalDatabase.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the PostgreSQL password
+*/}}
+{{- define "netbox.postgresql.secretKey" -}}
+{{- if .Values.postgresql.enabled -}}
+postgresql-password
+{{- else if .Values.externalDatabase.existingSecretName -}}
+{{ .Values.externalDatabase.existingSecretKey }}
+{{- else -}}
+db_password
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the Secret that contains the Redis tasks password
+*/}}
+{{- define "netbox.tasksRedis.secret" -}}
+{{- if .Values.redis.enabled -}}
+{{ include "netbox.redis.fullname" . }}
+{{- else if .Values.tasksRedis.existingSecretName -}}
+{{ .Values.tasksRedis.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the Redis tasks password
+*/}}
+{{- define "netbox.tasksRedis.secretKey" -}}
+{{- if .Values.redis.enabled -}}
+redis-password
+{{- else if .Values.tasksRedis.existingSecretName -}}
+{{ .Values.tasksRedis.existingSecretKey }}
+{{- else -}}
+redis_tasks_password
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the Secret that contains the Redis cache password
+*/}}
+{{- define "netbox.cacheRedis.secret" -}}
+{{- if .Values.redis.enabled -}}
+{{ include "netbox.redis.fullname" . }}
+{{- else if .Values.cacheRedis.existingSecretName -}}
+{{ .Values.cacheRedis.existingSecretName }}
+{{- else -}}
+{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the Redis cache password
+*/}}
+{{- define "netbox.cacheRedis.secretKey" -}}
+{{- if .Values.redis.enabled -}}
+redis-password
+{{- else if .Values.cacheRedis.existingSecretName -}}
+{{ .Values.cacheRedis.existingSecretKey }}
+{{- else -}}
+redis_cache_password
+{{- end -}}
+{{- end }}
+
+{{/*
+Volumes that need to be mounted for .Values.extraConfig entries
+*/}}
+{{- define "netbox.extraConfig.volumes" -}}
+{{- range $index, $config := .Values.extraConfig -}}
+- name: extra-config-{{ $index }}
+  {{- if $config.values }}
+  configMap:
+    name: {{ include "netbox.fullname" $ }}
+    items:
+      - key: extra-{{ $index }}.yaml
+        path: extra-{{ $index }}.yaml
+  {{- else if $config.configMap }}
+  configMap:
+    {{- toYaml $config.configMap | nindent 4 }}
+  {{- else if $config.secret }}
+  secret:
+    {{- toYaml $config.secret | nindent 4 }}
+  {{- end }}
+{{ end -}}
+{{- end }}
+
+{{/*
+Volume mounts for .Values.extraConfig entries
+*/}}
+{{- define "netbox.extraConfig.volumeMounts" -}}
+{{- range $index, $config := .Values.extraConfig -}}
+- name: extra-config-{{ $index }}
+  mountPath: /run/config/extra/{{ $index }}
+  readOnly: true
+{{ end -}}
 {{- end }}

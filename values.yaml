@@ -52,10 +52,6 @@ banner:
 # Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
 basePath: ''
 
-# Cache timeout in seconds. Set to 0 to disable caching. Defaults to 900
-# (15 minutes).
-cacheTimeout: 900
-
 # Maximum number of days to retain logged changes. Set to 0 to retain change
 # logs indefinitely. (Default: 90)
 changelogRetention: 90
@@ -69,6 +65,10 @@ cors:
   originWhitelist: []
   originRegexWhitelist: []
   #  - '^(https?://)?(\w+\.)?example\.com$'
+
+# Note: this is where the CUSTOM_VALIDATORS setting naturally fits in relation
+# to the upstream NetBox configuration, but the setting cannot be reflected in
+# YAML/JSON as it depends on creating instances of Python classes.
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a
 # substantial performance penalty and may reveal sensitive information about
@@ -100,6 +100,9 @@ exemptViewPermissions: []
 #  - dcim.region
 #  - ipam.prefix
 
+# Enable the GraphQL API
+graphQlEnabled: true
+
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
 # webhooks).
 httpProxies: null
@@ -115,9 +118,13 @@ internalIPs: ['127.0.0.1', '::1']
 # https://docs.djangoproject.com/en/1.11/topics/logging/
 logging: {}
 
+# Automatically reset the lifetime of a valid session upon each authenticated
+# request. Enables users to remain authenticated to NetBox indefinitely.
+loginPersistence: false
+
 # Setting this to True will permit only authenticated users to access any part
 # of NetBox. By default, anonymous users are permitted to access most data in
-# NetBox (excluding secrets) but not make any changes.
+# NetBox but not make any changes.
 loginRequired: false
 
 # The length of time (in seconds) for which a user will remain logged into the
@@ -127,6 +134,9 @@ loginTimeout: 1209600  # 14 days
 # Setting this to True will display a "maintenance mode" banner at the top of
 # every page.
 maintenanceMode: false
+
+# The URL to use when mapping physical addresses or GPS coordinates
+mapsUrl: 'https://maps.google.com/?q='
 
 # An API consumer can request an arbitrary number of objects by appending the
 # "limit" parameter to the URL (e.g. "?limit=1000"). This setting defines the
@@ -188,9 +198,21 @@ remoteAuth:
   autoCreateUser: true
   defaultGroups: []
   defaultPermissions: {}
-  # the following options are specific for backend "netbox.authentication.LDAPBackend"
+  groupSyncEnabled: false
+  groupHeader: HTTP_REMOTE_USER_GROUP
+  superuserGroups: []
+  superusers: []
+  staffGroups: []
+  staffUsers: []
+  groupSeparator: '|'
+
+  # The following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io
+  #
+  # When enabling LDAP support please see "Using LDAP Authentication" in README.md and
+  # uncomment ALL of the configuration settings below, or your configuration will be invalid.
+  #
   # ldap:
   #   serverUri: 'ldap://domain.com'
   #   startTls: true
@@ -215,10 +237,6 @@ remoteAuth:
   #   attrMail: 'mail'
 
 releaseCheck:
-  # This determines how often the GitHub API is called to check the latest
-  # release of NetBox. Must be at least 1 hour.
-  timeout: 86400
-
   # This repository is used to check whether there is a new release of NetBox
   # available. Set to null to disable the version check or use the URL below to
   # check for release in the official NetBox repository.
@@ -227,6 +245,9 @@ releaseCheck:
 
 # Maximum execution time for background tasks, in seconds.
 rqDefaultTimeout: 300  # 5 mins
+
+# The name to use for the session cookie.
+sessionCookieName: sessionid
 
 # Time zone (default: UTC)
 timeZone: UTC
@@ -239,6 +260,23 @@ timeFormat: 'g:i a'
 shortTimeFormat: 'H:i:s'
 dateTimeFormat: 'N j, Y g:i a'
 shortDateTimeFormat: 'Y-m-d H:i'
+
+## Extra configuration settings
+# You can pass additional YAML files to be loaded into NetBox's configuration.
+# These can be passed as arbitrary configuration values set in the chart, or
+# you can load arbitrary *.yaml keys from ConfigMaps and Secrets.
+extraConfig: []
+  # - values:
+  #     EXTRA_SETTING_ONE: example
+  #     ANOTHER_SETTING: foobar
+  # - configMap: # pod.spec.volumes.configMap
+  #     name: netbox-extra
+  #     items: []
+  #     optional: false
+  # - secret: # same as pod.spec.volumes.secret
+  #     secretName: netbox-extra
+  #     items: []
+  #     optional: false
 
 # If provided, this should be a 50+ character string of random characters. It
 # will be randomly generated if left blank.
@@ -290,6 +328,7 @@ redis:
 tasksRedis:
   database: 0
   ssl: false
+  insecureSkipTlsVerify: false
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.
@@ -306,6 +345,7 @@ tasksRedis:
 cachingRedis:
   database: 1
   ssl: false
+  insecureSkipTlsVerify: false
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.
@@ -384,10 +424,16 @@ reportsPersistence:
   ## Persistant storage size request
   size: 1Gi
 
+commonLabels: {}
+
+commonAnnotations: {}
+
 podAnnotations: {}
 
+podLabels: {}
+
 podSecurityContext:
-  # fsGroup: 1000
+  fsGroup: 1000
   runAsNonRoot: true
   # runAsUser: 1000
   # runAsGroup: 1000
@@ -413,6 +459,7 @@ service:
 
 ingress:
   enabled: false
+  className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -513,6 +560,84 @@ extraInitContainers: []
 #    image: busybox
 #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
 
+
+# Configuration of Cron settings
+housekeeping:
+  enabled: true
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  restartPolicy: OnFailure
+  schedule: '0 0 * * *'
+  successfulJobsHistoryLimit: 5
+  suspend: false
+
+  podAnnotations: {}
+
+  podLabels: {}
+
+  podSecurityContext:
+    fsGroup: 1000
+    runAsNonRoot: true
+    # runAsUser: 1000
+    # runAsGroup: 1000
+
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  ## Additional environment variables to set
+  extraEnvs: []
+  #  - name: FOO
+  #    valueFrom:
+  #      secretKeyRef:
+  #        key: FOO
+  #        name: secret-resource
+
+  ## Additional volumes to mount
+  extraVolumeMounts: []
+  #  - name: extra-volume
+  #    mountPath: /run/secrets/super-secret
+  #    readOnly: true
+
+  extraVolumes: []
+  #  - name: extra-volume
+  #    secret:
+  #      secretName: super-secret
+
+  ## Additional containers to be added to the NetBox pod.
+  extraContainers: []
+  #  - name: my-sidecar
+  #    image: nginx:latest
+
+  ## Containers which are run before the NetBox containers are started.
+  extraInitContainers: []
+  #  - name: init-myservice
+  #    image: busybox
+  #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+
 # Worker for Netbox
 # Only required for Netbox Jobs, e.g. Webhooks
 worker:
@@ -522,8 +647,10 @@ worker:
 
   podAnnotations: {}
 
+  podLabels: {}
+
   podSecurityContext:
-    # fsGroup: 1000
+    fsGroup: 1000
     runAsNonRoot: true
     # runAsUser: 1000
     # runAsGroup: 1000

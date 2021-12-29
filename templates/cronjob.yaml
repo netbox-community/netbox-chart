@@ -74,6 +74,12 @@ spec:
                   subPath: ldap_config.py
                   readOnly: true
                 {{ end -}}
+                {{ if regexMatch "[^social\\_core\\.backends]+$" .Values.remoteAuth.backend -}}
+                - name: config
+                  mountPath: /run/config/extra/sso/sso.yaml
+                  subPath: sso.yaml
+                  readOnly: true
+                {{ end -}}
                 - name: config
                   mountPath: /run/config/netbox
                   readOnly: true

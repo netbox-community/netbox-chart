@@ -241,6 +241,15 @@ data:
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson .Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int .Values.remoteAuth.ldap.cacheTimeout }}
   {{- end }}
+
+  {{- if regexMatch "[^social\\_core\\.backends]+$" .Values.remoteAuth.backend }}
+
+  sso.yaml: |
+    {{- range $k, $v := .Values.remoteAuth.sso }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
+  {{- end }}
+
   {{ range $index, $config := .Values.extraConfig -}}
   {{- if $config.values }}
   extra-{{ $index }}.yaml: |

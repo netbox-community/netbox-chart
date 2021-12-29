@@ -235,6 +235,15 @@ remoteAuth:
   #   attrFirstName: 'givenName'
   #   attrLastName: 'sn'
   #   attrMail: 'mail'
+  #
+  # If using SSO, pass all 'SOCIAL_AUTH_*' parameters through to configuration.py
+  # backend: social_core.backends.keycloak.KeycloakOAuth2
+  # sso:
+  #    SOCIAL_AUTH_KEYCLOAK_KEY: 'netbox'
+  #    SOCIAL_AUTH_KEYCLOAK_SECRET: 'yoursecret'
+  #    SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY: 'yourpublickey'
+  #    SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: 'https://keycloak.yourdomain.com/auth/realms/YOURREALM/protocol/openid-connect/auth'
+  #    SOCIAL_AUTH_KEYCLOAK_ACCESS_URL: 'https://keycloak.yourdomain.com/auth/realms/YOURREALM/protocol/openid-connect/token'
 
 releaseCheck:
   # This repository is used to check whether there is a new release of NetBox

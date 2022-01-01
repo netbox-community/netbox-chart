@@ -454,6 +454,13 @@ service:
     # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: http
   type: ClusterIP
   port: 80
+  nodePort: ""
+  clusterIP: ""
+  clusterIPs: []
+  externalIPs: []
+  externalTrafficPolicy: ""
+  ipFamilyPolicy: ""
+  loadBalancerIP: ""
   loadBalancerSourceRanges: []
   # - 10.0.0.0/8
 

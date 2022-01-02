@@ -91,7 +91,9 @@ Create the name of the service account to use
 Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}
-{{- if .Values.postgresql.enabled -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.existingSecret -}}
+{{ .Values.postgresql.existingSecret }}
+{{- else if .Values.postgresql.enabled -}}
 {{ include "netbox.postgresql.fullname" . }}
 {{- else if .Values.externalDatabase.existingSecretName -}}
 {{ .Values.externalDatabase.existingSecretName }}
@@ -117,7 +119,9 @@ db_password
 Name of the Secret that contains the Redis tasks password
 */}}
 {{- define "netbox.tasksRedis.secret" -}}
-{{- if .Values.redis.enabled -}}
+{{- if and .Values.redis.enabled .Values.redis.auth.existingSecret -}}
+{{ .Values.redis.auth.existingSecret }}
+{{- else if .Values.redis.enabled -}}
 {{ include "netbox.redis.fullname" . }}
 {{- else if .Values.tasksRedis.existingSecretName -}}
 {{ .Values.tasksRedis.existingSecretName }}
@@ -143,7 +147,9 @@ redis_tasks_password
 Name of the Secret that contains the Redis cache password
 */}}
 {{- define "netbox.cachingRedis.secret" -}}
-{{- if .Values.redis.enabled -}}
+{{- if and .Values.redis.enabled .Values.redis.auth.existingSecret -}}
+{{ .Values.redis.auth.existingSecret }}
+{{- else if .Values.redis.enabled -}}
 {{ include "netbox.redis.fullname" . }}
 {{- else if .Values.cachingRedis.existingSecretName -}}
 {{ .Values.cachingRedis.existingSecretName }}

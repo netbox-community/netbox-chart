@@ -36,6 +36,42 @@ $ helm install my-release \
 The default configuration includes the required PostgreSQL and Redis database
 services, but either or both may be managed externally if required.
 
+### Production Usage
+
+Always [use an existing Secret](#using-an-existing-secret) and supply all
+passwords and secret keys yourself to avoid Helm re-generating any of them for
+you.
+
+I strongly recommend setting both `postgresql.enabled` and `redis.enabled` to
+`false` and using a separate external PostgreSQL and Redis instance. This
+de-couples those services from the chart's bundled versions which may have
+complex upgrade requirements. I also recommend using a clustered PostgreSQL
+server (e.g. using Zalando's
+[Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
+with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
+[redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
+
+Set `persistence.enabled` to `false` and use the S3 `storageBackend` for object
+storage. This works well with Minio or Ceph RGW as well as Amazon S3.
+
+Run multiple replicas of the NetBox web front-end to avoid interruptions during
+upgrades or at other times when the pods need to be restarted. There's no need
+to have multiple workers (`worker.replicaCount`) for better availability. Set
+up `affinity.podAntiAffinity` to avoid multiple NetBox pods being colocated on
+the same node, for example:
+
+```
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: netbox
+            app.kubernetes.io/name: netbox
+            app.kubernetes.io/component: netbox
+        topologyKey: kubernetes.io/hostname
+```
+
 ## Uninstalling the Chart
 
 To delete the chart:

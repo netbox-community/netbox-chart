@@ -20,9 +20,30 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+      {{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort | quote }}
+      {{- end }}
   selector:
     {{- include "netbox.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: netbox
+  {{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP | quote }}
+  {{- end }}
+  {{- with .Values.service.clusterIPs }}
+  clusterIPs: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.externalIPs }}
+  externalIPs: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  {{- if .Values.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy | quote }}
+  {{- end }}
+  {{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP | quote }}
+  {{- end }}
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{- toYaml . | nindent 4 }}

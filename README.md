@@ -257,6 +257,13 @@ The following table lists the configurable parameters for this chart and their d
 | `securityContext`                               | Security context for NetBox containers                              | *see `values.yaml`*                          |
 | `service.type`                                  | Type of `Service` resource to create                                | `ClusterIP`                                  |
 | `service.port`                                  | Port number for the service                                         | `80`                                         |
+| `service.nodePort`                              | The port used on the node when `service.type` is NodePort           | `""`                                         |
+| `service.clusterIP`                             | The cluster IP address assigned to the service                      | `""`                                         |
+| `service.clusterIPs`                            | A list of cluster IP addresses assigned to the service              | `[]`                                         |
+| `service.externalIPs`                           | A list of external IP addresses aliased to this service             | `[]`                                         |
+| `service.externalTrafficPolicy`                 | Policy for routing external traffic                                 | `""`                                         |
+| `service.ipFamilyPolicy`                        | Represents the dual-stack-ness of the service                       | `""`                                         |
+| `service.loadBalancerIP`                        | Request a specific IP address when `service.type` is LoadBalancer   | `""`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
 | `ingress.enabled`                               | Create an `Ingress` resource for accessing NetBox                   | `false`                                      |
 | `ingress.className`                             | Use a named IngressClass                                            | `""`                                         |

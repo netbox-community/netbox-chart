@@ -86,7 +86,7 @@ $ helm delete my-release
 
 When upgrading or changing settings and using the bundled Bitnami PostgreSQL
 sub-chart, you **must** provide the `postgresql.postgresqlPassword` at minimum.
-Ideally you should also upply the `postgresql.postgresqlPostgresPassword` and,
+Ideally you should also supply the `postgresql.postgresqlPostgresPassword` and,
 if using replication, the `postgresql.replication.password`. Please see the
 [upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
 for further information.
@@ -365,14 +365,53 @@ Rather than specifying passwords and secrets as part of the Helm release values,
 you may pass these to NetBox using a pre-existing `Secret` resource. When using
 this, the `Secret` must contain the following keys:
 
-| Key                    | Description                                            | Required? |
-| -----------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `db_password`          | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
-| `email_password`       | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
-| `napalm_password`      | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
-| `redis_tasks_password` | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset            |
-| `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
-| `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+| Key                    | Description                                                   | Required?                                                                                         |
+| -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
+| `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
+| `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
+| `napalm_password`      | NAPALM user password                                          | Yes, but the value may be left blank if not required                                              |
+| `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
+| `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
+| `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
+| `superuser_password`   | Password for the initial super-user account                   | Yes                                                                                               |
+| `superuser_api_token`  | API token created for the initial super-user account          | Yes                                                                                               |
+
+## Using extraConfig for S3 storage configuration
+
+If you want to use S3 as your storage backend and not have the config in the `values.yaml` (credentials!)
+you can use an existing secret that is then referenced under the `extraConfig` key.
+
+The secret would look like this:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbox
+  name: netbox-extra
+stringData:
+  s3-config.yaml: |
+    STORAGE_CONFIG:
+      AWS_S3_ENDPOINT_URL: <endpoint-URL>
+      AWS_S3_REGION_NAME: <region>
+      AWS_STORAGE_BUCKET_NAME: <bucket-name>
+      AWS_ACCESS_KEY_ID: <access-key>
+      AWS_SECRET_ACCESS_KEY: <secret-key>
+```
+
+And the secret then has to be referenced like this:
+
+```yaml
+extraConfig:
+  - secret: # same as pod.spec.volumes.secret
+      secretName: netbox-extra
+      items:
+        - key: s3-config.yaml
+          path: s3-config.yaml
+      optional: false
+```
 
 ## Using LDAP Authentication
 

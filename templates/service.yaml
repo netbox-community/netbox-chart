@@ -21,7 +21,7 @@ spec:
       protocol: TCP
       name: http
       {{- if .Values.service.nodePort }}
-      nodePort: {{ .Values.service.nodePort | quote }}
+      nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
     {{- include "netbox.selectorLabels" . | nindent 4 }}

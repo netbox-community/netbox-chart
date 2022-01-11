@@ -407,10 +407,6 @@ And the secret then has to be referenced like this:
 extraConfig:
   - secret: # same as pod.spec.volumes.secret
       secretName: netbox-extra
-      items:
-        - key: s3-config.yaml
-          path: s3-config.yaml
-      optional: false
 ```
 
 ## Using LDAP Authentication

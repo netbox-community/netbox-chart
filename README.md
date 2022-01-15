@@ -36,6 +36,28 @@ $ helm install my-release \
 The default configuration includes the required PostgreSQL and Redis database
 services, but either or both may be managed externally if required.
 
+## Configuring SSO
+
+You can leverage the `extraConfig` value in conjunction with 'remoteAuth' to configure SSO. An example:
+
+```yaml
+remoteAuth:
+  enabled: true
+  backend: social_core.backends.keycloak.KeycloakOAuth2
+  autoCreateUser: false
+
+extraConfig:
+  - values:
+      SOCIAL_AUTH_KEYCLOAK_KEY: 'netbox'
+      SOCIAL_AUTH_KEYCLOAK_SECRET: 'HaveANiceDay'
+      SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY: 'MII....'
+      SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/auth'
+      SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/token'
+      SOCIAL_AUTH_KEYCLOAK_ID_KEY: 'email'
+      SOCIAL_AUTH_JSONFIELD_ENABLED: True
+
+```
+
 ## Uninstalling the Chart
 
 To delete the chart:

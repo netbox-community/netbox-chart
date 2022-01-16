@@ -40,7 +40,7 @@ spec:
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
           securityContext:
@@ -158,15 +158,15 @@ spec:
             {{- end }}
           {{- with .Values.housekeeping.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.housekeeping.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.housekeeping.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           restartPolicy: {{ .Values.housekeeping.restartPolicy }}
 {{- end -}}

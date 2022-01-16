@@ -10,6 +10,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# You can also use an existing secret for the superuser password and API token
+# See `existingSecret` for details
 superuser:
   name: admin
   email: admin@example.com
@@ -152,6 +154,7 @@ storageConfig: {}
   # AWS_ACCESS_KEY_ID: 'Key ID'
   # AWS_SECRET_ACCESS_KEY: 'Secret'
   # AWS_STORAGE_BUCKET_NAME: 'netbox'
+  # AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
   # AWS_S3_REGION_NAME: 'eu-west-1'
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
@@ -280,6 +283,8 @@ extraConfig: []
 
 # If provided, this should be a 50+ character string of random characters. It
 # will be randomly generated if left blank.
+# You can also use an existing secret with "secret_key" instead of "secretKey"
+# See `existingSecret` for details
 secretKey: ""
 
 ## Provide passwords using existing secret
@@ -287,12 +292,15 @@ secretKey: ""
 # - db_password: database password (if postgresql.enabled is false and
 #     externalDatabase.existingSecretName is blank)
 # - email_password: SMTP user password
+# - ldap_bind_password: Password for LDAP bind DN
 # - napalm_password: NAPALM user password
 # - redis_tasks_password: Redis password for tasks Redis instance (if
 #     redis.enabled is false and tasksRedis.existingSecretName is blank)
 # - redis_cache_password: Redis password for caching Redis instance (if
 #     redis.enabled is false and cachingRedis.existingSecretName is blank)
 # - secret_key: session encryption token (50+ random characters)
+# - superuser_password: Password for the initial super-user account
+# - superuser_api_token: API token created for the initial super-user account
 existingSecret: ""
 
 postgresql:
@@ -454,6 +462,13 @@ service:
     # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: http
   type: ClusterIP
   port: 80
+  nodePort: ""
+  clusterIP: ""
+  clusterIPs: []
+  externalIPs: []
+  externalTrafficPolicy: ""
+  ipFamilyPolicy: ""
+  loadBalancerIP: ""
   loadBalancerSourceRanges: []
   # - 10.0.0.0/8
 

@@ -15,6 +15,18 @@ data:
 
     from pathlib import Path
 
+    def _deep_merge(source, destination):
+      """Inspired by https://stackoverflow.com/a/20666342"""
+      for key, value in source.items():
+        dst_value = destination.get(key)
+
+        if isinstance(value, dict) and isinstance(dst_value, dict):
+          _deep_merge(value, dst_value)
+        else:
+          destination[key] = value
+
+      return destination
+
     def _load_yaml():
       extraConfigBase = Path('/run/config/extra')
       configFiles = [Path('/run/config/netbox/netbox.yaml')]
@@ -25,7 +37,7 @@ data:
         with open(configFile, 'r') as f:
           config = yaml.safe_load(f)
 
-        globals().update(config)
+        _deep_merge(config, globals())
 
     def _load_secret(name, key):
       path = "/run/secrets/{name}/{key}".format(name=name, key=key)

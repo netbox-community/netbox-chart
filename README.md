@@ -36,26 +36,40 @@ $ helm install my-release \
 The default configuration includes the required PostgreSQL and Redis database
 services, but either or both may be managed externally if required.
 
-## Configuring SSO
+### Production Usage
 
-You can leverage the `extraConfig` value in conjunction with 'remoteAuth' to configure SSO. An example:
+Always [use an existing Secret](#using-an-existing-secret) and supply all
+passwords and secret keys yourself to avoid Helm re-generating any of them for
+you.
 
-```yaml
-remoteAuth:
-  enabled: true
-  backend: social_core.backends.keycloak.KeycloakOAuth2
-  autoCreateUser: false
+I strongly recommend setting both `postgresql.enabled` and `redis.enabled` to
+`false` and using a separate external PostgreSQL and Redis instance. This
+de-couples those services from the chart's bundled versions which may have
+complex upgrade requirements. I also recommend using a clustered PostgreSQL
+server (e.g. using Zalando's
+[Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
+with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
+[redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
-extraConfig:
-  - values:
-      SOCIAL_AUTH_KEYCLOAK_KEY: 'netbox'
-      SOCIAL_AUTH_KEYCLOAK_SECRET: 'HaveANiceDay'
-      SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY: 'MII....'
-      SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/auth'
-      SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/token'
-      SOCIAL_AUTH_KEYCLOAK_ID_KEY: 'email'
-      SOCIAL_AUTH_JSONFIELD_ENABLED: True
+Set `persistence.enabled` to `false` and use the S3 `storageBackend` for object
+storage. This works well with Minio or Ceph RGW as well as Amazon S3.
 
+Run multiple replicas of the NetBox web front-end to avoid interruptions during
+upgrades or at other times when the pods need to be restarted. There's no need
+to have multiple workers (`worker.replicaCount`) for better availability. Set
+up `affinity.podAntiAffinity` to avoid multiple NetBox pods being colocated on
+the same node, for example:
+
+```
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: netbox
+            app.kubernetes.io/name: netbox
+            app.kubernetes.io/component: netbox
+        topologyKey: kubernetes.io/hostname
 ```
 
 ## Uninstalling the Chart
@@ -72,7 +86,7 @@ $ helm delete my-release
 
 When upgrading or changing settings and using the bundled Bitnami PostgreSQL
 sub-chart, you **must** provide the `postgresql.postgresqlPassword` at minimum.
-Ideally you should also upply the `postgresql.postgresqlPostgresPassword` and,
+Ideally you should also supply the `postgresql.postgresqlPostgresPassword` and,
 if using replication, the `postgresql.replication.password`. Please see the
 [upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
 for further information.
@@ -279,6 +293,13 @@ The following table lists the configurable parameters for this chart and their d
 | `securityContext`                               | Security context for NetBox containers                              | *see `values.yaml`*                          |
 | `service.type`                                  | Type of `Service` resource to create                                | `ClusterIP`                                  |
 | `service.port`                                  | Port number for the service                                         | `80`                                         |
+| `service.nodePort`                              | The port used on the node when `service.type` is NodePort           | `""`                                         |
+| `service.clusterIP`                             | The cluster IP address assigned to the service                      | `""`                                         |
+| `service.clusterIPs`                            | A list of cluster IP addresses assigned to the service              | `[]`                                         |
+| `service.externalIPs`                           | A list of external IP addresses aliased to this service             | `[]`                                         |
+| `service.externalTrafficPolicy`                 | Policy for routing external traffic                                 | `""`                                         |
+| `service.ipFamilyPolicy`                        | Represents the dual-stack-ness of the service                       | `""`                                         |
+| `service.loadBalancerIP`                        | Request a specific IP address when `service.type` is LoadBalancer   | `""`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
 | `ingress.enabled`                               | Create an `Ingress` resource for accessing NetBox                   | `false`                                      |
 | `ingress.className`                             | Use a named IngressClass                                            | `""`                                         |
@@ -344,14 +365,70 @@ Rather than specifying passwords and secrets as part of the Helm release values,
 you may pass these to NetBox using a pre-existing `Secret` resource. When using
 this, the `Secret` must contain the following keys:
 
-| Key                    | Description                                            | Required? |
-| -----------------------|--------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `db_password`          | The password for the external PostgreSQL database      | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset |
-| `email_password`       | SMTP user password                                     | Yes, but the value may be left blank if not required                                  |
-| `napalm_password`      | NAPALM user password                                   | Yes, but the value may be left blank if not required                                  |
-| `redis_tasks_password` | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset            |
-| `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
-| `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+| Key                    | Description                                                   | Required?                                                                                         |
+| -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
+| `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
+| `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
+| `napalm_password`      | NAPALM user password                                          | Yes, but the value may be left blank if not required                                              |
+| `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
+| `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
+| `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
+| `superuser_password`   | Password for the initial super-user account                   | Yes                                                                                               |
+| `superuser_api_token`  | API token created for the initial super-user account          | Yes                                                                                               |
+
+## Using extraConfig for S3 storage configuration
+
+If you want to use S3 as your storage backend and not have the config in the `values.yaml` (credentials!)
+you can use an existing secret that is then referenced under the `extraConfig` key.
+
+The secret would look like this:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbox
+  name: netbox-extra
+stringData:
+  s3-config.yaml: |
+    STORAGE_CONFIG:
+      AWS_S3_ENDPOINT_URL: <endpoint-URL>
+      AWS_S3_REGION_NAME: <region>
+      AWS_STORAGE_BUCKET_NAME: <bucket-name>
+      AWS_ACCESS_KEY_ID: <access-key>
+      AWS_SECRET_ACCESS_KEY: <secret-key>
+```
+
+And the secret then has to be referenced like this:
+
+```yaml
+extraConfig:
+  - secret: # same as pod.spec.volumes.secret
+      secretName: netbox-extra
+```
+
+## Configuring SSO
+
+You can leverage the `extraConfig` value in conjunction with `remoteAuth` to configure SSO. An example:
+
+```yaml
+remoteAuth:
+  enabled: true
+  backend: social_core.backends.keycloak.KeycloakOAuth2
+  autoCreateUser: false
+
+extraConfig:
+  - values:
+      SOCIAL_AUTH_KEYCLOAK_KEY: 'netbox'
+      SOCIAL_AUTH_KEYCLOAK_SECRET: 'HaveANiceDay'
+      SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY: 'MII....'
+      SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/auth'
+      SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/token'
+      SOCIAL_AUTH_KEYCLOAK_ID_KEY: 'email'
+      SOCIAL_AUTH_JSONFIELD_ENABLED: True
+```
 
 ## Using LDAP Authentication
 

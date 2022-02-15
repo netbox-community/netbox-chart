@@ -214,8 +214,8 @@ data:
     # Define special user types using groups. Exercise great caution when assigning superuser status.
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
         "is_active": AUTH_LDAP_REQUIRE_GROUP,
-        "is_staff": {{ .Values.remoteAuth.ldap.isAdminDn | quote }},
-        "is_superuser": {{ .Values.remoteAuth.ldap.isSuperUserDn | quote }}
+        "is_staff": {{ .Values.remoteAuth.ldap.isAdminDn | squote }},
+        "is_superuser": {{ .Values.remoteAuth.ldap.isSuperUserDn | squote }}
     }
     # Populate the Django user from the LDAP directory.
     AUTH_LDAP_USER_ATTR_MAP = {

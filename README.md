@@ -264,6 +264,11 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
+| `readinessProbe.enabled`                        | Enable Kubernetes readinessProbe, see [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
+| `readinessProbe.initialDelaySeconds`            | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `readinessProbe.timeoutSeconds`                 | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `readinessProbe.periodSeconds`                  | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `readinessProbe.successThreshold`               | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `init.image.repository`                         | Init container image repository                                     | `busybox`                                    |
 | `init.image.tag`                                | Init container image tag                                            | `1.32.1`                                     |
 | `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |

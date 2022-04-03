@@ -19,6 +19,7 @@ $ helm install netbox \
 - This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
 - This chart works with NetBox 3.0.0+ (3.0.11+ recommended)
 - Recent versions of Helm 3 are supported
+- a storage class that support ReadWriteMany (RWX) for persistent volumes, [see below](#readwritemany-persistent-volumes)
 
 ## Installing the Chart
 
@@ -330,6 +331,24 @@ this, the `Secret` must contain the following keys:
 | `redis_tasks_password` | Password for the external Redis tasks database         | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset            |
 | `redis_cache_password` | Password for the external Redis cache database         | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset          |
 | `secret_key`           | Django session and password reset token encryption key | Yes, and should be 50+ random characters                                              |
+
+## ReadWriteMany Persistent Volumes
+
+Media files are stored in a persistent volume (see `persistence`, above). In order for the main NetBox pod as well as the worker and housekeeping pods to be able to work with media files, they all need to mount the same volume. This is only possible when the Persistent Volume Claim is using the [access mode `ReadWriteMany`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes). If your Kubernetes platform does not have a storage class supporting `ReadWriteMany`, you can get by with using `ReadWriteOnce` and making sure all pods are scheduled on the same node, using the [standard Kubernetes mechanism](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector). This will allow the volume to be mounted by all pods on that node, at least for some of the storage classes.
+
+Example:
+```yaml
+nodeSelector:
+  "kubernetes.io/hostname": "k3s-node1"
+
+housekeeping:
+  nodeSelector:
+    "kubernetes.io/hostname": "k3s-node1"
+
+worker:
+  nodeSelector:
+    "kubernetes.io/hostname": "k3s-node1"
+```
 
 ## Using LDAP Authentication
 

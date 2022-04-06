@@ -155,7 +155,15 @@ storageConfig: {}
   # AWS_S3_REGION_NAME: 'eu-west-1'
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
-metricsEnabled: false
+metrics:
+  enabled: false
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+
+# Set up metrics scraping with Prometheus Operator
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
 
 napalm:
   # Credentials that NetBox will use to access live devices.

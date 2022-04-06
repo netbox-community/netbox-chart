@@ -137,7 +137,11 @@ The following table lists the configurable parameters for this chart and their d
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
-| `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
+| `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
+| `metrics.scrapeInterval`                        | Prometheus scrape interval                                          | `30s`                                        |
+| `metrics.scrapeTimeout`                         | Prometheus scrape timeout                                           | `10s`                                        |
+| `metrics.serviceMonitor.enabled`                | Enable Prometheus Operator handled ServiceMonitor                   | `false`                                      |
+| `metrics.serviceMonitor.additionalLabels`       | Additional labels for Prometheus Operator handled ServiceMonitor    | `{}`                                         |
 | `napalm.username`                               | Username used by the NAPALM library to access network devices       | `""`                                         |
 | `napalm.password`                               | Password used by the NAPALM library (see also `existingSecret`)     | `""`                                         |
 | `napalm.timeout`                                | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |

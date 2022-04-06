@@ -108,7 +108,7 @@ data:
     MEDIA_ROOT: /opt/netbox/netbox/media
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
     STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
-    METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
+    METRICS_ENABLED: {{ toJson .Values.metrics.enabled }}
     NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
     NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
     NAPALM_ARGS: {{ toJson .Values.napalm.args }}

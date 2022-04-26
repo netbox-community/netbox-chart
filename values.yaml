@@ -512,6 +512,13 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 0
+  timeoutSeconds: 1
+  periodSeconds: 10
+  successThreshold: 1
+
 init:
   image:
     repository: busybox

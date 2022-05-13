@@ -525,6 +525,8 @@ nodeSelector: {}
 
 tolerations: []
 
+hostAliases: []
+
 updateStrategy: {}
   # type: RollingUpdate
 
@@ -686,6 +688,8 @@ worker:
   nodeSelector: {}
 
   tolerations: []
+
+  hostAliases: []
 
   updateStrategy: {}
     # type: RollingUpdate

@@ -38,6 +38,10 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
         spec:
+          {{- with .Values.housekeeping.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 8 }}
@@ -158,10 +162,6 @@ spec:
             {{- end }}
           {{- with .Values.housekeeping.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
-          {{- with .Values.housekeeping.affinity }}
-          affinity:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           {{- with .Values.housekeeping.tolerations }}

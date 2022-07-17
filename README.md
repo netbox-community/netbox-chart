@@ -141,15 +141,20 @@ The following table lists the configurable parameters for this chart and their d
 | `skipStartupScripts`                            | Skip [netbox-docker startup scripts]                                | `true`                                       |
 | `allowedHosts`                                  | List of valid FQDNs for this NetBox instance                        | `["*"]`                                      |
 | `admins`                                        | List of admins to email about critical errors                       | `[]`                                         |
+| `authPasswordValidators`                        | Configure validation of local user account passwords                | `[]`                                         |
 | `allowedUrlSchemes`                             | URL schemes that are allowed within links in NetBox                 | *see `values.yaml`*                          |
 | `banner.top`                                    | Banner text to display at the top of every page                     | `""`                                         |
 | `banner.bottom`                                 | Banner text to display at the bottom of every page                  | `""`                                         |
 | `banner.login`                                  | Banner text to display on the login page                            | `""`                                         |
 | `basePath`                                      | Base URL path if accessing NetBox within a directory                | `""`                                         |
 | `changelogRetention`                            | Maximum number of days to retain logged changes (0 = forever)       | `90`                                         |
+| `customValidators`                              | Custom validators for NetBox field values                           | `{}`                                         |
+| `defaultUserPreferences`                        | Default preferences for newly created user accounts                 | `{}`                                         |
 | `cors.originAllowAll`                           | [CORS]: allow all origins                                           | `false`                                      |
 | `cors.originWhitelist`                          | [CORS]: list of origins authorised to make cross-site HTTP requests | `[]`                                         |
 | `cors.originRegexWhitelist`                     | [CORS]: list of regex strings matching authorised origins           | `[]`                                         |
+| `csrf.cookieName`                               | Name of the CSRF authentication cookie                              | `csrftoken`                                  |
+| `csrf.trustedOrigins`                           | A list of trusted origins for unsafe (e.g. POST) requests           | `[]`                                         |
 | `debug`                                         | Enable NetBox debugging (NOT for production use)                    | `false`                                      |
 | `email.server`                                  | SMTP server to use to send emails                                   | `localhost`                                  |
 | `email.port`                                    | TCP port to connect to the SMTP server on                           | `25`                                         |
@@ -157,13 +162,17 @@ The following table lists the configurable parameters for this chart and their d
 | `email.password`                                | Password for SMTP authentication (see also `existingSecret`)        | `""`                                         |
 | `email.useSSL`                                  | Use SSL when connecting to the server                               | `false`                                      |
 | `email.useTLS`                                  | Use TLS when connecting to the server                               | `false`                                      |
+| `email.sslCertFile`                             | SMTP SSL certificate file path (e.g. in a mounted volume)           | `""`                                         |
+| `email.sslKeyFile`                              | SMTP SSL key file path (e.g. in a mounted volume)                   | `""`                                         |
 | `email.timeout`                                 | Timeout for SMTP connections, in seconds                            | `10`                                         |
 | `email.from`                                    | Sender address for emails sent by NetBox                            | `""`                                         |
 | `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
 | `exemptViewPermissions`                         | A list of models to exempt from the enforcement of view permissions | `[]`                                         |
+| `fieldChoices`                                  | Configure custom choices for certain built-in fields                | `{}`                                         |
 | `graphQlEnabled`                                | Enable the GraphQL API                                              | `true`                                       |
 | `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
+| `jobResultRetention`                            | The number of days to retain job results (scripts and reports)      | `90`                                         |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
 | `loginPersistence`                              | Enables users to remain authenticated to NetBox indefinitely        | `false`                                      |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
@@ -181,6 +190,9 @@ The following table lists the configurable parameters for this chart and their d
 | `paginateCount`                                 | The default number of objects to display per page in the web UI     | `50`                                         |
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
+| `powerFeedDefaultAmperage`                      | Default amperage value for new power feeds                          | `15`                                         |
+| `powerFeedMaxUtilisation`                       | Default maximum utilisation percentage for new power feeds          | `80`                                         |
+| `powerFeedDefaultVoltage`                       | Default voltage value for new power feeds                           | `120`                                        |
 | `preferIPv4`                                    | Prefer devices' IPv4 address when determining their primary address | `false`                                      |
 | `rackElevationDefaultUnitHeight`                | Rack elevation default height in pixels                             | `22`                                         |
 | `rackElevationDefaultUnitWidth`                 | Rack elevation default width in pixels                              | `220`                                        |

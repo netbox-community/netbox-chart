@@ -82,6 +82,7 @@ data:
       {{- end }}
       OPTIONS:
         sslmode: {{ .Values.externalDatabase.sslMode | quote }}
+        target_session_attrs: 'read-write'
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
       DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 

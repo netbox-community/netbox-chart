@@ -83,14 +83,18 @@ data:
       OPTIONS:
         sslmode: {{ .Values.externalDatabase.sslMode | quote }}
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
+      DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 
     ADMINS: {{ toJson .Values.admins }}
+    AUTH_PASSWORD_VALIDATORS: {{ toJson .Values.authPasswordValidators }}
     ALLOWED_URL_SCHEMES: {{ toJson .Values.allowedUrlSchemes }}
     BANNER_TOP: {{ .Values.banner.top | quote }}
     BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
     BANNER_LOGIN: {{ .Values.banner.login | quote }}
     BASE_PATH: {{ .Values.basePath | quote }}
     CHANGELOG_RETENTION: {{ int .Values.changelogRetention }}
+    CUSTOM_VALIDATORS: {{ toJson .Values.customValidators }}
+    DEFAULT_USER_PREFERENCES: {{ toJson .Values.defaultUserPreferences }}
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
@@ -103,14 +107,18 @@ data:
       USERNAME: {{ .Values.email.username | quote }}
       USE_SSL: {{ toJson .Values.email.useSSL }}
       USE_TLS: {{ toJson .Values.email.useTLS }}
+      SSL_CERTFILE: {{ .Values.email.sslCertFile | quote }}
+      SSL_KEYFILE: {{ .Values.email.sslKeyFile | quote }}
       TIMEOUT: {{ .Values.email.timeout | int }}
       FROM_EMAIL: {{ toJson .Values.email.from }}
 
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
+    FIELD_CHOICES: {{ toJson .Values.fieldChoices }}
     GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
+    JOBRESULT_RETENTION: {{ int .Values.jobResultRetention }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
@@ -128,6 +136,9 @@ data:
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
+    POWERFEED_DEFAULT_AMPERAGE: {{ int .Values.powerFeedDefaultAmperage }}
+    POWERFEED_DEFAULT_MAX_UTILIZATION: {{ int .Values.powerFeedMaxUtilisation }}
+    POWERFEED_DEFAULT_VOLTAGE: {{ int .Values.powerFeedDefaultVoltage }}
     PREFER_IPV4: {{ toJson .Values.preferIPv4 }}
     RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: {{ int .Values.rackElevationDefaultUnitHeight }}
     RACK_ELEVATION_DEFAULT_UNIT_WIDTH: {{ int .Values.rackElevationDefaultUnitWidth }}
@@ -181,6 +192,7 @@ data:
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
+    CSRF_COOKIE_NAME: {{ .Values.csrf.cookieName | quote }}
     SESSION_COOKIE_NAME: {{ .Values.sessionCookieName }}
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}

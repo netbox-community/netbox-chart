@@ -94,6 +94,7 @@ data:
     CORS_ORIGIN_ALLOW_ALL: {{ toJson .Values.cors.originAllowAll }}
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
+    CSRF_TRUSTED_ORIGINS: {{ toJson .Values.csrf.trustedOrigins }}
     DEBUG: {{ toJson .Values.debug }}
 
     EMAIL:

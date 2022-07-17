@@ -68,6 +68,11 @@ cors:
   originRegexWhitelist: []
   #  - '^(https?://)?(\w+\.)?example\.com$'
 
+# CSRF settings.  Needed for netbox v3.2.0 and newer. For more information
+# see https://docs.netbox.dev/en/stable/configuration/optional-settings/#csrf_trusted_origins
+csrf:
+  trustedOrigins: []
+
 # Note: this is where the CUSTOM_VALIDATORS setting naturally fits in relation
 # to the upstream NetBox configuration, but the setting cannot be reflected in
 # YAML/JSON as it depends on creating instances of Python classes.

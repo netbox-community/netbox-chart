@@ -119,15 +119,17 @@ db_password
 Name of the Secret that contains the Redis tasks password
 */}}
 {{- define "netbox.tasksRedis.secret" -}}
-{{- if and .Values.redis.enabled .Values.redis.auth.existingSecret -}}
-{{ .Values.redis.auth.existingSecret }}
-{{- else if .Values.redis.enabled -}}
-{{ include "netbox.redis.fullname" . }}
-{{- else if .Values.tasksRedis.existingSecretName -}}
-{{ .Values.tasksRedis.existingSecretName }}
-{{- else -}}
-{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
-{{- end -}}
+  {{- if .Values.redis.enabled }}
+    {{- if .Values.redis.auth.existingSecret }}
+      {{- .Values.redis.auth.existingSecret }}
+    {{- else }}
+      {{- include "netbox.redis.fullname" . }}
+    {{- end }}
+  {{- else if .Values.tasksRedis.existingSecretName }}
+    {{- .Values.tasksRedis.existingSecretName }}
+  {{- else }}
+    {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+  {{- end }}
 {{- end }}
 
 {{/*
@@ -147,15 +149,17 @@ redis_tasks_password
 Name of the Secret that contains the Redis cache password
 */}}
 {{- define "netbox.cachingRedis.secret" -}}
-{{- if and .Values.redis.enabled .Values.redis.auth.existingSecret -}}
-{{ .Values.redis.auth.existingSecret }}
-{{- else if .Values.redis.enabled -}}
-{{ include "netbox.redis.fullname" . }}
-{{- else if .Values.cachingRedis.existingSecretName -}}
-{{ .Values.cachingRedis.existingSecretName }}
-{{- else -}}
-{{ .Values.existingSecret | default (include "netbox.fullname" .) }}
-{{- end -}}
+  {{- if .Values.redis.enabled }}
+    {{- if .Values.redis.auth.existingSecret }}
+      {{- .Values.redis.auth.existingSecret }}
+    {{- else }}
+      {{- include "netbox.redis.fullname" . }}
+    {{- end }}
+  {{- else if .Values.cachingRedis.existingSecretName }}
+    {{- .Values.cachingRedis.existingSecretName }}
+  {{- else }}
+    {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+  {{- end }}
 {{- end }}
 
 {{/*

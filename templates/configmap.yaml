@@ -159,14 +159,14 @@ data:
 
     REDIS:
       tasks:
-        {{ if .Values.redis.enabled -}}
+        {{- if .Values.redis.enabled }}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.master.service.port | int }}
-        {{- else if .Values.tasksRedis.sentinels -}}
+        {{- else if .Values.tasksRedis.sentinels }}
         SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
         SENTINEL_TIMEOUT: {{ .Values.tasksRedis.sentinelTimeout | int }}
-        {{- else -}}
+        {{- else }}
         HOST: {{ .Values.tasksRedis.host | quote }}
         PORT: {{ .Values.tasksRedis.port | int}}
         {{- end }}
@@ -174,14 +174,14 @@ data:
         SSL: {{ toJson .Values.tasksRedis.ssl }}
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
       caching:
-        {{ if .Values.redis.enabled -}}
+        {{- if .Values.redis.enabled }}
         HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
         PORT: {{ .Values.redis.master.service.port | int }}
-        {{- else if .Values.cachingRedis.sentinels -}}
+        {{- else if .Values.cachingRedis.sentinels }}
         SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}
         SENTINEL_TIMEOUT: {{ .Values.cachingRedis.sentinelTimeout | int }}
-        {{- else -}}
+        {{- else }}
         HOST: {{ .Values.cachingRedis.host | quote }}
         PORT: {{ .Values.cachingRedis.port | int}}
         {{- end }}

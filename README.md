@@ -156,6 +156,7 @@ The following table lists the configurable parameters for this chart and their d
 | `csrf.cookieName`                               | Name of the CSRF authentication cookie                              | `csrftoken`                                  |
 | `csrf.trustedOrigins`                           | A list of trusted origins for unsafe (e.g. POST) requests           | `[]`                                         |
 | `debug`                                         | Enable NetBox debugging (NOT for production use)                    | `false`                                      |
+| `dbWaitDebug`                                   | Show details of errors that occur when applying migrations          | `false`                                      |
 | `email.server`                                  | SMTP server to use to send emails                                   | `localhost`                                  |
 | `email.port`                                    | TCP port to connect to the SMTP server on                           | `25`                                         |
 | `email.username`                                | Optional username for SMTP authentication                           | `""`                                         |

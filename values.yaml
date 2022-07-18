@@ -108,6 +108,10 @@ csrf:
 # enable debugging on a production system.
 debug: false
 
+# Display full traceback of errors that occur when applying database
+# migrations.
+dbWaitDebug: false
+
 # Email settings
 email:
   server: localhost

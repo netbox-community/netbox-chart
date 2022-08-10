@@ -9,7 +9,11 @@ metadata:
 spec:
   containers:
     - name: wget
-      image: busybox
+      image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
       command: ['wget']
       args: ['{{ include "netbox.fullname" . }}:{{ .Values.service.port }}']
+      {{- if .Values.test.resources }}
+      resources:
+        {{- toYaml .Values.test.resources | nindent 12 }}
+      {{- end }}
   restartPolicy: Never

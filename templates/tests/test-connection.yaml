@@ -10,6 +10,7 @@ spec:
   containers:
     - name: wget
       image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
+      imagePullPolicy: {{ .Values.test.image.pullPolicy }}
       command: ['wget']
       args: ['{{ include "netbox.fullname" . }}:{{ .Values.service.port }}']
       {{- if .Values.test.resources }}

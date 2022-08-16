@@ -427,52 +427,9 @@ extraConfig:
       secretName: netbox-extra
 ```
 
-## Configuring SSO
-
-You can leverage the `extraConfig` value in conjunction with `remoteAuth` to configure SSO. An example:
-
-```yaml
-remoteAuth:
-  enabled: true
-  backend: social_core.backends.keycloak.KeycloakOAuth2
-  autoCreateUser: false
-
-extraConfig:
-  - values:
-      SOCIAL_AUTH_KEYCLOAK_KEY: 'netbox'
-      SOCIAL_AUTH_KEYCLOAK_SECRET: 'HaveANiceDay'
-      SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY: 'MII....'
-      SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/auth'
-      SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL: 'https://keycloak.yourdomain.com/auth/realms/YourRealm/protocol/openid-connect/token'
-      SOCIAL_AUTH_KEYCLOAK_ID_KEY: 'email'
-      SOCIAL_AUTH_JSONFIELD_ENABLED: True
-```
-
-## Using LDAP Authentication
-
-In order to enable LDAP authentication, please carry out the following steps:
-
-1. Set `image.tag` in your values to an image with LDAP support (e.g. `v3.0.11-ldap`)
-2. Configure the `remoteAuth` settings to enable the LDAP backend (see below)
-3. Make sure you set *all* of the `remoteAuth.ldap` settings shown in the `values.yaml` file
-
-For example:
-
-```yaml
-remoteAuth:
-  enabled: true
-  backend: netbox.authentication.LDAPBackend
-  ldap:
-    serverUri: 'ldap://domain.com'
-    startTls: true
-    ignoreCertErrors: true
-    bindDn: ''
-    bindPassword: ''
-    # and ALL the other remoteAuth.ldap.* settings from values.yaml
-```
-
-Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
-to an empty string as in the example above.
+## Authentication
+* [Single Sign On](docs/auth.md#configuring-sso)
+* [LDAP Authentication](docs/auth.md#using-ldap-authentication)
 
 ## License
 

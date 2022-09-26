@@ -659,6 +659,11 @@ extraInitContainers: []
 #    image: busybox
 #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
 
+serviceMonitor:
+  enabled: false
+  additionalLabels: {}
+  interval: 1m
+  scrapeTimeout: 10s
 
 # Configuration of Cron settings
 housekeeping:

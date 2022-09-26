@@ -237,6 +237,10 @@ The following table lists the configurable parameters for this chart and their d
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
 | `timeFormat`                                    | Django date format for long-form time strings                       | `"g:i a"`                                    |
+| `servicemonitor.enabled`                        | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
+| `servicemonitor.additionalLabels`               | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `servicemonitor.interval`                       | Interval to scrape metrics.                                         | `1m`                                         |
+| `servicemonitor.scrapeTimeout`                  | Timeout duration for scraping metrics                               | `10s`                                        |
 | `shortTimeFormat`                               | Django date format for short-form time strings                      | `"H:i:s"`                                    |
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |

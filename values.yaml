@@ -399,7 +399,8 @@ redis:
   # To use an external Redis instance, set this to false and configure the
   # settings under *both* tasksRedis *and* cachingRedis
   enabled: true
-
+  clusterDomain: cluster.local
+  
 tasksRedis:
   database: 0
   ssl: false

@@ -1,7 +1,9 @@
+{{- if .Values.test.enabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "netbox.fullname" . }}-test-connection"
+  namespace: {{ .Release.Namespace | quote }}
   labels:
 {{ include "netbox.labels" . | indent 4 }}
   annotations:
@@ -18,3 +20,4 @@ spec:
         {{- toYaml .Values.test.resources | nindent 8 }}
       {{- end }}
   restartPolicy: Never
+{{- end -}}

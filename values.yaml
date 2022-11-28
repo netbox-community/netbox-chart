@@ -604,6 +604,7 @@ init:
     runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
 
 test:
+  enabled: true
   image:
     repository: busybox
     tag: 1.32.1

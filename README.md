@@ -330,6 +330,7 @@ The following table lists the configurable parameters for this chart and their d
 | `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |
 | `init.resources`                                | Configure resource requests or limits for init container            | `{}`                                         |
 | `init.securityContext`                          | Security context for init container                                 | *see `values.yaml`*                          |
+| `test.enabled`                                  | Whether to enable the connection testing pod                        | `true`                                       |
 | `autoscaling.enabled`                           | Whether to enable the HorizontalPodAutoscaler                       | `false`                                      |
 | `autoscaling.minReplicas`                       | Minimum number of replicas when autoscaling is enabled              | `1`                                          |
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |

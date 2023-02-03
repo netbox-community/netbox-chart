@@ -404,6 +404,7 @@ tasksRedis:
   database: 0
   ssl: false
   insecureSkipTlsVerify: false
+  caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.

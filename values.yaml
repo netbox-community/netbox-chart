@@ -579,6 +579,14 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+topologySpreadConstraints: []
+  # - maxSkew: 1
+  #  topologyKey: topology.kubernetes.io/zone
+  #  whenUnsatisfiable: DoNotSchedule
+  #  labelSelector:
+  #    "app.kubernetes.io/component": netbox
+  #    "app.kubernetes.io/name": netbox
+
 readinessProbe:
   enabled: true
   initialDelaySeconds: 0

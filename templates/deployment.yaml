@@ -101,9 +101,6 @@ spec:
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           {{- end }}
-          {{- if gt (len .Values.topologySpreadConstraints) 0 }}
-          topologySpreadConstraints: {{ toYaml .Values.topologySpreadConstraints | nindent 12 }}
-          {{- end }}
           volumeMounts:
             - name: config
               mountPath: /etc/netbox/config/configuration.py
@@ -230,4 +227,7 @@ spec:
       {{- with .Values.hostAliases }}
       hostAliases:
         {{- toYaml . | indent 8 }}
+      {{- end }}
+      {{- if gt (len .Values.topologySpreadConstraints) 0 }}
+      topologySpreadConstraints: {{ toYaml .Values.topologySpreadConstraints | nindent 8 }}
       {{- end }}

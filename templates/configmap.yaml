@@ -82,7 +82,11 @@ data:
       {{- end }}
       OPTIONS:
         sslmode: {{ .Values.externalDatabase.sslMode | quote }}
+        {{ if .Values.postgresql.enabled -}}
         target_session_attrs: 'read-write'
+        {{- else -}}
+        target_session_attrs: {{ .Values.externalDatabase.targetSessionAttrs | quote }}
+        {{- end }}
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
       DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 

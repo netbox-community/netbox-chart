@@ -161,8 +161,8 @@ data:
     REDIS:
       tasks:
         {{- if .Values.redis.enabled }}
-        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-        PORT: {{ .Values.redis.master.service.port | int }}
+        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.redis) | quote }}
+        PORT: {{ .Values.redis.master.service.ports.redis | int }}
         {{- else if .Values.tasksRedis.sentinels }}
         SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
@@ -176,8 +176,8 @@ data:
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
       caching:
         {{- if .Values.redis.enabled }}
-        HOST: {{ printf "%s-master" (include "netbox.redis.fullname" .) | quote }}
-        PORT: {{ .Values.redis.master.service.port | int }}
+        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.redis) | quote }}
+        PORT: {{ .Values.redis.master.service.ports.redis | int }}
         {{- else if .Values.cachingRedis.sentinels }}
         SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}

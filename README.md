@@ -94,6 +94,7 @@ for further information.
 ### From 4.x to 5.x
 
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 17.x; please read the upstream upgrade notes if you are using the bundled Redis
 
 ### From 3.x to 4.x
 

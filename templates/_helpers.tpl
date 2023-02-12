@@ -25,18 +25,6 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Fully qualified app name for redis child chart.
-*/}}
-{{- define "netbox.redis.fullname" -}}
-{{- if .Values.redis.fullnameOverride }}
-{{- .Values.redis.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default "redis" .Values.redis.nameOverride }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "netbox.chart" -}}
@@ -106,11 +94,7 @@ Name of the Secret that contains the Redis tasks password
 */}}
 {{- define "netbox.tasksRedis.secret" -}}
   {{- if .Values.redis.enabled }}
-    {{- if .Values.redis.auth.existingSecret }}
-      {{- .Values.redis.auth.existingSecret }}
-    {{- else }}
-      {{- include "netbox.redis.fullname" . }}
-    {{- end }}
+    {{- include "redis.secretName" .Subcharts.redis -}}
   {{- else if .Values.tasksRedis.existingSecretName }}
     {{- .Values.tasksRedis.existingSecretName }}
   {{- else }}
@@ -122,13 +106,13 @@ Name of the Secret that contains the Redis tasks password
 Name of the key in Secret that contains the Redis tasks password
 */}}
 {{- define "netbox.tasksRedis.secretKey" -}}
-{{- if .Values.redis.enabled -}}
-redis-password
-{{- else if .Values.tasksRedis.existingSecretName -}}
-{{ .Values.tasksRedis.existingSecretKey }}
-{{- else -}}
-redis_tasks_password
-{{- end -}}
+  {{- if .Values.redis.enabled -}}
+    {{- include "redis.secretPasswordKey" .Subcharts.redis -}}
+  {{- else if .Values.tasksRedis.existingSecretName -}}
+    {{ .Values.tasksRedis.existingSecretKey }}
+  {{- else -}}
+    redis_tasks_password
+  {{- end -}}
 {{- end }}
 
 {{/*
@@ -136,11 +120,7 @@ Name of the Secret that contains the Redis cache password
 */}}
 {{- define "netbox.cachingRedis.secret" -}}
   {{- if .Values.redis.enabled }}
-    {{- if .Values.redis.auth.existingSecret }}
-      {{- .Values.redis.auth.existingSecret }}
-    {{- else }}
-      {{- include "netbox.redis.fullname" . }}
-    {{- end }}
+    {{- include "redis.secretName" .Subcharts.redis -}}
   {{- else if .Values.cachingRedis.existingSecretName }}
     {{- .Values.cachingRedis.existingSecretName }}
   {{- else }}
@@ -152,13 +132,13 @@ Name of the Secret that contains the Redis cache password
 Name of the key in Secret that contains the Redis cache password
 */}}
 {{- define "netbox.cachingRedis.secretKey" -}}
-{{- if .Values.redis.enabled -}}
-redis-password
-{{- else if .Values.cachingRedis.existingSecretName -}}
-{{ .Values.cachingRedis.existingSecretKey }}
-{{- else -}}
-redis_cache_password
-{{- end -}}
+  {{- if .Values.redis.enabled -}}
+    {{- include "redis.secretPasswordKey" .Subcharts.redis -}}
+  {{- else if .Values.cachingRedis.existingSecretName -}}
+    {{ .Values.cachingRedis.existingSecretKey }}
+  {{- else -}}
+    redis_cache_password
+  {{- end -}}
 {{- end }}
 
 {{/*

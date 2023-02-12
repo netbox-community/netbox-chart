@@ -228,6 +228,7 @@ spec:
       hostAliases:
         {{- toYaml . | indent 8 }}
       {{- end }}
-      {{- if gt (len .Values.topologySpreadConstraints) 0 }}
-      topologySpreadConstraints: {{ toYaml .Values.topologySpreadConstraints | nindent 8 }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
       {{- end }}

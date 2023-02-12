@@ -36,6 +36,9 @@ allowedHosts:
 admins: []
   # - ['John Doe', 'jdoe@example.com']
 
+# Permit the retrieval of API tokens after their creation.
+allowTokenRetrieval: false
+
 # This parameter acts as a pass-through for configuring Django's built-in
 # password validators for local user accounts. If configured, these will be
 # applied whenever a user's password is updated to ensure that it meets minimum
@@ -101,6 +104,9 @@ csrf:
 # Note: this is where the CUSTOM_VALIDATORS setting naturally fits in relation
 # to the upstream NetBox configuration, but the setting cannot be reflected in
 # YAML/JSON as it depends on creating instances of Python classes.
+
+# Set the default preferred language/locale
+defaultLanguage: en-us
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a
 # substantial performance penalty and may reveal sensitive information about
@@ -185,6 +191,9 @@ loginRequired: false
 # The length of time (in seconds) for which a user will remain logged into the
 # web UI before being prompted to re-authenticate.
 loginTimeout: 1209600  # 14 days
+
+# The view name or URL to which users are redirected after logging out.
+logoutRedirectUrl: home
 
 # Setting this to True will display a "maintenance mode" banner at the top of
 # every page.
@@ -318,6 +327,9 @@ rqDefaultTimeout: 300  # 5 mins
 # The name to use for the session cookie.
 sessionCookieName: sessionid
 
+# Localization
+enableLocalization: false
+
 # Time zone (default: UTC)
 timeZone: UTC
 
@@ -406,6 +418,7 @@ tasksRedis:
   database: 0
   ssl: false
   insecureSkipTlsVerify: false
+  caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.
@@ -415,6 +428,7 @@ tasksRedis:
   #  - mysentinel:26379
   sentinelService: netbox-redis
   sentinelTimeout: 300
+  username: ""
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password
@@ -423,6 +437,7 @@ cachingRedis:
   database: 1
   ssl: false
   insecureSkipTlsVerify: false
+  caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
   # sentinels are given.
@@ -432,6 +447,7 @@ cachingRedis:
   #  - mysentinel:26379
   sentinelService: netbox-redis
   sentinelTimeout: 300
+  username: ""
   password: ""
   existingSecretName: ""
   existingSecretKey: redis-password

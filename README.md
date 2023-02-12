@@ -93,8 +93,10 @@ for further information.
 
 ### From 4.x to 5.x
 
+* NetBox has been updated to 3.4.4, but older 3.x versions should still work. This is not tested or supported, however.
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
 * The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 17.x; please read the upstream upgrade notes if you are using the bundled Redis
+* No partiular upgrade steps are required as long as you are not using the bundled Bitnami PostgreSQL or Redis charts.
 
 ### From 3.x to 4.x
 
@@ -146,6 +148,7 @@ The following table lists the configurable parameters for this chart and their d
 | `skipStartupScripts`                            | Skip [netbox-docker startup scripts]                                | `true`                                       |
 | `allowedHosts`                                  | List of valid FQDNs for this NetBox instance                        | `["*"]`                                      |
 | `admins`                                        | List of admins to email about critical errors                       | `[]`                                         |
+| `allowTokenRetrieval`                           | Permit the retrieval of API tokens after their creation             | `false`                                      |
 | `authPasswordValidators`                        | Configure validation of local user account passwords                | `[]`                                         |
 | `allowedUrlSchemes`                             | URL schemes that are allowed within links in NetBox                 | *see `values.yaml`*                          |
 | `banner.top`                                    | Banner text to display at the top of every page                     | `""`                                         |
@@ -161,6 +164,7 @@ The following table lists the configurable parameters for this chart and their d
 | `csrf.cookieName`                               | Name of the CSRF authentication cookie                              | `csrftoken`                                  |
 | `csrf.trustedOrigins`                           | A list of trusted origins for unsafe (e.g. POST) requests           | `[]`                                         |
 | `debug`                                         | Enable NetBox debugging (NOT for production use)                    | `false`                                      |
+| `defaultLanguage`                               | Set the default preferred language/locale                           | `en-us`                                      |
 | `dbWaitDebug`                                   | Show details of errors that occur when applying migrations          | `false`                                      |
 | `email.server`                                  | SMTP server to use to send emails                                   | `localhost`                                  |
 | `email.port`                                    | TCP port to connect to the SMTP server on                           | `25`                                         |
@@ -183,6 +187,7 @@ The following table lists the configurable parameters for this chart and their d
 | `loginPersistence`                              | Enables users to remain authenticated to NetBox indefinitely        | `false`                                      |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
 | `loginTimeout`                                  | How often to re-authenticate users                                  | `1209600` (14 days)                          |
+| `logoutRedirectUrl`                             | View name or URL to which users are redirected after logging out    | `home`                                       |
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
 | `mapsUrl`                                       | The URL to use when mapping physical addresses or GPS coordinates   | `https://maps.google.com/?q=`                |
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
@@ -238,6 +243,7 @@ The following table lists the configurable parameters for this chart and their d
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `rqDefaultTimeout`                              | Maximum execution time for background tasks, in seconds             | `300` (5 minutes)                            |
 | `sessionCookieName`                             | The name to use for the session cookie                              | `"sessionid"`                                |
+| `enableLocalization`                            | Localization                                                        | `false`                                      |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
@@ -272,22 +278,26 @@ The following table lists the configurable parameters for this chart and their d
 | `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
 | `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
 | `tasksRedis.insecureSkipTlsVerify`              | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
+| `tasksRedis.caCertPath`                         | Path to CA certificates bundle for Redis (needs mounting manually)  | `""`                                         |
 | `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
 | `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
 | `tasksRedis.sentinelService`                    | Sentinel master service name                                        | `"netbox-redis"`                             |
 | `tasksRedis.sentinelTimeout`                    | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
+| `tasksRedis.username`                           | Username for external Redis                                         | `""`                                         |
 | `tasksRedis.password`                           | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `tasksRedis.existingSecretName`                 | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
 | `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
 | `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
 | `cachingRedis.insecureSkipTlsVerify`            | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
+| `cachingRedis.caCertPath`                       | Path to CA certificates bundle for Redis (needs mounting manually)  | `""`                                         |
 | `cachingRedis.host`                             | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
 | `cachingRedis.port`                             | Port number for external Redis                                      | `6379`                                       |
 | `cachingRedis.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
 | `cachingRedis.sentinelService`                  | Sentinel master service name                                        | `"netbox-redis"`                             |
 | `cachingRedis.sentinelTimeout`                  | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
+| `cachingRedis.username`                         | Username for external Redis                                         | `""`                                         |
 | `cachingRedis.password`                         | Password for external Redis (see also `existingSecret`)             | `""`                                         |
 | `cachingRedis.existingSecretName`               | Fetch password for external Redis from a different `Secret`         | `""`                                         |
 | `cachingRedis.existingSecretKey`                | Key to fetch the password in the above `Secret`                     | `redis-password`                             |

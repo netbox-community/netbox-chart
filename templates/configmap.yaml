@@ -87,6 +87,7 @@ data:
       DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 
     ADMINS: {{ toJson .Values.admins }}
+    ALLOW_TOKEN_RETRIEVAL: {{ toJson .Values.allowTokenRetrieval }}
     AUTH_PASSWORD_VALIDATORS: {{ toJson .Values.authPasswordValidators }}
     ALLOWED_URL_SCHEMES: {{ toJson .Values.allowedUrlSchemes }}
     BANNER_TOP: {{ .Values.banner.top | quote }}
@@ -101,6 +102,7 @@ data:
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
     CSRF_TRUSTED_ORIGINS: {{ toJson .Values.csrf.trustedOrigins }}
     DEBUG: {{ toJson .Values.debug }}
+    DEFAULT_LANGUAGE: {{ .Values.defaultLanguage | quote }}
 
     EMAIL:
       SERVER: {{ .Values.email.server | quote }}
@@ -124,6 +126,7 @@ data:
     LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
+    LOGOUT_REDIRECT_URL: {{ .Values.logoutRedirectUrl | quote }}
     MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
     MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
@@ -171,9 +174,11 @@ data:
         HOST: {{ .Values.tasksRedis.host | quote }}
         PORT: {{ .Values.tasksRedis.port | int}}
         {{- end }}
+        USERNAME: {{ .Values.tasksRedis.username | quote }}
         DATABASE: {{ int .Values.tasksRedis.database }}
         SSL: {{ toJson .Values.tasksRedis.ssl }}
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
+        CA_CERT_PATH: {{ .Values.tasksRedis.caCertPath | quote }}
       caching:
         {{- if .Values.redis.enabled }}
         HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.redis) | quote }}
@@ -186,15 +191,18 @@ data:
         HOST: {{ .Values.cachingRedis.host | quote }}
         PORT: {{ .Values.cachingRedis.port | int}}
         {{- end }}
+        USERNAME: {{ .Values.cachingRedis.username | quote }}
         DATABASE: {{ int .Values.cachingRedis.database }}
         SSL: {{ toJson .Values.cachingRedis.ssl }}
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.cachingRedis.insecureSkipTlsVerify }}
+        CA_CERT_PATH: {{ .Values.cachingRedis.caCertPath | quote }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
     CSRF_COOKIE_NAME: {{ .Values.csrf.cookieName | quote }}
     SESSION_COOKIE_NAME: {{ .Values.sessionCookieName }}
+    ENABLE_LOCALIZATION: {{ toJson .Values.enableLocalization }}
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}
     SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}

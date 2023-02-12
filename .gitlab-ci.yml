@@ -10,7 +10,7 @@ helm-lint:
     entrypoint: [""]
   script:
     - helm version
-    - helm dependency update
+    - helm dependency build
     - helm lint --strict
 
 yamllint:

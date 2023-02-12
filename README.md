@@ -377,6 +377,57 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 $ helm install --name my-release bootc/netbox --values values.yaml
 ```
 
+## Persistent storage pitfalls
+
+Persistent storage for media is enabled by default, but unless you take special
+care you will run into issues. The most common issue is that one of the NetBox
+pods gets stuck in the `ContainerCreating` state. There are several ways around
+this problem:
+
+1. For production usage I recommend **disabling** persistent storage by setting
+   `persistence.enabled` to `false` and using the S3 `storageBackend`. This can
+   be used with any S3-compatible storage provider including Amazon S3, Minio,
+   Ceph RGW, and many others. See further down for an example of this.
+2. Use a `ReadWriteMany` volume that can be mounted by several pods across
+   nodes simultaneously.
+3. Configure pod affinity settings to keep all the pods on the same node. This
+   allows a `ReadWriteOnce` volume to be mounted in several pods at the same
+   time.
+4. Disable persistent storage of media altogether and just manage without. The
+   storage functionality is only needed to store uploaded image attachments.
+
+To configure the pod affinity to allow using a `ReadWriteOnce` volume you can
+use the following example configuration:
+
+```yaml
+affinity:
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: netbox
+      topologyKey: kubernetes.io/hostname
+
+
+housekeeping:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: netbox
+        topologyKey: kubernetes.io/hostname
+
+worker:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: netbox
+        topologyKey: kubernetes.io/hostname
+```
+
 ## Using an Existing Secret
 
 Rather than specifying passwords and secrets as part of the Helm release values,

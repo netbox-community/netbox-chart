@@ -393,6 +393,7 @@ externalDatabase:
   sslMode: prefer
   connMaxAge: 300
   disableServerSideCursors: false
+  targetSessionAttrs: read-write
 
 redis:
   ## Deploy Redis using bundled chart

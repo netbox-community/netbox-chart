@@ -70,10 +70,10 @@ data:
 
     DATABASE:
       {{ if .Values.postgresql.enabled -}}
-      HOST: {{ include "netbox.postgresql.fullname" . | quote }}
-      USER: {{ .Values.postgresql.postgresqlUsername | quote }}
-      NAME: {{ .Values.postgresql.postgresqlDatabase | quote }}
-      PORT: {{ .Values.postgresql.service.port | int }}
+      HOST: {{ include "postgresql.primary.fullname" .Subcharts.postgresql | quote }}
+      USER: {{ include "postgresql.username" .Subcharts.postgresql | quote }}
+      NAME: {{ include "postgresql.database" .Subcharts.postgresql | quote }}
+      PORT: {{ include "postgresql.service.port" .Subcharts.postgresql | int }}
       {{- else -}}
       HOST: {{ .Values.externalDatabase.host | quote }}
       USER: {{ .Values.externalDatabase.username | quote }}

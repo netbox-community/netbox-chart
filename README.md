@@ -8,8 +8,8 @@ data center infrastructure management (DCIM) tool.
 ```shell
 $ helm repo add bootc https://charts.boo.tc
 $ helm install netbox \
-  --set postgresql.postgresqlPostgresPassword=[password1] \
-  --set postgresql.postgresqlPassword=[password2] \
+  --set postgresql.auth.postgresPassword=[password1] \
+  --set postgresql.auth.password=[password2] \
   --set redis.auth.password=[password3] \
   bootc/netbox
 ```
@@ -27,8 +27,8 @@ To install the chart with the release name `my-release` and default configuratio
 ```shell
 $ helm repo add bootc https://charts.boo.tc
 $ helm install my-release \
-  --set postgresql.postgresqlPostgresPassword=[password1] \
-  --set postgresql.postgresqlPassword=[password2] \
+  --set postgresql.auth.postgresPassword=[password1] \
+  --set postgresql.auth.password=[password2] \
   --set redis.auth.password=[password3] \
   bootc/netbox
 ```
@@ -85,11 +85,15 @@ $ helm delete my-release
 ### Bundled PostgreSQL
 
 When upgrading or changing settings and using the bundled Bitnami PostgreSQL
-sub-chart, you **must** provide the `postgresql.postgresqlPassword` at minimum.
-Ideally you should also supply the `postgresql.postgresqlPostgresPassword` and,
-if using replication, the `postgresql.replication.password`. Please see the
+sub-chart, you **must** provide the `postgresql.auth.password` at minimum.
+Ideally you should also supply the `postgresql.auth.postgresPassword` and,
+if using replication, the `postgresql.auth.replicationPassword`. Please see the
 [upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
 for further information.
+
+### From 4.x to 5.x
+
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
 
 ### From 3.x to 4.x
 
@@ -248,8 +252,8 @@ The following table lists the configurable parameters for this chart and their d
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
 | `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
-| `postgresql.postgresqlUsername`                 | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
-| `postgresql.postgresqlDatabase`                 | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
+| `postgresql.auth.username`                      | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
+| `postgresql.auth.database`                      | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
 | `postgresql.*`                                  | Values under this key are passed to the bundled PostgreSQL chart    | n/a                                          |
 | `externalDatabase.host`                         | PostgreSQL host to use when `postgresql.enabled` is `false`         | `localhost`                                  |
 | `externalDatabase.port`                         | Port number for external PostgreSQL                                 | `5432`                                       |

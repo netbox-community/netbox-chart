@@ -25,18 +25,6 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Fully qualified app name for postgresql child chart.
-*/}}
-{{- define "netbox.postgresql.fullname" -}}
-{{- if .Values.postgresql.fullnameOverride }}
-{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default "postgresql" .Values.postgresql.nameOverride }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-
-{{/*
 Fully qualified app name for redis child chart.
 */}}
 {{- define "netbox.redis.fullname" -}}
@@ -92,11 +80,7 @@ Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}
   {{- if .Values.postgresql.enabled }}
-    {{- if .Values.postgresql.existingSecret }}
-      {{- .Values.postgresql.existingSecret }}
-    {{- else }}
-      {{- include "netbox.postgresql.fullname" . }}
-    {{- end }}
+    {{- include "postgresql.secretName" .Subcharts.postgresql -}}
   {{- else if .Values.externalDatabase.existingSecretName }}
     {{- .Values.externalDatabase.existingSecretName }}
   {{- else }}
@@ -108,13 +92,13 @@ Name of the Secret that contains the PostgreSQL password
 Name of the key in Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secretKey" -}}
-{{- if .Values.postgresql.enabled -}}
-postgresql-password
-{{- else if .Values.externalDatabase.existingSecretName -}}
-{{ .Values.externalDatabase.existingSecretKey }}
-{{- else -}}
-db_password
-{{- end -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- include "postgresql.userPasswordKey" .Subcharts.postgresql -}}
+  {{- else if .Values.externalDatabase.existingSecretName -}}
+    {{- .Values.externalDatabase.existingSecretKey -}}
+  {{- else -}}
+    db_password
+  {{- end -}}
 {{- end }}
 
 {{/*

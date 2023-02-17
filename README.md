@@ -96,7 +96,7 @@ for further information.
 * NetBox has been updated to 3.4.4, but older 3.x versions should still work. This is not tested or supported, however.
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
 * The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 17.x; please read the upstream upgrade notes if you are using the bundled Redis
-* No partiular upgrade steps are required as long as you are not using the bundled Bitnami PostgreSQL or Redis charts.
+* No particular upgrade steps are required as long as you are not using the bundled Bitnami PostgreSQL or Redis charts.
 
 ### From 3.x to 4.x
 

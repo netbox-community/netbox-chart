@@ -465,6 +465,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# Set this to true to automatically mount the service account token in the containers
+automountServiceAccountToken: false
+
 ## Storage configuration for media
 persistence:
   enabled: true

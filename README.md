@@ -307,7 +307,7 @@ The following table lists the configurable parameters for this chart and their d
 | `serviceAccount.create`                         | Create a ServiceAccount for NetBox                                  | `true`                                       |
 | `serviceAccount.annotations`                    | Annotations to add to the service account                           | `{}`                                         |
 | `serviceAccount.name`                           | The name of the service account to use                              | `""` (use the fullname)                      |
-| `automountServiceAccountToken`                  | Whether to automatically mount the serviceAccount token in the containers or not | `false`                         |
+| `serviceAccount.automountServiceAccountToken`   | Whether to automatically mount the token in the containers using this serviceAccount or not | `false`              |
 | `persistence.enabled`                           | Enable storage persistence for uploaded media (images)              | `true`                                       |
 | `persistence.existingClaim`                     | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |
 | `persistence.subPath`                           | Mount a sub-path of the volume into the container, not the root     | `""`                                         |
@@ -342,6 +342,7 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
+| `automountServiceAccountToken`                  | Whether to automatically mount the serviceAccount token in the main container or not | `false`                     |
 | `topologySpreadConstraints`                     | Configure Pod Topology Spread Constraints for NetBox                | `[]`                                         |
 | `readinessProbe.enabled`                        | Enable Kubernetes readinessProbe, see [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
 | `readinessProbe.initialDelaySeconds`            | Number of seconds                                                   |  *see `values.yaml`*                         |
@@ -379,6 +380,7 @@ The following table lists the configurable parameters for this chart and their d
 | `housekeeping.podLabels`                        | Additional labels for housekeeping CronJob pods                     | `{}`                                         |
 | `housekeeping.podSecurityContext`               | Security context for housekeeping CronJob pods                      | *see `values.yaml`*                          |
 | `housekeeping.securityContext`                  | Security context for housekeeping CronJob containers                | *see `values.yaml`*                          |
+| `housekeeping.automountServiceAccountToken`     | Whether to automatically mount the serviceAccount token in the housekeeping container or not | `false`             |
 | `housekeeping.resources`                        | Configure resource requests or limits for housekeeping CronJob      | `{}`                                         |
 | `housekeeping.nodeSelector`                     | Node labels for housekeeping CronJob pod assignment                 | `{}`                                         |
 | `housekeeping.tolerations`                      | Toleration labels for housekeeping CronJob pod assignment           | `[]`                                         |

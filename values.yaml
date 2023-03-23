@@ -11,7 +11,9 @@ image:
   tag: ""
 
 # You can also use an existing secret for the superuser password and API token
-# See `existingSecret` for details
+# See `existingSecret` for details. The supplied API token must have a minimum
+# length of 40 characters.
+# Do note that these values is only being read on by NetBox on the inital install. 
 superuser:
   name: admin
   email: admin@example.com
@@ -379,7 +381,15 @@ secretKey: ""
 # - secret_key: session encryption token (50+ random characters)
 # - superuser_password: Password for the initial super-user account
 # - superuser_api_token: API token created for the initial super-user account
+#
+# To use existing secrets with the bundled Redis and Postgres charts check the
+# respective values.yaml file of the bundled charts. Note that this chart 
+# is not using the latest version of the bundled charts and because of that
+# the values you find in their latest value.yaml file may not work in this case.
+# While possible, this approach of using the bundled charts for production is 
+# NOT recommended. 
 existingSecret: ""
+
 
 postgresql:
   ## Deploy PostgreSQL using bundled chart

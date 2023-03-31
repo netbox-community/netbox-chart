@@ -300,6 +300,7 @@ remoteAuth:
   #   userDnTemplate: null
   #   userSearchBaseDn: 'OU=Users,OU=MyCompany,DC=domain,dc=com'
   #   userSearchAttr: 'sAMAccountName'
+  #   userSearch: ['OU=Users1,OU=MyCompany,DC=domain,dc=com', 'OU=Users2,OU=MyCompany,DC=domain,dc=com']
   #   groupSearchBaseDn: 'OU=Groups,OU=MyCompany,DC=domain,dc=com'
   #   groupSearchClass: 'group'
   #   groupType: 'GroupOfNamesType'

@@ -239,10 +239,10 @@ data:
     AUTH_LDAP_CONNECTION_OPTIONS = {
         ldap.OPT_REFERRALS: 0
     }
-    {{- if .Values.remoteAuth.ldap.userSearch }}
+    {{- if .Values.remoteAuth.ldap.userSearchDnList }}
     AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
-    {{- range $userSearch := .Values.remoteAuth.ldap.userSearch }}
-      LDAPSearch("{{ $userSearch }}", ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)"),
+    {{- range $userSearchDnList := .Values.remoteAuth.ldap.userSearchDnList }}
+      LDAPSearch("{{ $userSearchDnList }}", ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)"),
     {{- end }}
     )
     {{- end }}

@@ -210,5 +210,8 @@ remoteAuth:
     # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
 
-Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
+Notes:
+
+1. In order to use anonymous LDAP binding set `bindDn` and `bindPassword`
 to an empty string as in the example above.
+2. If more than one user DN exists, set value of `userSearchDnList` to the list of the DNs.

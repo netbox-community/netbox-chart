@@ -284,6 +284,12 @@ remoteAuth:
   staffUsers: []
   groupSeparator: '|'
 
+# Extend configuration.py
+customPythonConfig: []
+  # - "SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY = '<key>'"
+  # - "SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET = '<secret>'"
+
+
   # The following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io

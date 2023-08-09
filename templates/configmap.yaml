@@ -65,6 +65,8 @@ data:
                                      in REDIS['caching']['SENTINELS']]
     {{- end }}
 
+    _load_yaml()
+
   netbox.yaml: |
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
 

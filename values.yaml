@@ -695,6 +695,12 @@ serviceMonitor:
 # Configuration of Cron settings
 housekeeping:
   enabled: true
+
+  args: []
+  command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - housekeeping
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   restartPolicy: OnFailure
@@ -773,6 +779,12 @@ housekeeping:
 # Only required for Netbox Jobs, e.g. Webhooks
 worker:
   enabled: true
+
+  args: []
+  command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - rqworker
 
   replicaCount: 1
 

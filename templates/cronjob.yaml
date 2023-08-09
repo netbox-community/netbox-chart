@@ -55,9 +55,9 @@ spec:
                 {{- toYaml .Values.housekeeping.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               command:
-                - /opt/netbox/venv/bin/python
-                - /opt/netbox/netbox/manage.py
-                - housekeeping
+              {{- toYaml .Values.housekeeping.command | nindent 16 }}
+              args:
+              {{- toYaml .Values.housekeeping.args | nindent 16 }}
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               {{- with .Values.housekeeping.extraEnvs }}
               env:

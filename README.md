@@ -16,9 +16,9 @@ $ helm install netbox \
 
 ## Prerequisites
 
-- This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
+- Kubernetes 1.25.0+ (a [current](https://kubernetes.io/releases/) version)
+- Helm 3.10.0+ (a version [compatible](https://helm.sh/docs/topics/version_skew/) with your cluster)
 - This chart works with NetBox 3.0.0+ (3.0.11+ recommended)
-- Recent versions of Helm 3 are supported
 
 ## Installing the Chart
 

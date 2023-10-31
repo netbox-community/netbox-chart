@@ -65,6 +65,10 @@ data:
                                      in REDIS['caching']['SENTINELS']]
     {{- end }}
 
+    {{- if .Values.allowedHostsIncludesPodIp }}
+    ALLOWED_HOSTS.append(os.getenv("POD_IP"))
+    {{- end }}
+
   netbox.yaml: |
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
 

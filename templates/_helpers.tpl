@@ -68,7 +68,7 @@ Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}
   {{- if .Values.postgresql.enabled }}
-    {{- include "postgresql.secretName" .Subcharts.postgresql -}}
+    {{- include "postgresql.v1.secretName" .Subcharts.postgresql -}}
   {{- else if .Values.externalDatabase.existingSecretName }}
     {{- .Values.externalDatabase.existingSecretName }}
   {{- else }}
@@ -81,7 +81,7 @@ Name of the key in Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secretKey" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- include "postgresql.userPasswordKey" .Subcharts.postgresql -}}
+    {{- include "postgresql.v1.userPasswordKey" .Subcharts.postgresql -}}
   {{- else if .Values.externalDatabase.existingSecretName -}}
     {{- .Values.externalDatabase.existingSecretKey -}}
   {{- else -}}

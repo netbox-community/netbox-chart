@@ -74,10 +74,10 @@ data:
 
     DATABASE:
       {{ if .Values.postgresql.enabled -}}
-      HOST: {{ include "postgresql.primary.fullname" .Subcharts.postgresql | quote }}
-      USER: {{ include "postgresql.username" .Subcharts.postgresql | quote }}
-      NAME: {{ include "postgresql.database" .Subcharts.postgresql | quote }}
-      PORT: {{ include "postgresql.service.port" .Subcharts.postgresql | int }}
+      HOST: {{ include "postgresql.v1.primary.fullname" .Subcharts.postgresql | quote }}
+      USER: {{ include "postgresql.v1.username" .Subcharts.postgresql | quote }}
+      NAME: {{ include "postgresql.v1.database" .Subcharts.postgresql | quote }}
+      PORT: {{ include "postgresql.v1.service.port" .Subcharts.postgresql | int }}
       {{- else -}}
       HOST: {{ .Values.externalDatabase.host | quote }}
       USER: {{ .Values.externalDatabase.username | quote }}

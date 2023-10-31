@@ -151,8 +151,8 @@ Volumes that need to be mounted for .Values.extraConfig entries
   configMap:
     name: {{ include "netbox.fullname" $ }}
     items:
-      - key: extra-{{ $index }}.yaml
-        path: extra-{{ $index }}.yaml
+    - key: extra-{{ $index }}.yaml
+      path: extra-{{ $index }}.yaml
   {{- else if $config.configMap }}
   configMap:
     {{- toYaml $config.configMap | nindent 4 }}

@@ -1,5 +1,4 @@
 {{- if .Values.worker.enabled }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,9 +11,9 @@ metadata:
     {{- include "netbox.labels" . | nindent 4 }}
     app.kubernetes.io/component: worker
 spec:
-{{- if not .Values.worker.autoscaling.enabled }}
+  {{- if not .Values.worker.autoscaling.enabled }}
   replicas: {{ .Values.worker.replicaCount }}
-{{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "netbox.selectorLabels" . | nindent 6 }}
@@ -42,122 +41,122 @@ spec:
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
       {{- with .Values.worker.extraInitContainers }}
       initContainers:
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}-worker
-          securityContext:
-            {{- toYaml .Values.worker.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command:
-            - /opt/netbox/venv/bin/python
-            - /opt/netbox/netbox/manage.py
-            - rqworker
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.worker.extraEnvs }}
-          env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          volumeMounts:
-            - name: config
-              mountPath: /etc/netbox/config/configuration.py
-              subPath: configuration.py
-              readOnly: true
-            {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
-            - name: config
-              mountPath: /etc/netbox/config/ldap/ldap_config.py
-              subPath: ldap_config.py
-              readOnly: true
-            {{ end -}}
-            - name: config
-              mountPath: /run/config/netbox
-              readOnly: true
-            - name: secrets
-              mountPath: /run/secrets/netbox
-              readOnly: true
-            {{- include "netbox.extraConfig.volumeMounts" . | nindent 12 -}}
-            - name: netbox-tmp
-              mountPath: /tmp
-            - name: media
-              mountPath: /opt/netbox/netbox/media
-              subPath: {{ .Values.persistence.subPath | default "" | quote }}
-            {{- if .Values.reportsPersistence.enabled }}
-            - name: reports
-              mountPath: /opt/netbox/netbox/reports
-              subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
-            {{- end }}
-            {{- with .Values.worker.extraVolumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- if .Values.worker.resources }}
-          resources:
-            {{- toYaml .Values.worker.resources | nindent 12 }}
-          {{- end }}
-        {{- with .Values.worker.extraContainers }}
+      - name: {{ .Chart.Name }}-worker
+        securityContext:
+          {{- toYaml .Values.worker.securityContext | nindent 10 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command:
+        - /opt/netbox/venv/bin/python
+        - /opt/netbox/netbox/manage.py
+        - rqworker
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.worker.extraEnvs }}
+        env:
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      volumes:
+        volumeMounts:
         - name: config
-          configMap:
-            name: {{ include "netbox.fullname" . }}
+          mountPath: /etc/netbox/config/configuration.py
+          subPath: configuration.py
+          readOnly: true
+        {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+        - name: config
+          mountPath: /etc/netbox/config/ldap/ldap_config.py
+          subPath: ldap_config.py
+          readOnly: true
+        {{ end -}}
+        - name: config
+          mountPath: /run/config/netbox
+          readOnly: true
         - name: secrets
-          projected:
-            sources:
-              - secret:
-                  name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
-                  items:
-                    # Used by our configuration
-                    - key: email_password
-                      path: email_password
-                    - key: napalm_password
-                      path: napalm_password
-                    - key: secret_key
-                      path: secret_key
-                    {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
-                    - key: ldap_bind_password
-                      path: ldap_bind_password
-                    {{- end }}
-              - secret:
-                  name: {{ include "netbox.postgresql.secret" . | quote }}
-                  items:
-                    - key: {{ include "netbox.postgresql.secretKey" . | quote }}
-                      path: db_password
-              - secret:
-                  name: {{ include "netbox.tasksRedis.secret" . | quote }}
-                  items:
-                    - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
-                      path: redis_tasks_password
-              - secret:
-                  name: {{ include "netbox.cachingRedis.secret" . | quote }}
-                  items:
-                    - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
-                      path: redis_cache_password
-        {{- include "netbox.extraConfig.volumes" . | nindent 8 -}}
+          mountPath: /run/secrets/netbox
+          readOnly: true
+        {{- include "netbox.extraConfig.volumeMounts" . | nindent 8 -}}
         - name: netbox-tmp
-          emptyDir:
-            medium: Memory
+          mountPath: /tmp
         - name: media
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
+          mountPath: /opt/netbox/netbox/media
+          subPath: {{ .Values.persistence.subPath | default "" | quote }}
         {{- if .Values.reportsPersistence.enabled }}
         - name: reports
-          persistentVolumeClaim:
-            claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+          mountPath: /opt/netbox/netbox/reports
+          subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
         {{- end }}
-        {{- with .Values.worker.extraVolumes }}
+        {{- with .Values.worker.extraVolumeMounts }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.worker.resources }}
+        resources:
+          {{- toYaml .Values.worker.resources | nindent 10 }}
+        {{- end }}
+      {{- with .Values.worker.extraContainers }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "netbox.fullname" . }}
+      - name: secrets
+        projected:
+          sources:
+          - secret:
+              name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
+              items:
+              # Used by our configuration
+              - key: email_password
+                path: email_password
+              - key: napalm_password
+                path: napalm_password
+              - key: secret_key
+                path: secret_key
+              {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
+              - key: ldap_bind_password
+                path: ldap_bind_password
+              {{- end }}
+          - secret:
+              name: {{ include "netbox.postgresql.secret" . | quote }}
+              items:
+              - key: {{ include "netbox.postgresql.secretKey" . | quote }}
+                path: db_password
+          - secret:
+              name: {{ include "netbox.tasksRedis.secret" . | quote }}
+              items:
+              - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
+                path: redis_tasks_password
+          - secret:
+              name: {{ include "netbox.cachingRedis.secret" . | quote }}
+              items:
+              - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
+                path: redis_cache_password
+      {{- include "netbox.extraConfig.volumes" . | nindent 6 -}}
+      - name: netbox-tmp
+        emptyDir:
+          medium: Memory
+      - name: media
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      {{- if .Values.reportsPersistence.enabled }}
+      - name: reports
+        persistentVolumeClaim:
+          claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+      {{- end }}
+      {{- with .Values.worker.extraVolumes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -168,10 +167,10 @@ spec:
       {{- end }}
       {{- with .Values.worker.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.worker.hostAliases }}
       hostAliases:
-        {{- toYaml . | indent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
 {{- end }}

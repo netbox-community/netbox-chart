@@ -30,6 +30,10 @@ skipStartupScripts: true
 allowedHosts:
   - '*'
 
+# Include Pod IP in list of allowed hosts by providing it as the 'POD_IP' envvar
+# at runtime, which is then used in the configuration.py.
+allowedHostsIncludesPodIP: true
+
 # Specify one or more name and email address tuples representing NetBox
 # administrators. These people will be notified of application errors (assuming
 # correct email settings are provided).

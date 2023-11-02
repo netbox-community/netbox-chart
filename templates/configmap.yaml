@@ -162,6 +162,7 @@ data:
     REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
     REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}
     REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
+    REMOTE_AUTH_AUTO_CREATE_GROUPS: {{ toJson .Values.remoteAuth.autoCreateGroups }}
     REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}
     REMOTE_AUTH_DEFAULT_PERMISSIONS: {{ toJson .Values.remoteAuth.defaultPermissions }}
     REMOTE_AUTH_GROUP_SYNC_ENABLED: {{ toJson .Values.remoteAuth.groupSyncEnabled }}

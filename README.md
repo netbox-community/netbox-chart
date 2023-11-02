@@ -211,6 +211,7 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.backend`                            | Remote authentication backend class                                 | `netbox.authentication.RemoteUserBackend`    |
 | `remoteAuth.header`                             | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
 | `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `true`                                       |
+| `remoteAuth.autoCreateGroups`                   | Enables the automatic creation of new groups                        | `false`                                      |
 | `remoteAuth.defaultGroups`                      | A list of groups to assign to newly created users                   | `[]`                                         |
 | `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
 | `remoteAuth.groupSyncEnabled`                   | Sync remote user groups from an HTTP header set by a reverse proxy  | `false`                                      |

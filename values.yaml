@@ -278,6 +278,7 @@ remoteAuth:
   backend: netbox.authentication.RemoteUserBackend
   header: HTTP_REMOTE_USER
   autoCreateUser: true
+  autoCreateGroups: false
   defaultGroups: []
   defaultPermissions: {}
   groupSyncEnabled: false

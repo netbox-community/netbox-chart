@@ -621,7 +621,7 @@ readinessProbe:
 init:
   image:
     repository: busybox
-    tag: 1.32.1
+    tag: 1.36.1
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -638,7 +638,7 @@ init:
 test:
   image:
     repository: busybox
-    tag: 1.32.1
+    tag: 1.36.1
     pullPolicy: IfNotPresent
 
   resources: {}

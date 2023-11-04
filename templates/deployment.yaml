@@ -79,6 +79,10 @@ spec:
         - name: DB_WAIT_DEBUG
           value: "1"
         {{- end }}
+        {{- if .Values.overrideUnitConfig }}
+        - name: UNIT_CONFIG
+          value: /run/config/netbox/nginx-unit.json
+        {{- end }}
         {{- with .Values.extraEnvs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

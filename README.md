@@ -260,9 +260,10 @@ The following table lists the configurable parameters for this chart and their d
 | `shortTimeFormat`                               | Django date format for short-form time strings                      | `"H:i:s"`                                    |
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
+| `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
 | `secretKey`                                     | Django secret key used for sessions and password reset tokens       | `""` (generated)                             |
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
-| `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
+| `overrideUnitConfig`                            | Override the NGINX Unit application server configuration            | `{}` (*see values.yaml*)                     |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
 | `postgresql.auth.username`                      | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
 | `postgresql.auth.database`                      | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |

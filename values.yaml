@@ -378,6 +378,51 @@ secretKey: ""
 # - superuser_api_token: API token created for the initial super-user account
 existingSecret: ""
 
+# Override the NGINX Unit configuration inside the container. When enabled, this
+# overrides the default configuration loaded into Unit. The upstream config is:
+# https://github.com/netbox-community/netbox-docker/blob/release/docker/nginx-unit.json
+# Remember that JSON is valid YAML: you can safely copy-and-paste from the above
+# into your values.yaml, or you can copy the YAML version from below as a
+# starting point.
+overrideUnitConfig: {}
+  # listeners:
+  #   "0.0.0.0:8080":
+  #     pass: routes/main
+  #   "[::]:8080":
+  #     pass: routes/main
+  #   "0.0.0.0:8081":
+  #     pass: routes/status
+  #   "[::]:8081":
+  #     pass: routes/status
+  #
+  # routes:
+  #   main:
+  #     - match:
+  #         uri: "/static/*"
+  #       action:
+  #         share: "/opt/netbox/netbox${uri}"
+  #     - action:
+  #         pass: applications/netbox
+  #
+  #   status:
+  #     - match:
+  #         uri: "/status/*"
+  #       action:
+  #         proxy: "http://unix:/opt/unit/unit.sock"
+  #
+  # applications:
+  #   netbox:
+  #     type: "python 3"
+  #     path: /opt/netbox/netbox/
+  #     module: netbox.wsgi
+  #     home: /opt/netbox/venv
+  #     processes:
+  #       max: 4
+  #       spare: 1
+  #       idle_timeout: 120
+  #
+  # access_log: /dev/stdout
+
 postgresql:
   ## Deploy PostgreSQL using bundled chart
   # To use an external database, set this to false and configure the settings

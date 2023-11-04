@@ -302,6 +302,11 @@ data:
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson .Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int .Values.remoteAuth.ldap.cacheTimeout }}
   {{- end }}
+  {{- if .Values.overrideUnitConfig }}
+
+  nginx-unit.json: |-
+    {{- toPrettyJson .Values.overrideUnitConfig | nindent 4 }}
+  {{- end }}
   {{- range $index, $config := .Values.extraConfig -}}
   {{- if $config.values }}
 

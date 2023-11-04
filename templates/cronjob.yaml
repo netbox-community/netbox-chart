@@ -39,6 +39,7 @@ spec:
           {{- toYaml . | nindent 10 }}
           {{- end }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
+          automountServiceAccountToken: {{ .Values.housekeeping.automountServiceAccountToken }}
           securityContext:
             {{- toYaml .Values.housekeeping.podSecurityContext | nindent 12 }}
           {{- with .Values.housekeeping.extraInitContainers }}

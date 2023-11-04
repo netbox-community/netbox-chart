@@ -1,7 +1,7 @@
 apiVersion: v2
 name: netbox
 version: 5.0.0
-appVersion: v3.4.4
+appVersion: v3.6.4
 kubeVersion: ">=1.25.0"
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
 home: https://github.com/bootc/netbox-chart

@@ -115,8 +115,6 @@ spec:
               # Used by our configuration
               - key: email_password
                 path: email_password
-              - key: napalm_password
-                path: napalm_password
               - key: secret_key
                 path: secret_key
               {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}

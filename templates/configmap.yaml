@@ -57,7 +57,6 @@ data:
 
     DATABASE["PASSWORD"] = _load_secret("netbox", "db_password")
     EMAIL["PASSWORD"] = _load_secret("netbox", "email_password")
-    NAPALM_PASSWORD = _load_secret("netbox", "napalm_password")
     REDIS["tasks"]["PASSWORD"] = _load_secret("netbox", "redis_tasks_password")
     REDIS["caching"]["PASSWORD"] = _load_secret("netbox", "redis_cache_password")
     SECRET_KEY = _load_secret("netbox", "secret_key")
@@ -131,7 +130,7 @@ data:
     GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
-    JOBRESULT_RETENTION: {{ int .Values.jobResultRetention }}
+    JOB_RETENTION: {{ int .Values.jobRetention }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
@@ -146,9 +145,6 @@ data:
     STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
     {{- end }}
     METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
-    NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
-    NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
-    NAPALM_ARGS: {{ toJson .Values.napalm.args }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
@@ -159,8 +155,11 @@ data:
     RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: {{ int .Values.rackElevationDefaultUnitHeight }}
     RACK_ELEVATION_DEFAULT_UNIT_WIDTH: {{ int .Values.rackElevationDefaultUnitWidth }}
     REMOTE_AUTH_ENABLED: {{ toJson .Values.remoteAuth.enabled }}
-    REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
+    REMOTE_AUTH_BACKEND: {{ toJson .Values.remoteAuth.backends }}
     REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}
+    REMOTE_AUTH_USER_FIRST_NAME: {{ .Values.remoteAuth.userFirstName | quote }}
+    REMOTE_AUTH_USER_LAST_NAME: {{ .Values.remoteAuth.userLastName | quote }}
+    REMOTE_AUTH_USER_EMAIL: {{ .Values.remoteAuth.userEmail | quote }}
     REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
     REMOTE_AUTH_AUTO_CREATE_GROUPS: {{ toJson .Values.remoteAuth.autoCreateGroups }}
     REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}

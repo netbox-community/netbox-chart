@@ -18,7 +18,7 @@ $ helm install netbox \
 
 - Kubernetes 1.25.0+ (a [current](https://kubernetes.io/releases/) version)
 - Helm 3.10.0+ (a version [compatible](https://helm.sh/docs/topics/version_skew/) with your cluster)
-- This chart works with NetBox 3.0.0+ (3.0.11+ recommended)
+- This chart works with NetBox 3.5.0+ (3.6.4+ recommended)
 
 ## Installing the Chart
 
@@ -93,10 +93,15 @@ for further information.
 
 ### From 4.x to 5.x
 
-* NetBox has been updated to 3.4.4, but older 3.x versions should still work. This is not tested or supported, however.
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 17.x; please read the upstream upgrade notes if you are using the bundled Redis
-* No particular upgrade steps are required as long as you are not using the bundled Bitnami PostgreSQL or Redis charts.
+* NetBox has been updated to 3.6.4, but older 3.5+ versions should still work (this is not tested or supported, however).
+* **Potentially breaking changes:**
+  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in NetBox 3.5.
+  * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
+  * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
+  * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
+  * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 13.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 18.x; please read the upstream upgrade notes if you are using the bundled Redis.
 
 ### From 3.x to 4.x
 
@@ -182,7 +187,7 @@ The following table lists the configurable parameters for this chart and their d
 | `graphQlEnabled`                                | Enable the GraphQL API                                              | `true`                                       |
 | `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
-| `jobResultRetention`                            | The number of days to retain job results (scripts and reports)      | `90`                                         |
+| `jobRetention`                                  | The number of days to retain job results (scripts and reports)      | `90`                                         |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
 | `loginPersistence`                              | Enables users to remain authenticated to NetBox indefinitely        | `false`                                      |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
@@ -194,10 +199,6 @@ The following table lists the configurable parameters for this chart and their d
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
 | `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
-| `napalm.username`                               | Username used by the NAPALM library to access network devices       | `""`                                         |
-| `napalm.password`                               | Password used by the NAPALM library (see also `existingSecret`)     | `""`                                         |
-| `napalm.timeout`                                | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
-| `napalm.args`                                   | A dictionary of optional arguments to pass to NAPALM                | `{}`                                         |
 | `paginateCount`                                 | The default number of objects to display per page in the web UI     | `50`                                         |
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
@@ -208,9 +209,12 @@ The following table lists the configurable parameters for this chart and their d
 | `rackElevationDefaultUnitHeight`                | Rack elevation default height in pixels                             | `22`                                         |
 | `rackElevationDefaultUnitWidth`                 | Rack elevation default width in pixels                              | `220`                                        |
 | `remoteAuth.enabled`                            | Enable remote authentication support                                | `false`                                      |
-| `remoteAuth.backend`                            | Remote authentication backend class                                 | `netbox.authentication.RemoteUserBackend`    |
+| `remoteAuth.backends`                           | Remote authentication backend classes                               | `[netbox.authentication.RemoteUserBackend]`  |
 | `remoteAuth.header`                             | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
-| `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `true`                                       |
+| `remoteAuth.userFirstName`                      | HTTP header which contains the user's first name                    | `HTTP_REMOTE_USER_FIRST_NAME`                |
+| `remoteAuth.userLastName`                       | HTTP header which contains the user's last name                     | `HTTP_REMOTE_USER_LAST_NAME`                 |
+| `remoteAuth.userEmail`                          | HTTP header which contains the user's email address                 | `HTTP_REMOTE_USER_EMAIL`                     |
+| `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `false`                                      |
 | `remoteAuth.autoCreateGroups`                   | Enables the automatic creation of new groups                        | `false`                                      |
 | `remoteAuth.defaultGroups`                      | A list of groups to assign to newly created users                   | `[]`                                         |
 | `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
@@ -462,7 +466,6 @@ this, the `Secret` must contain the following keys:
 | `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
 | `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
 | `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
-| `napalm_password`      | NAPALM user password                                          | Yes, but the value may be left blank if not required                                              |
 | `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
 | `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
 | `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |

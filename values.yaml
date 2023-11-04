@@ -66,6 +66,8 @@ banner:
 # Base URL path if accessing NetBox within a directory. For example, if
 # installed at http://example.com/netbox/, set to 'netbox/'. If using
 # Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
+# This will also require customising the NGINX Unit application server
+# configuration.
 basePath: ''
 
 # Maximum number of days to retain logged changes. Set to 0 to retain change
@@ -175,8 +177,8 @@ internalIPs: ['127.0.0.1', '::1']
 
 # The number of days to retain job results (scripts and reports). Set this to 0
 # to retain job results in the database indefinitely.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#jobresult_retention
-jobResultRetention: 90
+# https://docs.netbox.dev/en/stable/configuration/miscellaneous/#job_retention
+jobRetention: 90
 
 # Enable custom logging. Please see the Django documentation for detailed
 # guidance on configuring custom logs:
@@ -226,19 +228,6 @@ storageConfig: {}
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 metricsEnabled: false
 
-napalm:
-  # Credentials that NetBox will use to access live devices.
-  username: ''
-  password: ''
-
-  # NAPALM timeout (in seconds). (Default: 30)
-  timeout: 30
-
-  # NAPALM optional arguments (see
-  # http://napalm.readthedocs.io/en/latest/support/#optional-arguments).
-  # Arguments must be provided as a dictionary.
-  args: {}
-
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50
 
@@ -275,9 +264,13 @@ rackElevationDefaultUnitWidth: 220
 # Remote authentication support
 remoteAuth:
   enabled: false
-  backend: netbox.authentication.RemoteUserBackend
+  backends:
+    - netbox.authentication.RemoteUserBackend
   header: HTTP_REMOTE_USER
-  autoCreateUser: true
+  userFirstName: HTTP_REMOTE_USER_FIRST_NAME
+  userLastName: HTTP_REMOTE_USER_LAST_NAME
+  userEmail: HTTP_REMOTE_USER_EMAIL
+  autoCreateUser: false
   autoCreateGroups: false
   defaultGroups: []
   defaultPermissions: {}
@@ -376,7 +369,6 @@ secretKey: ""
 #     externalDatabase.existingSecretName is blank)
 # - email_password: SMTP user password
 # - ldap_bind_password: Password for LDAP bind DN
-# - napalm_password: NAPALM user password
 # - redis_tasks_password: Redis password for tasks Redis instance (if
 #     redis.enabled is false and tasksRedis.existingSecretName is blank)
 # - redis_cache_password: Redis password for caching Redis instance (if

@@ -30,6 +30,10 @@ skipStartupScripts: true
 allowedHosts:
   - '*'
 
+# Include Pod IP in list of allowed hosts by providing it as the 'POD_IP' envvar
+# at runtime, which is then used in the configuration.py.
+allowedHostsIncludesPodIP: true
+
 # Specify one or more name and email address tuples representing NetBox
 # administrators. These people will be notified of application errors (assuming
 # correct email settings are provided).
@@ -62,6 +66,8 @@ banner:
 # Base URL path if accessing NetBox within a directory. For example, if
 # installed at http://example.com/netbox/, set to 'netbox/'. If using
 # Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
+# This will also require customising the NGINX Unit application server
+# configuration.
 basePath: ''
 
 # Maximum number of days to retain logged changes. Set to 0 to retain change
@@ -171,8 +177,8 @@ internalIPs: ['127.0.0.1', '::1']
 
 # The number of days to retain job results (scripts and reports). Set this to 0
 # to retain job results in the database indefinitely.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#jobresult_retention
-jobResultRetention: 90
+# https://docs.netbox.dev/en/stable/configuration/miscellaneous/#job_retention
+jobRetention: 90
 
 # Enable custom logging. Please see the Django documentation for detailed
 # guidance on configuring custom logs:
@@ -222,19 +228,6 @@ storageConfig: {}
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 metricsEnabled: false
 
-napalm:
-  # Credentials that NetBox will use to access live devices.
-  username: ''
-  password: ''
-
-  # NAPALM timeout (in seconds). (Default: 30)
-  timeout: 30
-
-  # NAPALM optional arguments (see
-  # http://napalm.readthedocs.io/en/latest/support/#optional-arguments).
-  # Arguments must be provided as a dictionary.
-  args: {}
-
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50
 
@@ -271,9 +264,14 @@ rackElevationDefaultUnitWidth: 220
 # Remote authentication support
 remoteAuth:
   enabled: false
-  backend: netbox.authentication.RemoteUserBackend
+  backends:
+    - netbox.authentication.RemoteUserBackend
   header: HTTP_REMOTE_USER
-  autoCreateUser: true
+  userFirstName: HTTP_REMOTE_USER_FIRST_NAME
+  userLastName: HTTP_REMOTE_USER_LAST_NAME
+  userEmail: HTTP_REMOTE_USER_EMAIL
+  autoCreateUser: false
+  autoCreateGroups: false
   defaultGroups: []
   defaultPermissions: {}
   groupSyncEnabled: false
@@ -371,7 +369,6 @@ secretKey: ""
 #     externalDatabase.existingSecretName is blank)
 # - email_password: SMTP user password
 # - ldap_bind_password: Password for LDAP bind DN
-# - napalm_password: NAPALM user password
 # - redis_tasks_password: Redis password for tasks Redis instance (if
 #     redis.enabled is false and tasksRedis.existingSecretName is blank)
 # - redis_cache_password: Redis password for caching Redis instance (if
@@ -380,6 +377,51 @@ secretKey: ""
 # - superuser_password: Password for the initial super-user account
 # - superuser_api_token: API token created for the initial super-user account
 existingSecret: ""
+
+# Override the NGINX Unit configuration inside the container. When enabled, this
+# overrides the default configuration loaded into Unit. The upstream config is:
+# https://github.com/netbox-community/netbox-docker/blob/release/docker/nginx-unit.json
+# Remember that JSON is valid YAML: you can safely copy-and-paste from the above
+# into your values.yaml, or you can copy the YAML version from below as a
+# starting point.
+overrideUnitConfig: {}
+  # listeners:
+  #   "0.0.0.0:8080":
+  #     pass: routes/main
+  #   "[::]:8080":
+  #     pass: routes/main
+  #   "0.0.0.0:8081":
+  #     pass: routes/status
+  #   "[::]:8081":
+  #     pass: routes/status
+  #
+  # routes:
+  #   main:
+  #     - match:
+  #         uri: "/static/*"
+  #       action:
+  #         share: "/opt/netbox/netbox${uri}"
+  #     - action:
+  #         pass: applications/netbox
+  #
+  #   status:
+  #     - match:
+  #         uri: "/status/*"
+  #       action:
+  #         proxy: "http://unix:/opt/unit/unit.sock"
+  #
+  # applications:
+  #   netbox:
+  #     type: "python 3"
+  #     path: /opt/netbox/netbox/
+  #     module: netbox.wsgi
+  #     home: /opt/netbox/venv
+  #     processes:
+  #       max: 4
+  #       spare: 1
+  #       idle_timeout: 120
+  #
+  # access_log: /dev/stdout
 
 postgresql:
   ## Deploy PostgreSQL using bundled chart
@@ -466,6 +508,8 @@ serviceAccount:
   name: ""
   # Existing secret name to use for container registry authentication
   imagePullSecrets: []
+  # Set this to true to automatically mount the token in the containers using this service account
+  automountServiceAccountToken: false
 
 ## Storage configuration for media
 persistence:
@@ -587,6 +631,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Set this to true to automatically mount the service account token in the main container
+automountServiceAccountToken: false
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -618,7 +665,7 @@ readinessProbe:
 init:
   image:
     repository: busybox
-    tag: 1.32.1
+    tag: 1.36.1
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -635,7 +682,7 @@ init:
 test:
   image:
     repository: busybox
-    tag: 1.32.1
+    tag: 1.36.1
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -723,6 +770,9 @@ housekeeping:
     runAsUser: 1000
     runAsGroup: 1000
 
+  # Set this to true to automatically mount the service account token in the housekeeping container
+  automountServiceAccountToken: false
+
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -796,6 +846,10 @@ worker:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
+  
+  # Set this to true to automatically mount the service account token in the worker container
+  automountServiceAccountToken: false
+  
 
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

@@ -13,12 +13,13 @@ $ helm install netbox \
   --set redis.auth.password=[password3] \
   bootc/netbox
 ```
+⚠️ **WARNING:** Please see [Production Usage](#production-usage) below before using this chart for real.
 
 ## Prerequisites
 
-- This chart has only been tested on Kubernetes 1.18+, but should work on 1.14+
-- This chart works with NetBox 3.0.0+ (3.0.11+ recommended)
-- Recent versions of Helm 3 are supported
+- Kubernetes 1.25.0+ (a [current](https://kubernetes.io/releases/) version)
+- Helm 3.10.0+ (a version [compatible](https://helm.sh/docs/topics/version_skew/) with your cluster)
+- This chart works with NetBox 3.5.0+ (3.6.4+ recommended)
 
 ## Installing the Chart
 
@@ -34,7 +35,7 @@ $ helm install my-release \
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
-services, but either or both may be managed externally if required.
+services, but both should be managed externally in production deployments; see below.
 
 ### Production Usage
 
@@ -52,7 +53,7 @@ with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
 Set `persistence.enabled` to `false` and use the S3 `storageBackend` for object
-storage. This works well with Minio or Ceph RGW as well as Amazon S3.
+storage. This works well with Minio or Ceph RGW as well as Amazon S3. See [Using extraConfig for S3 storage configuration](#using-extraconfig-for-s3-storage-configuration) and [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
 Run multiple replicas of the NetBox web front-end to avoid interruptions during
 upgrades or at other times when the pods need to be restarted. There's no need
@@ -60,7 +61,7 @@ to have multiple workers (`worker.replicaCount`) for better availability. Set
 up `affinity.podAntiAffinity` to avoid multiple NetBox pods being colocated on
 the same node, for example:
 
-```
+```yaml
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -93,10 +94,15 @@ for further information.
 
 ### From 4.x to 5.x
 
-* NetBox has been updated to 3.4.4, but older 3.x versions should still work. This is not tested or supported, however.
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 17.x; please read the upstream upgrade notes if you are using the bundled Redis
-* No particular upgrade steps are required as long as you are not using the bundled Bitnami PostgreSQL or Redis charts.
+* NetBox has been updated to 3.6.4, but older 3.5+ versions should still work (this is not tested or supported, however).
+* **Potentially breaking changes:**
+  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in NetBox 3.5.
+  * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
+  * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
+  * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
+  * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 13.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 18.x; please read the upstream upgrade notes if you are using the bundled Redis.
 
 ### From 3.x to 4.x
 
@@ -182,7 +188,7 @@ The following table lists the configurable parameters for this chart and their d
 | `graphQlEnabled`                                | Enable the GraphQL API                                              | `true`                                       |
 | `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |
-| `jobResultRetention`                            | The number of days to retain job results (scripts and reports)      | `90`                                         |
+| `jobRetention`                                  | The number of days to retain job results (scripts and reports)      | `90`                                         |
 | `logging`                                       | Custom Django logging configuration                                 | `{}`                                         |
 | `loginPersistence`                              | Enables users to remain authenticated to NetBox indefinitely        | `false`                                      |
 | `loginRequired`                                 | Permit only logged-in users to access NetBox                        | `false` (unauthenticated read-only access)   |
@@ -194,10 +200,6 @@ The following table lists the configurable parameters for this chart and their d
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
 | `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
-| `napalm.username`                               | Username used by the NAPALM library to access network devices       | `""`                                         |
-| `napalm.password`                               | Password used by the NAPALM library (see also `existingSecret`)     | `""`                                         |
-| `napalm.timeout`                                | Timeout for NAPALM to connect to a device (in seconds)              | `30`                                         |
-| `napalm.args`                                   | A dictionary of optional arguments to pass to NAPALM                | `{}`                                         |
 | `paginateCount`                                 | The default number of objects to display per page in the web UI     | `50`                                         |
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
@@ -208,9 +210,13 @@ The following table lists the configurable parameters for this chart and their d
 | `rackElevationDefaultUnitHeight`                | Rack elevation default height in pixels                             | `22`                                         |
 | `rackElevationDefaultUnitWidth`                 | Rack elevation default width in pixels                              | `220`                                        |
 | `remoteAuth.enabled`                            | Enable remote authentication support                                | `false`                                      |
-| `remoteAuth.backend`                            | Remote authentication backend class                                 | `netbox.authentication.RemoteUserBackend`    |
+| `remoteAuth.backends`                           | Remote authentication backend classes                               | `[netbox.authentication.RemoteUserBackend]`  |
 | `remoteAuth.header`                             | The name of the HTTP header which conveys the username              | `HTTP_REMOTE_USER`                           |
-| `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `true`                                       |
+| `remoteAuth.userFirstName`                      | HTTP header which contains the user's first name                    | `HTTP_REMOTE_USER_FIRST_NAME`                |
+| `remoteAuth.userLastName`                       | HTTP header which contains the user's last name                     | `HTTP_REMOTE_USER_LAST_NAME`                 |
+| `remoteAuth.userEmail`                          | HTTP header which contains the user's email address                 | `HTTP_REMOTE_USER_EMAIL`                     |
+| `remoteAuth.autoCreateUser`                     | Enables the automatic creation of new users                         | `false`                                      |
+| `remoteAuth.autoCreateGroups`                   | Enables the automatic creation of new groups                        | `false`                                      |
 | `remoteAuth.defaultGroups`                      | A list of groups to assign to newly created users                   | `[]`                                         |
 | `remoteAuth.defaultPermissions`                 | A list of permissions to assign newly created users                 | `{}`                                         |
 | `remoteAuth.groupSyncEnabled`                   | Sync remote user groups from an HTTP header set by a reverse proxy  | `false`                                      |
@@ -255,9 +261,10 @@ The following table lists the configurable parameters for this chart and their d
 | `shortTimeFormat`                               | Django date format for short-form time strings                      | `"H:i:s"`                                    |
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
+| `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
 | `secretKey`                                     | Django secret key used for sessions and password reset tokens       | `""` (generated)                             |
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
-| `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
+| `overrideUnitConfig`                            | Override the NGINX Unit application server configuration            | `{}` (*see values.yaml*)                     |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
 | `postgresql.auth.username`                      | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
 | `postgresql.auth.database`                      | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
@@ -307,6 +314,8 @@ The following table lists the configurable parameters for this chart and their d
 | `serviceAccount.create`                         | Create a ServiceAccount for NetBox                                  | `true`                                       |
 | `serviceAccount.annotations`                    | Annotations to add to the service account                           | `{}`                                         |
 | `serviceAccount.name`                           | The name of the service account to use                              | `""` (use the fullname)                      |
+| `serviceAccount.imagePullSecrets`               | Add an imagePullSecrets attribute to the serviceAccount             | `""`                                         |
+| `serviceAccount.automountServiceAccountToken`   | Whether to automatically mount the token in the containers using this serviceAccount or not | `false`              |
 | `persistence.enabled`                           | Enable storage persistence for uploaded media (images)              | `true`                                       |
 | `persistence.existingClaim`                     | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |
 | `persistence.subPath`                           | Mount a sub-path of the volume into the container, not the root     | `""`                                         |
@@ -341,6 +350,7 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
+| `automountServiceAccountToken`                  | Whether to automatically mount the serviceAccount token in the main container or not | `false`                     |
 | `topologySpreadConstraints`                     | Configure Pod Topology Spread Constraints for NetBox                | `[]`                                         |
 | `readinessProbe.enabled`                        | Enable Kubernetes readinessProbe, see [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
 | `readinessProbe.initialDelaySeconds`            | Number of seconds                                                   |  *see `values.yaml`*                         |
@@ -378,6 +388,7 @@ The following table lists the configurable parameters for this chart and their d
 | `housekeeping.podLabels`                        | Additional labels for housekeeping CronJob pods                     | `{}`                                         |
 | `housekeeping.podSecurityContext`               | Security context for housekeeping CronJob pods                      | *see `values.yaml`*                          |
 | `housekeeping.securityContext`                  | Security context for housekeeping CronJob containers                | *see `values.yaml`*                          |
+| `housekeeping.automountServiceAccountToken`     | Whether to automatically mount the serviceAccount token in the housekeeping container or not | `false`             |
 | `housekeeping.resources`                        | Configure resource requests or limits for housekeeping CronJob      | `{}`                                         |
 | `housekeeping.nodeSelector`                     | Node labels for housekeeping CronJob pod assignment                 | `{}`                                         |
 | `housekeeping.tolerations`                      | Toleration labels for housekeeping CronJob pod assignment           | `[]`                                         |
@@ -461,7 +472,6 @@ this, the `Secret` must contain the following keys:
 | `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
 | `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
 | `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
-| `napalm_password`      | NAPALM user password                                          | Yes, but the value may be left blank if not required                                              |
 | `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
 | `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
 | `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |

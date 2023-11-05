@@ -3,18 +3,18 @@ kind: Pod
 metadata:
   name: "{{ include "netbox.fullname" . }}-test-connection"
   labels:
-{{ include "netbox.labels" . | indent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
   containers:
-    - name: wget
-      image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
-      imagePullPolicy: {{ .Values.test.image.pullPolicy }}
-      command: ['wget']
-      args: ['{{ include "netbox.fullname" . }}:{{ .Values.service.port }}']
-      {{- if .Values.test.resources }}
-      resources:
-        {{- toYaml .Values.test.resources | nindent 8 }}
-      {{- end }}
+  - name: wget
+    image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
+    imagePullPolicy: {{ .Values.test.image.pullPolicy }}
+    command: ['wget']
+    args: ['{{ include "netbox.fullname" . }}:{{ .Values.service.port }}']
+    {{- if .Values.test.resources }}
+    resources:
+      {{- toYaml .Values.test.resources | nindent 6 }}
+    {{- end }}
   restartPolicy: Never

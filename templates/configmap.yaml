@@ -7,73 +7,82 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-{{ include "netbox.labels" . | indent 4 }}
+    {{- include "netbox.labels" . | nindent 4 }}
 data:
-  configuration.py: |
+  configuration.py: |-
     import re
-    import yaml
-
     from pathlib import Path
 
+    import yaml
+
+
     def _deep_merge(source, destination):
-      """Inspired by https://stackoverflow.com/a/20666342"""
-      for key, value in source.items():
-        dst_value = destination.get(key)
+        """Inspired by https://stackoverflow.com/a/20666342"""
+        for key, value in source.items():
+            dst_value = destination.get(key)
 
-        if isinstance(value, dict) and isinstance(dst_value, dict):
-          _deep_merge(value, dst_value)
-        else:
-          destination[key] = value
+            if isinstance(value, dict) and isinstance(dst_value, dict):
+                _deep_merge(value, dst_value)
+            else:
+                destination[key] = value
 
-      return destination
+        return destination
+
 
     def _load_yaml():
-      extraConfigBase = Path('/run/config/extra')
-      configFiles = [Path('/run/config/netbox/netbox.yaml')]
+        extraConfigBase = Path("/run/config/extra")
+        configFiles = [Path("/run/config/netbox/netbox.yaml")]
 
-      configFiles.extend(sorted(extraConfigBase.glob('*/*.yaml')))
+        configFiles.extend(sorted(extraConfigBase.glob("*/*.yaml")))
 
-      for configFile in configFiles:
-        with open(configFile, 'r') as f:
-          config = yaml.safe_load(f)
+        for configFile in configFiles:
+            with open(configFile, "r") as f:
+                config = yaml.safe_load(f)
 
-        _deep_merge(config, globals())
+            _deep_merge(config, globals())
+
 
     def _load_secret(name, key):
-      path = "/run/secrets/{name}/{key}".format(name=name, key=key)
-      with open(path, 'r') as f:
-        return f.read()
+        path = "/run/secrets/{name}/{key}".format(name=name, key=key)
+        with open(path, "r") as f:
+            return f.read()
+
+
+    CORS_ORIGIN_REGEX_WHITELIST = list()
+    DATABASE = dict()
+    EMAIL = dict()
+    REDIS = dict()
 
     _load_yaml()
 
-    DATABASE['PASSWORD'] = _load_secret('netbox', 'db_password')
-    EMAIL['PASSWORD'] = _load_secret('netbox', 'email_password')
-    NAPALM_PASSWORD = _load_secret('netbox', 'napalm_password')
-    REDIS['tasks']['PASSWORD'] = _load_secret('netbox', 'redis_tasks_password')
-    REDIS['caching']['PASSWORD'] = _load_secret('netbox', 'redis_cache_password')
-    SECRET_KEY = _load_secret('netbox', 'secret_key')
+    DATABASE["PASSWORD"] = _load_secret("netbox", "db_password")
+    EMAIL["PASSWORD"] = _load_secret("netbox", "email_password")
+    REDIS["tasks"]["PASSWORD"] = _load_secret("netbox", "redis_tasks_password")
+    REDIS["caching"]["PASSWORD"] = _load_secret("netbox", "redis_cache_password")
+    SECRET_KEY = _load_secret("netbox", "secret_key")
 
     # Post-process certain values
-    CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r
-                                   in CORS_ORIGIN_REGEX_WHITELIST]
+    CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]
     {{- if and (not .Values.redis.enabled) .Values.tasksRedis.sentinels }}
-    REDIS['tasks']['SENTINELS'] = [tuple(x.split(r":")) for x
-                                   in REDIS['tasks']['SENTINELS']]
+    REDIS['tasks']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['tasks']['SENTINELS']]
     {{- end }}
     {{- if and (not .Values.redis.enabled) .Values.cachingRedis.sentinels }}
-    REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x
-                                     in REDIS['caching']['SENTINELS']]
+    REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['caching']['SENTINELS']]
     {{- end }}
 
-  netbox.yaml: |
+    {{- if .Values.allowedHostsIncludesPodIp }}
+    ALLOWED_HOSTS.append(os.getenv("POD_IP"))
+    {{- end }}
+
+  netbox.yaml: |-
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
 
     DATABASE:
       {{ if .Values.postgresql.enabled -}}
-      HOST: {{ include "postgresql.primary.fullname" .Subcharts.postgresql | quote }}
-      USER: {{ include "postgresql.username" .Subcharts.postgresql | quote }}
-      NAME: {{ include "postgresql.database" .Subcharts.postgresql | quote }}
-      PORT: {{ include "postgresql.service.port" .Subcharts.postgresql | int }}
+      HOST: {{ include "postgresql.v1.primary.fullname" .Subcharts.postgresql | quote }}
+      USER: {{ include "postgresql.v1.username" .Subcharts.postgresql | quote }}
+      NAME: {{ include "postgresql.v1.database" .Subcharts.postgresql | quote }}
+      PORT: {{ include "postgresql.v1.service.port" .Subcharts.postgresql | int }}
       {{- else -}}
       HOST: {{ .Values.externalDatabase.host | quote }}
       USER: {{ .Values.externalDatabase.username | quote }}
@@ -121,7 +130,7 @@ data:
     GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}
-    JOBRESULT_RETENTION: {{ int .Values.jobResultRetention }}
+    JOB_RETENTION: {{ int .Values.jobRetention }}
     LOGGING: {{ toJson .Values.logging }}
     LOGIN_PERSISTENCE: {{ toJson .Values.loginPersistence }}
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
@@ -131,12 +140,11 @@ data:
     MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
+    {{- if .Values.storageBackend }}
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
     STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
+    {{- end }}
     METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
-    NAPALM_USERNAME: {{ .Values.napalm.username | quote }}
-    NAPALM_TIMEOUT: {{ int .Values.napalm.timeout }}
-    NAPALM_ARGS: {{ toJson .Values.napalm.args }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}
@@ -147,9 +155,13 @@ data:
     RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: {{ int .Values.rackElevationDefaultUnitHeight }}
     RACK_ELEVATION_DEFAULT_UNIT_WIDTH: {{ int .Values.rackElevationDefaultUnitWidth }}
     REMOTE_AUTH_ENABLED: {{ toJson .Values.remoteAuth.enabled }}
-    REMOTE_AUTH_BACKEND: {{ .Values.remoteAuth.backend | quote }}
+    REMOTE_AUTH_BACKEND: {{ toJson .Values.remoteAuth.backends }}
     REMOTE_AUTH_HEADER: {{ .Values.remoteAuth.header | quote }}
+    REMOTE_AUTH_USER_FIRST_NAME: {{ .Values.remoteAuth.userFirstName | quote }}
+    REMOTE_AUTH_USER_LAST_NAME: {{ .Values.remoteAuth.userLastName | quote }}
+    REMOTE_AUTH_USER_EMAIL: {{ .Values.remoteAuth.userEmail | quote }}
     REMOTE_AUTH_AUTO_CREATE_USER: {{ toJson .Values.remoteAuth.autoCreateUser }}
+    REMOTE_AUTH_AUTO_CREATE_GROUPS: {{ toJson .Values.remoteAuth.autoCreateGroups }}
     REMOTE_AUTH_DEFAULT_GROUPS: {{ toJson .Values.remoteAuth.defaultGroups }}
     REMOTE_AUTH_DEFAULT_PERMISSIONS: {{ toJson .Values.remoteAuth.defaultPermissions }}
     REMOTE_AUTH_GROUP_SYNC_ENABLED: {{ toJson .Values.remoteAuth.groupSyncEnabled }}
@@ -213,52 +225,67 @@ data:
 
   {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
 
-  ldap_config.py: |
-    import yaml
-    import ldap
-    from django_auth_ldap.config import LDAPSearch
+  ldap_config.py: |-
     from importlib import import_module
+
+    from django_auth_ldap.config import LDAPSearch
+
+    import ldap
+
+    import yaml
+
+
     def _load_yaml():
-      with open('/run/config/netbox/ldap.yaml', 'r') as f:
-        config = yaml.safe_load(f)
-      globals().update(config)
+        with open("/run/config/netbox/ldap.yaml", "r") as f:
+            config = yaml.safe_load(f)
+        globals().update(config)
+
+
     def _load_secret(name, key):
-      path = "/run/secrets/{name}/{key}".format(name=name, key=key)
-      with open(path, 'r') as f:
-        return f.read()
+        path = "/run/secrets/{name}/{key}".format(name=name, key=key)
+        with open(path, "r") as f:
+            return f.read()
+
+
     # Import and return the group type based on string name
     def _import_group_type(group_type_name):
-        mod = import_module('django_auth_ldap.config')
+        mod = import_module("django_auth_ldap.config")
         try:
             return getattr(mod, group_type_name)()
-        except:
+        except AttributeError:
             return None
+
+
     _load_yaml()
-    AUTH_LDAP_BIND_PASSWORD = _load_secret('netbox', 'ldap_bind_password')
+
+    AUTH_LDAP_BIND_PASSWORD = _load_secret("netbox", "ldap_bind_password")
     # The following may be needed if you are binding to Active Directory.
-    AUTH_LDAP_CONNECTION_OPTIONS = {
-        ldap.OPT_REFERRALS: 0
-    }
-    AUTH_LDAP_USER_SEARCH = LDAPSearch(AUTH_LDAP_USER_SEARCH_BASEDN,
-                                      ldap.SCOPE_SUBTREE,
-                                      "(" + AUTH_LDAP_USER_SEARCH_ATTR + "=%(user)s)")
-    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_SEARCH_BASEDN, ldap.SCOPE_SUBTREE,
-                                  "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")")
+    AUTH_LDAP_CONNECTION_OPTIONS = {ldap.OPT_REFERRALS: 0}
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(
+        AUTH_LDAP_USER_SEARCH_BASEDN,
+        ldap.SCOPE_SUBTREE,
+        "(" + AUTH_LDAP_USER_SEARCH_ATTR + "=%(user)s)",
+    )
+    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+        AUTH_LDAP_GROUP_SEARCH_BASEDN,
+        ldap.SCOPE_SUBTREE,
+        "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")",
+    )
     AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
     # Define special user types using groups. Exercise great caution when assigning superuser status.
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
         "is_active": AUTH_LDAP_REQUIRE_GROUP,
         "is_staff": {{ .Values.remoteAuth.ldap.isAdminDn | quote }},
-        "is_superuser": {{ .Values.remoteAuth.ldap.isSuperUserDn | quote }}
+        "is_superuser": {{ .Values.remoteAuth.ldap.isSuperUserDn | quote }},
     }
     # Populate the Django user from the LDAP directory.
     AUTH_LDAP_USER_ATTR_MAP = {
         "first_name": {{ .Values.remoteAuth.ldap.attrFirstName | quote }},
         "last_name": {{ .Values.remoteAuth.ldap.attrLastName | quote }},
-        "email": {{ .Values.remoteAuth.ldap.attrMail | quote }}
+        "email": {{ .Values.remoteAuth.ldap.attrMail | quote }},
     }
 
-  ldap.yaml: |
+  ldap.yaml: |-
     AUTH_LDAP_SERVER_URI: {{ .Values.remoteAuth.ldap.serverUri | quote }}
     AUTH_LDAP_BIND_DN: {{ .Values.remoteAuth.ldap.bindDn | quote }}
     AUTH_LDAP_START_TLS: {{ toJson .Values.remoteAuth.ldap.startTls }}
@@ -275,9 +302,15 @@ data:
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson .Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int .Values.remoteAuth.ldap.cacheTimeout }}
   {{- end }}
-  {{ range $index, $config := .Values.extraConfig -}}
+  {{- if .Values.overrideUnitConfig }}
+
+  nginx-unit.json: |-
+    {{- toPrettyJson .Values.overrideUnitConfig | nindent 4 }}
+  {{- end }}
+  {{- range $index, $config := .Values.extraConfig -}}
   {{- if $config.values }}
-  extra-{{ $index }}.yaml: |
+
+  extra-{{ $index }}.yaml: |-
     {{- toYaml $config.values | nindent 4 }}
   {{- end }}
   {{ end -}}

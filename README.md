@@ -13,6 +13,7 @@ $ helm install netbox \
   --set redis.auth.password=[password3] \
   bootc/netbox
 ```
+⚠️ **WARNING:** Please see [Production Usage](#production-usage) below before using this chart for real.
 
 ## Prerequisites
 
@@ -34,7 +35,7 @@ $ helm install my-release \
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
-services, but either or both may be managed externally if required.
+services, but both should be managed externally in production deployments; see below.
 
 ### Production Usage
 
@@ -52,7 +53,7 @@ with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
 Set `persistence.enabled` to `false` and use the S3 `storageBackend` for object
-storage. This works well with Minio or Ceph RGW as well as Amazon S3.
+storage. This works well with Minio or Ceph RGW as well as Amazon S3. See [Using extraConfig for S3 storage configuration](#using-extraconfig-for-s3-storage-configuration) and [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
 Run multiple replicas of the NetBox web front-end to avoid interruptions during
 upgrades or at other times when the pods need to be restarted. There's no need
@@ -60,7 +61,7 @@ to have multiple workers (`worker.replicaCount`) for better availability. Set
 up `affinity.podAntiAffinity` to avoid multiple NetBox pods being colocated on
 the same node, for example:
 
-```
+```yaml
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:

@@ -314,6 +314,7 @@ The following table lists the configurable parameters for this chart and their d
 | `serviceAccount.create`                         | Create a ServiceAccount for NetBox                                  | `true`                                       |
 | `serviceAccount.annotations`                    | Annotations to add to the service account                           | `{}`                                         |
 | `serviceAccount.name`                           | The name of the service account to use                              | `""` (use the fullname)                      |
+| `serviceAccount.imagePullSecrets`               | Add an imagePullSecrets attribute to the serviceAccount             | `""`                                         |
 | `serviceAccount.automountServiceAccountToken`   | Whether to automatically mount the token in the containers using this serviceAccount or not | `false`              |
 | `persistence.enabled`                           | Enable storage persistence for uploaded media (images)              | `true`                                       |
 | `persistence.existingClaim`                     | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |

@@ -61,11 +61,13 @@ spec:
               mountPath: /etc/netbox/config/configuration.py
               subPath: configuration.py
               readOnly: true
-            {{ if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" -}}
+            {{- range .Values.remoteAuth.backends }}
+            {{- if eq . "netbox.authentication.LDAPBackend" }}
             - name: config
               mountPath: /etc/netbox/config/ldap/ldap_config.py
               subPath: ldap_config.py
               readOnly: true
+            {{ end -}}
             {{ end -}}
             - name: config
               mountPath: /run/config/netbox
@@ -110,9 +112,11 @@ spec:
                     path: email_password
                   - key: secret_key
                     path: secret_key
-                  {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
+                  {{- range .Values.remoteAuth.backends }}
+                  {{- if eq . "netbox.authentication.LDAPBackend" }}
                   - key: ldap_bind_password
                     path: ldap_bind_password
+                  {{- end }}
                   {{- end }}
               - secret:
                   name: {{ include "netbox.postgresql.secret" . | quote }}

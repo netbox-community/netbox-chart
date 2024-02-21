@@ -9,6 +9,10 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+  # Overrides the command used to run the container when set
+  command: []
+  # Overrides the args used to run the container when set
+  args: []
 
 # You can also use an existing secret for the superuser password and API token
 # See `existingSecret` for details

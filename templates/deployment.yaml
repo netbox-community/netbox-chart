@@ -69,6 +69,16 @@ spec:
           {{- toYaml .Values.securityContext | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.image.command }}
+        command: {{ range . }}
+          - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.image.args }}
+        args: {{ range . }}
+          - {{ . | quote }}
+        {{- end }}
+        {{- end }}
         env:
         - name: SUPERUSER_NAME
           value: {{ .Values.superuser.name | quote }}

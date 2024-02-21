@@ -147,6 +147,8 @@ The following table lists the configurable parameters for this chart and their d
 | `image.repository`                              | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
 | `image.tag`                                     | NetBox container image tag                                          | `""`                                         |
 | `image.pullPolicy`                              | NetBox container image pull policy                                  | `IfNotPresent`                               |
+| `image.command`                                 | NetBox container image command/entrypoint                           | *unset, see Dockerfile*                      |
+| `image.args`                                    | NetBox container image args                                         | *unset, see Dockerfile*                      |
 | `superuser.name`                                | Initial super-user account to create                                | `admin`                                      |
 | `superuser.email`                               | Email address for the initial super-user account                    | `admin@example.com`                          |
 | `superuser.password`                            | Password for the initial super-user account                         | `admin`                                      |

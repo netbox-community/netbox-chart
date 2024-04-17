@@ -20,3 +20,10 @@
 .idea/
 *.tmproj
 .vscode/
+
+# OWNERS file for Kubernetes
+OWNERS
+# example production yaml
+values-production.yaml
+# ci files
+ci/

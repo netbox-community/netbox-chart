@@ -16,16 +16,16 @@ maintainers:
   - name: Chris Boot
     url: https://github.com/bootc
 dependencies:
+  - name: common
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: ^2.19.1
+    tags:
+      - bitnami-common
   - name: postgresql
-    version: 13.x.x
+    version: ^13.4.6
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: 18.x.x
+    version: ^18.19.4
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
-annotations:
-  artifacthub.io/license: Apache-2.0
-  artifacthub.io/links: |
-    - name: Upstream Project
-      url: https://github.com/netbox-community/netbox

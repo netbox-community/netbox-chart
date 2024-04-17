@@ -1,0 +1,55 @@
+# yamllint disable rule:document-start
+# https://docs.github.com/actions
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.list-changed.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config config.yaml)
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+  test:
+    name: Test
+    if: needs.prepare.outputs.changed == 'true'
+    needs:
+      - prepare
+    uses: ./.github/workflows/test.yml
+    with:
+      action-matrix: '["lint", "install", "install --upgrade"]'
+
+  release:
+    name: Release
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    # secrets:
+    #   GPG_KEY_BASE64: ${{ secrets.GPG_KEY_BASE64 }}

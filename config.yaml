@@ -1,0 +1,11 @@
+owner: netbox-community
+repo: netbox-chart
+remote: origin
+target-branch: develop
+sign: false
+key: NetBox Community
+chart-dirs:
+  - charts
+chart-repos:
+  - bitnami=https://charts.bitnami.com/bitnami
+generate-release-notes: true

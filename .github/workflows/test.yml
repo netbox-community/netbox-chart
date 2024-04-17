@@ -1,0 +1,45 @@
+# yamllint disable rule:document-start
+# https://docs.github.com/actions
+
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      action-matrix:
+        required: false
+        default: '["install"]'
+        type: string
+        description: Matrix of actions to run
+
+jobs:
+  ct:
+    name: Run chart-testing
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        action: ${{ fromJSON(inputs.action-matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - uses: actions/setup-python@v5
+        if: startsWith(matrix.action, 'lint')
+        with:
+          python-version: 3.x
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.9.0
+        if: startsWith(matrix.action, 'install')
+
+      - name: Run chart-testing (${{ matrix.action }})
+        run: ct ${{ matrix.action }} --config config.yaml --debug

@@ -173,3 +173,14 @@ Volume mounts for .Values.extraConfig entries
   readOnly: true
 {{ end -}}
 {{- end }}
+
+{{/*
+Name of the Secret that contains the Email password
+*/}}
+{{- define "netbox.email.secret" -}}
+{{- if .Values.email.existingSecretName }}
+  {{- .Values.email.existingSecretName }}
+{{- else }}
+  {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+{{- end }}
+{{- end }}

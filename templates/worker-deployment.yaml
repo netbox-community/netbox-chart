@@ -114,14 +114,17 @@ spec:
               name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
               items:
               # Used by our configuration
-              - key: email_password
-                path: email_password
               - key: secret_key
                 path: secret_key
               {{- if eq .Values.remoteAuth.backend "netbox.authentication.LDAPBackend" }}
               - key: ldap_bind_password
                 path: ldap_bind_password
               {{- end }}
+          - secret:
+              name: {{ include "netbox.email.secret" . | quote }}
+              items:
+                - key: email_password
+                  path: email_password
           - secret:
               name: {{ include "netbox.postgresql.secret" . | quote }}
               items:

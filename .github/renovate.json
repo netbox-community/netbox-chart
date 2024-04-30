@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disableDependencyDashboard"
+  ],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "bumpVersion": "patch"
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["major"],
+      "bumpVersion": "minor"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["(^|/)Chart.yaml$"],
+      "matchStrings": [
+        "\\nname: (?<depName>.*?)\\n",
+        "\\nappVersion: \"(?<currentValue>.*?)\"\\n"
+      ],
+      "matchStringsStrategy": "combination",
+      "depNameTemplate": "ghcr.io/netbox-community/{{{depName}}}",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver-coerced"
+    }
+  ],
+  "github-actions": {
+    "enabled": false
+  }
+}

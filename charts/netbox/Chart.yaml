@@ -11,9 +11,9 @@ sources:
   - https://github.com/netbox-community/netbox
   - https://github.com/netbox-community/netbox-chart
 maintainers:
-  - name: NetBox Community
+  - name: netbox-community
     url: https://github.com/netbox-community
-  - name: Chris Boot
+  - name: bootc
     url: https://github.com/bootc
 dependencies:
   - name: common

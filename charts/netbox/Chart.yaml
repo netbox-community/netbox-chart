@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta0
+version: 5.0.0-beta1
 appVersion: "v3.6.4"
 type: application
 kubeVersion: ^1.25.0-0
@@ -11,9 +11,9 @@ sources:
   - https://github.com/netbox-community/netbox
   - https://github.com/netbox-community/netbox-chart
 maintainers:
-  - name: NetBox Community
+  - name: netbox-community
     url: https://github.com/netbox-community
-  - name: Chris Boot
+  - name: bootc
     url: https://github.com/bootc
 dependencies:
   - name: common

@@ -5,10 +5,10 @@ name: Analysis
 on:
   push:
     branches:
-      - main
+      - develop
   pull_request:
     branches:
-      - main
+      - develop
   schedule:
     - cron: '43 2 * * 6'
   workflow_dispatch:

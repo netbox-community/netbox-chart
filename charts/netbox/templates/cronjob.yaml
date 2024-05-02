@@ -2,13 +2,13 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "netbox.fullname" . }}-housekeeping
+  name: {{ include "common.names.fullname" . }}-housekeeping
   {{- with .Values.commonAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "netbox.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: housekeeping
 spec:
   concurrencyPolicy: {{ .Values.housekeeping.concurrencyPolicy }}
@@ -19,7 +19,7 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        {{- include "netbox.labels" . | nindent 8 }}
+        {{- include "common.labels.standard" . | nindent 8 }}
     spec:
       template:
         metadata:
@@ -28,7 +28,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           labels:
-            {{- include "netbox.selectorLabels" . | nindent 12 }}
+            {{- include "common.labels.matchLabels" . | nindent 12 }}
             app.kubernetes.io/component: housekeeping
             {{- with .Values.housekeeping.podLabels }}
             {{- toYaml . | nindent 12 }}
@@ -101,12 +101,12 @@ spec:
           volumes:
           - name: config
             configMap:
-              name: {{ include "netbox.fullname" . }}
+              name: {{ include "common.names.fullname" . }}
           - name: secrets
             projected:
               sources:
               - secret:
-                  name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
+                  name: {{ .Values.existingSecret | default (include "common.names.fullname" .) | quote }}
                   items:
                   # Used by our configuration
                   - key: email_password
@@ -139,14 +139,14 @@ spec:
           - name: media
             {{- if .Values.persistence.enabled }}
             persistentVolumeClaim:
-              claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
+              claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "common.names.fullname" .)) }}
             {{- else }}
             emptyDir: {}
             {{- end }}
           {{- if .Values.reportsPersistence.enabled }}
           - name: reports
             persistentVolumeClaim:
-              claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+              claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
           {{- end }}
           {{- with .Values.housekeeping.extraVolumes }}
           {{- toYaml . | nindent 10 }}

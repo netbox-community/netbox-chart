@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "netbox.fullname" . }}
+  name: {{ include "common.names.fullname" . }}
   {{- with .Values.commonAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "netbox.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: netbox
 spec:
 {{- if not .Values.autoscaling.enabled }}
@@ -15,7 +15,7 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "netbox.selectorLabels" . | nindent 6 }}
+      {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: netbox
   {{ if .Values.updateStrategy -}}
   strategy:
@@ -32,7 +32,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "netbox.selectorLabels" . | nindent 8 }}
+        {{- include "common.labels.matchLabels" . | nindent 8 }}
         app.kubernetes.io/component: netbox
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -164,12 +164,12 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: {{ include "netbox.fullname" . }}
+          name: {{ include "common.names.fullname" . }}
       - name: secrets
         projected:
           sources:
           - secret:
-              name: {{ .Values.existingSecret | default (include "netbox.fullname" .) | quote }}
+              name: {{ .Values.existingSecret | default (include "common.names.fullname" .) | quote }}
               items:
               # Used by netbox-docker entry scripts
               - key: superuser_password
@@ -210,14 +210,14 @@ spec:
       - name: media
         {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "netbox.fullname" .)) }}
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "common.names.fullname" .)) }}
         {{- else }}
         emptyDir: {}
         {{- end }}
       {{- if .Values.reportsPersistence.enabled }}
       - name: reports
         persistentVolumeClaim:
-          claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "netbox.fullname" .)) }}
+          claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
       {{- end }}
       {{- with .Values.extraVolumes }}
       {{- toYaml . | nindent 6 }}

@@ -29,3 +29,8 @@ dependencies:
     version: ^18.19.4
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: Upstream Project
+      url: https://github.com/netbox-community/netbox

@@ -2,13 +2,13 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "netbox.fullname" . }}-reports
+  name: {{ include "common.names.fullname" . }}-reports
   {{- with .Values.commonAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "netbox.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.reportsPersistence.accessMode | quote }}

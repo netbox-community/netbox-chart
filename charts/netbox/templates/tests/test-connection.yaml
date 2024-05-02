@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "netbox.fullname" . }}-test-connection"
+  name: {{ printf "%s-test-connection" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels:
-    {{- include "netbox.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -12,7 +12,7 @@ spec:
     image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
     imagePullPolicy: {{ .Values.test.image.pullPolicy }}
     command: ['wget']
-    args: ['{{ include "netbox.fullname" . }}:{{ .Values.service.port }}']
+    args: ['{{ include "common.names.fullname" . }}:{{ .Values.service.port }}']
     {{- if .Values.test.resources }}
     resources:
       {{- toYaml .Values.test.resources | nindent 6 }}

@@ -67,7 +67,7 @@ spec:
       - name: {{ .Chart.Name }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: {{ include "netbox.image" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: SUPERUSER_NAME

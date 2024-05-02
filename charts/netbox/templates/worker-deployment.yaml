@@ -55,7 +55,7 @@ spec:
       - name: {{ .Chart.Name }}-worker
         securityContext:
           {{- toYaml .Values.worker.securityContext | nindent 10 }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: {{ include "netbox.image" . | quote }}
         command:
         - /opt/netbox/venv/bin/python
         - /opt/netbox/netbox/manage.py

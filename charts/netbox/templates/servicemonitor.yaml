@@ -3,17 +3,17 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "common.names.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
-    {{- with .Values.serviceMonitor.additionalLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.serviceMonitor.additionalLabels .Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
-  jobLabel: {{ .Release.Name }}
+  jobLabel: {{ include "common.names.fullname" . }}
   namespaceSelector:
     matchNames:
-    - {{ .Release.Namespace }}
+    - {{ include "common.names.namespace" . | quote }}
   selector:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}

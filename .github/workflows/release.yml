@@ -5,10 +5,10 @@ name: Release
 
 on:
   workflow_call:
-    secrets:
-      GPG_KEY_BASE64:
-        required: true
-        description: GPG key for signing
+    # secrets:
+    #   GPG_KEY_BASE64:
+    #     required: true
+    #     description: GPG key for signing
 
 jobs:
   publish:

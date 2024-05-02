@@ -1,63 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "netbox.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "netbox.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "netbox.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "netbox.labels" -}}
-helm.sh/chart: {{ include "netbox.chart" . }}
-{{ include "netbox.selectorLabels" . }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with .Values.commonLabels }}
-{{ toYaml . }}
-{{- end }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "netbox.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "netbox.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
 {{- define "netbox.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "netbox.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "common.names.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -72,7 +20,7 @@ Name of the Secret that contains the PostgreSQL password
   {{- else if .Values.externalDatabase.existingSecretName }}
     {{- .Values.externalDatabase.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
   {{- end }}
 {{- end }}
 
@@ -98,7 +46,7 @@ Name of the Secret that contains the Redis tasks password
   {{- else if .Values.tasksRedis.existingSecretName }}
     {{- .Values.tasksRedis.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
   {{- end }}
 {{- end }}
 
@@ -124,7 +72,7 @@ Name of the Secret that contains the Redis cache password
   {{- else if .Values.cachingRedis.existingSecretName }}
     {{- .Values.cachingRedis.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "netbox.fullname" .) }}
+    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
   {{- end }}
 {{- end }}
 
@@ -149,7 +97,7 @@ Volumes that need to be mounted for .Values.extraConfig entries
 - name: extra-config-{{ $index }}
   {{- if $config.values }}
   configMap:
-    name: {{ include "netbox.fullname" $ }}
+    name: {{ include "common.names.fullname" $ }}
     items:
     - key: extra-{{ $index }}.yaml
       path: extra-{{ $index }}.yaml

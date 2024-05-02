@@ -1,2 +1,39 @@
+# https://git-scm.com/docs/gitignore
+
+# General files
+pkg/*
+*.pyc
+.project
+/.bin
+/_test/secrets/*.json
+
+# macOS
+._*
+.DS_Store
+
+# Editors and IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Emacs save files
+*~
+\#*\#
+.\#*
+
+# Vim-related files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Releases
+dist/
+
+# Chart dependencies
 **/charts/*.tgz
-.*.swp
+values-*.yaml
+.history
+/public

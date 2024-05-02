@@ -1,0 +1,10 @@
+# https://git-scm.com/docs/gitattributes
+
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Collapse generated and vendored files on GitHub
+*.lock linguist-generated=true merge=ours
+
+# Reduce conflicts on markdown files
+*.md merge=union

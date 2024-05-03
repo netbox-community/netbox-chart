@@ -5,10 +5,13 @@ name: Release
 
 on:
   workflow_call:
-    # secrets:
-    #   GPG_KEY_BASE64:
-    #     required: true
-    #     description: GPG key for signing
+    secrets:
+      GPG_KEY_BASE64:
+        required: true
+        description: GPG key for signing
+      GPG_PASSPHRASE:
+        required: true
+        description: passphrase for the signing key
 
 jobs:
   publish:
@@ -29,15 +32,19 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # - name: Prepare GPG key
-      #   run: |
-      #     gpg_dir=.cr-gpg
-      #     mkdir "$gpg_dir"
-      #     keyring="$gpg_dir/secring.gpg"
-      #     base64 -d <<< "$GPG_KEY_BASE64" > "$keyring"
-      #     echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
-      #   env:
-      #     GPG_KEY_BASE64: ${{ secrets.GPG_KEY_BASE64 }}
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
+          base64 -d <<< "$GPG_KEY_BASE64" > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          echo "$GPG_PASSPHRASE" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          GPG_KEY_BASE64: "${{ secrets.GPG_KEY_BASE64 }}"
+          GPG_PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"
 
       - name: Install Helm
         uses: azure/setup-helm@v4.2.0
@@ -50,7 +57,7 @@ jobs:
         with:
           config: config.yaml
         env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3

@@ -109,6 +109,7 @@ data:
     CORS_ORIGIN_WHITELIST: {{ toJson .Values.cors.originWhitelist }}
     CORS_ORIGIN_REGEX_WHITELIST: {{ toJson .Values.cors.originRegexWhitelist }}
     CSRF_TRUSTED_ORIGINS: {{ toJson .Values.csrf.trustedOrigins }}
+    DATA_UPLOAD_MAX_MEMORY_SIZE: {{ int .Values.dataUploadMaxMemorySize }}
     DEBUG: {{ toJson .Values.debug }}
     DEFAULT_LANGUAGE: {{ .Values.defaultLanguage | quote }}
 
@@ -126,6 +127,7 @@ data:
     ENFORCE_GLOBAL_UNIQUE: {{ toJson .Values.enforceGlobalUnique }}
     EXEMPT_VIEW_PERMISSIONS: {{ toJson .Values.exemptViewPermissions }}
     FIELD_CHOICES: {{ toJson .Values.fieldChoices }}
+    FILE_UPLOAD_MAX_MEMORY_SIZE: {{ int .Values.fileUploadMaxMemorySize }}
     GRAPHQL_ENABLED: {{ toJson .Values.graphQlEnabled }}
     HTTP_PROXIES: {{ toJson .Values.httpProxies }}
     INTERNAL_IPS: {{ toJson .Values.internalIPs }}

@@ -114,6 +114,10 @@ csrf:
 # Set the default preferred language/locale
 defaultLanguage: en-us
 
+# The maximum size (in bytes) of an incoming HTTP request (i.e. GET or POST data).
+# Requests which exceed this size will raise a RequestDataTooBig exception.
+dataUploadMaxMemorySize: 2621440
+
 # Set to True to enable server debugging. WARNING: Debugging introduces a
 # substantial performance penalty and may reveal sensitive information about
 # your installation. Only enable debugging while performing testing. Never
@@ -161,6 +165,11 @@ fieldChoices: {}
   #   - [baz, Baz, blue]
   # 'dcim.Site.status+':
   #   ...
+
+# The maximum amount (in bytes) of uploaded data that will be held in memory before being written to the filesystem.
+# Changing this setting can be useful for example to be able to upload files bigger than 2.5MB to custom scripts
+# for processing.
+fileUploadMaxMemorySize: 2621440
 
 # Enable the GraphQL API
 graphQlEnabled: true

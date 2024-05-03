@@ -169,6 +169,7 @@ The following table lists the configurable parameters for this chart and their d
 | `cors.originRegexWhitelist`                     | [CORS]: list of regex strings matching authorised origins           | `[]`                                         |
 | `csrf.cookieName`                               | Name of the CSRF authentication cookie                              | `csrftoken`                                  |
 | `csrf.trustedOrigins`                           | A list of trusted origins for unsafe (e.g. POST) requests           | `[]`                                         |
+| `dataUploadMaxMemorySize`                       | The maximum size (in bytes) of an incoming HTTP request             | `2621440`                                    |
 | `debug`                                         | Enable NetBox debugging (NOT for production use)                    | `false`                                      |
 | `defaultLanguage`                               | Set the default preferred language/locale                           | `en-us`                                      |
 | `dbWaitDebug`                                   | Show details of errors that occur when applying migrations          | `false`                                      |
@@ -185,6 +186,7 @@ The following table lists the configurable parameters for this chart and their d
 | `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
 | `exemptViewPermissions`                         | A list of models to exempt from the enforcement of view permissions | `[]`                                         |
 | `fieldChoices`                                  | Configure custom choices for certain built-in fields                | `{}`                                         |
+| `fileUploadMaxMemorySize`                       | The maximum amount (in bytes) of uploaded data that will be held in memory before being written to the filesystem  | `2621440` |
 | `graphQlEnabled`                                | Enable the GraphQL API                                              | `true`                                       |
 | `httpProxies`                                   | HTTP proxies NetBox should use when sending outbound HTTP requests  | `null`                                       |
 | `internalIPs`                                   | IP addresses recognized as internal to the system                   | `['127.0.0.1', '::1']`                       |

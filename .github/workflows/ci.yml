@@ -52,5 +52,6 @@ jobs:
       contents: write
       packages: write
       id-token: write
-    # secrets:
-    #   GPG_KEY_BASE64: ${{ secrets.GPG_KEY_BASE64 }}
+    secrets:
+      GPG_KEY_BASE64: ${{ secrets.GPG_KEY_BASE64 }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

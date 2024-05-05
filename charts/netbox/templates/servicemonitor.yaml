@@ -1,10 +1,10 @@
-{{- if and .Values.metricsEnabled .Values.serviceMonitor.enabled -}}
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
-  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.serviceMonitor.additionalLabels .Values.commonLabels ) "context" . ) }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metrics.serviceMonitor.additionalLabels .Values.commonLabels ) "context" . ) }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
@@ -19,11 +19,11 @@ spec:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
   endpoints:
   - port: http
-    path: /metrics
-    {{- with .Values.serviceMonitor.interval }}
-    interval: {{ . }}
+    path: "/metrics"
+    {{- if .Values.metrics.serviceMonitor.interval }}
+    interval: {{ .Values.metrics.serviceMonitor.interval }}
     {{- end }}
-    {{- with .Values.serviceMonitor.scrapeTimeout  }}
-    scrapeTimeout: {{ . }}
+    {{- if .Values.metrics.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
     {{- end }}
 {{- end }}

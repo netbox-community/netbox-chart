@@ -145,7 +145,7 @@ data:
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
     STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
     {{- end }}
-    METRICS_ENABLED: {{ toJson .Values.metricsEnabled }}
+    METRICS_ENABLED: {{ toJson .Values.metrics.enabled }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PLUGINS: {{ toJson .Values.plugins }}
     PLUGINS_CONFIG: {{ toJson .Values.pluginsConfig }}

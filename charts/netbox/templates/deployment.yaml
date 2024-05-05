@@ -37,35 +37,34 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
+      {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 6 }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       initContainers:
       - name: init-dirs
-        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
-        imagePullPolicy: {{ .Values.init.image.pullPolicy }}
+        image: {{ include "netbox.init.image" . | quote }}
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
         command: [/bin/sh, -c, mkdir -p /opt/unit/state /opt/unit/tmp]
         {{- if .Values.init.resources }}
-        resources:
-          {{- toYaml .Values.init.resources | nindent 10 }}
+        resources: {{- toYaml .Values.init.resources | nindent 11 }}
+        {{- else if ne .Values.init.resourcesPreset "none" }}
+        resources: {{- include "common.resources.preset" (dict "type" .Values.init.resourcesPreset) | nindent 10 }}
         {{- end }}
-        securityContext:
-          {{- toYaml .Values.init.securityContext | nindent 10 }}
+        securityContext: {{- .Values.init.securityContext | toYaml | nindent 10 }}
         volumeMounts:
         - name: optunit
           mountPath: /opt/unit
-      {{- with .Values.extraInitContainers }}
-      {{- toYaml . | nindent 6 }}
+      {{- if .Values.initContainers }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | trim | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+        {{- if .Values.securityContext.enabled }}
+        securityContext: {{- omit .Values.securityContext "enabled" | toYaml | nindent 12 }}
+        {{- end }}
         image: {{ include "netbox.image" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
@@ -150,14 +149,15 @@ spec:
           mountPath: /run/secrets/superuser_api_token
           subPath: superuser_api_token
           readOnly: true
-        {{- with .Values.extraVolumeMounts }}
-        {{- toYaml . | nindent 8 }}
+        {{- if .Values.extraVolumeMounts }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 10 }}
         {{- end }}
         {{- if .Values.resources }}
-        resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+        resources: {{ toYaml .Values.resources | nindent 12 }}
+        {{- else if ne .Values.resourcesPreset "none" }}
+        resources: {{- include "common.resources.preset" (dict "type" .Values.resourcesPreset) | nindent 10 }}
         {{- end }}
-      {{- with .Values.extraContainers }}
+      {{- with .Values.sidecars }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:

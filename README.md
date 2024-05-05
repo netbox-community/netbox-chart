@@ -96,6 +96,10 @@ for further information.
 
 * NetBox has been updated to 3.6.4, but older 3.5+ versions should still work (this is not tested or supported, however).
 * **Potentially breaking changes:**
+  * The `extraContainers` setting has been renamed `sidecars` to match conventions.
+  * The `extraInitContainers` setting has been renamed `initContainers` to match conventions.
+  * The `metricsEnabled` setting has been renamed `metrics.enabled` to match conventions.
+  * The `serviceMonitor` setting has been moved to `metrics.serviceMonitor` to match conventions.
   * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in NetBox 3.5.
   * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
   * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
@@ -201,7 +205,6 @@ The following table lists the configurable parameters for this chart and their d
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
 | `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
 | `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
-| `metricsEnabled`                                | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `paginateCount`                                 | The default number of objects to display per page in the web UI     | `50`                                         |
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
@@ -256,10 +259,11 @@ The following table lists the configurable parameters for this chart and their d
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
 | `timeFormat`                                    | Django date format for long-form time strings                       | `"g:i a"`                                    |
-| `serviceMonitor.enabled`                        | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
-| `serviceMonitor.additionalLabels`               | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
-| `serviceMonitor.interval`                       | Interval to scrape metrics.                                         | `1m`                                         |
-| `serviceMonitor.scrapeTimeout`                  | Timeout duration for scraping metrics                               | `10s`                                        |
+| `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
+| `metrics.serviceMonitor.enabled`                | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
+| `metrics.serviceMonitor.additionalLabels`       | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.serviceMonitor.interval`               | Interval to scrape metrics.                                         | `1m`                                         |
+| `metrics.serviceMonitor.scrapeTimeout`          | Timeout duration for scraping metrics                               | `10s`                                        |
 | `shortTimeFormat`                               | Django date format for short-form time strings                      | `"H:i:s"`                                    |
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
@@ -376,8 +380,8 @@ The following table lists the configurable parameters for this chart and their d
 | `extraEnvs`                                     | Additional environment variables to set in the NetBox container     | `[]`                                         |
 | `extraVolumeMounts`                             | Additional volumes to mount in the NetBox container                 | `[]`                                         |
 | `extraVolumes`                                  | Additional volumes to reference in pods                             | `[]`                                         |
-| `extraContainers`                               | Additional sidecar containers to be added to pods                   | `[]`                                         |
-| `extraInitContainers`                           | Additional init containers to run before starting main containers   | `[]`                                         |
+| `sidecars`                               | Additional sidecar containers to be added to pods                   | `[]`                                         |
+| `initContainers`                           | Additional init containers to run before starting main containers   | `[]`                                         |
 | `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
 | `housekeeping.enabled`                          | Whether the [Housekeeping][housekeeping] `CronJob` should be active | `true`                                       |
 | `housekeeping.concurrencyPolicy`                | ConcurrencyPolicy for the Housekeeping CronJob.                     | `Forbid`                                     |
@@ -398,8 +402,8 @@ The following table lists the configurable parameters for this chart and their d
 | `housekeeping.extraEnvs`                        | Additional environment variables to set in housekeeping CronJob     | `[]`                                         |
 | `housekeeping.extraVolumeMounts`                | Additional volumes to mount in the housekeeping CronJob             | `[]`                                         |
 | `housekeeping.extraVolumes`                     | Additional volumes to reference in housekeeping CronJob pods        | `[]`                                         |
-| `housekeeping.extraContainers`                  | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
-| `housekeeping.extraInitContainers`              | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
+| `housekeeping.sidecars`                  | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
+| `housekeeping.initContainers`              | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
 
 [netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers

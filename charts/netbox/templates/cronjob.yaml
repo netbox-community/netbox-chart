@@ -33,15 +33,12 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
         spec:
-          {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
-          {{- toYaml . | nindent 10 }}
-          {{- end }}
+          {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 6 }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
           automountServiceAccountToken: {{ .Values.housekeeping.automountServiceAccountToken }}
           securityContext:
             {{- toYaml .Values.housekeeping.podSecurityContext | nindent 12 }}
-          {{- with .Values.housekeeping.extraInitContainers }}
+          {{- with .Values.housekeeping.initContainers }}
           initContainers:
           {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -49,7 +46,7 @@ spec:
           - name: {{ .Chart.Name }}-housekeeping
             securityContext:
               {{- toYaml .Values.housekeeping.securityContext | nindent 14 }}
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            image: {{ include "netbox.image" . | quote }}
             command:
             - /opt/netbox/venv/bin/python
             - /opt/netbox/netbox/manage.py
@@ -91,10 +88,11 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- if .Values.housekeeping.resources }}
-            resources:
-              {{- toYaml .Values.housekeeping.resources | nindent 14 }}
+            resources: {{ toYaml .Values.housekeeping.resources | nindent 14 }}
+            {{- else if ne .Values.housekeeping.resourcesPreset "none" }}
+            resources: {{- include "common.resources.preset" (dict "type" .Values.housekeeping.resourcesPreset) | nindent 14 }}
             {{- end }}
-          {{- with .Values.housekeeping.extraContainers }}
+          {{- with .Values.housekeeping.sidecars }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
           volumes:

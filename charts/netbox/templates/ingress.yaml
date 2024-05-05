@@ -30,11 +30,7 @@ spec:
       {{- if kindIs "string" . }}
       - path: {{ . }}
         pathType: Prefix
-        backend:
-          service:
-            name: {{ include "common.names.fullname" . }}
-            port:
-              name: http
+        backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" $) "servicePort" "http" "context" $) | nindent 10 }}
       {{- else }}
       {{- (list .) | toYaml | nindent 6 }}
       {{- end }}

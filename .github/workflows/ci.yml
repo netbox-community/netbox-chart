@@ -46,7 +46,11 @@ jobs:
 
   release:
     name: Release
-    if: github.ref == 'refs/heads/master'
+    if:
+      contains('
+        refs/heads/master
+        refs/heads/develop
+      ', github.ref)
     uses: ./.github/workflows/release.yml
     permissions:
       contents: write

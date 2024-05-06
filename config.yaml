@@ -3,7 +3,8 @@ repo: netbox-chart
 remote: origin
 target-branch: develop
 sign: true
-key: NetBox Community
+key: builds@netboxlabs.com
+keyring: ~/.cr-gpg/secring.gpg
 chart-dirs:
   - charts
 chart-repos:

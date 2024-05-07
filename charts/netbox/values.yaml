@@ -1,22 +1,84 @@
-# Default values for netbox.
+# Default values for NetBox.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+## @section Global parameters
+## Global container image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global container image parameters: imageRegistry, imagePullSecrets and storageClass
 
+## @param global.imageRegistry Global container image registry
+## @param global.imagePullSecrets Global container registry secret names as an array
+## @param global.storageClass Global StorageClass for Persistent Volume(s)
+##
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+
+## @section Common parameters
+
+## @param kubeVersion Override Kubernetes version
+##
+kubeVersion: ""
+## @param nameOverride String to partially override common.names.fullname
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: ""
+## @param commonLabels Labels to add to all deployed objects
+##
+commonLabels: {}
+## @param commonAnnotations Annotations to add to all deployed objects
+##
+commonAnnotations: {}
+## @param clusterDomain Kubernetes cluster domain name
+##
+clusterDomain: cluster.local
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+extraDeploy: []
+
+## @section NetBox Image parameters
+## @param image.registry Image registry
+## @param image.repository Image repository
+## @param image.tag Image tag
+## @param image.digest Image digest in the way sha256:aa...
+## @param image.pullPolicy MariaDB image pull policy
+## @param image.pullSecrets Specify docker-registry secret names as an array
+##
 image:
+  registry: docker.io
   repository: netboxcommunity/netbox
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  ## Defaults to '{{ .Chart.AppVersion }}'
+  ##
   tag: ""
+  ## If set, override the tag
+  ##
+  digest: ""
+  ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Example:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+
+## @section NetBox Configuration parameters
 
 # You can also use an existing secret for the superuser password and API token
 # See `existingSecret` for details
 superuser:
   name: admin
   email: admin@example.com
-  password: admin
-  apiToken: 0123456789abcdef0123456789abcdef01234567
+  password: ""
+  apiToken: ""
 
 # Skip the netbox-docker startup scripts which can pre-populate objects into a
 # fresh NetBox installation. By default these do nothing, but they take a while
@@ -28,7 +90,7 @@ skipStartupScripts: true
 # server. NetBox will not permit write access to the server via any other
 # hostnames. The first FQDN in the list will be treated as the preferred name.
 allowedHosts:
-  - '*'
+  - "*"
 
 # Include Pod IP in list of allowed hosts by providing it as the 'POD_IP' envvar
 # at runtime, which is then used in the configuration.py.
@@ -57,18 +119,18 @@ allowedUrlSchemes: [file, ftp, ftps, http, https, irc, mailto, sftp, ssh, tel,
 banner:
   # Optionally display a persistent banner at the top and/or bottom of every
   # page. HTML is allowed.
-  top: ''
-  bottom: ''
+  top: ""
+  bottom: ""
 
   # Text to include on the login page above the login form. HTML is allowed.
-  login: ''
+  login: ""
 
 # Base URL path if accessing NetBox within a directory. For example, if
 # installed at http://example.com/netbox/, set to 'netbox/'. If using
 # Kubernetes Ingress, make sure you set ingress.hosts[].paths[] appropriately.
 # This will also require customising the NGINX Unit application server
 # configuration.
-basePath: ''
+basePath: ""
 
 # Maximum number of days to retain logged changes. Set to 0 to retain change
 # logs indefinitely. (Default: 90)
@@ -132,14 +194,14 @@ dbWaitDebug: false
 email:
   server: localhost
   port: 25
-  username: ''
-  password: ''
+  username: ""
+  password: ""
   useSSL: false
   useTLS: false
-  sslCertFile: ''
-  sslKeyFile: ''
+  sslCertFile: ""
+  sslKeyFile: ""
   timeout: 10  # seconds
-  from: ''
+  from: ""
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce
 # unique IP space within the global table (all prefixes and IP addresses not
@@ -233,9 +295,6 @@ storageConfig: {}
   # AWS_STORAGE_BUCKET_NAME: 'netbox'
   # AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
   # AWS_S3_REGION_NAME: 'eu-west-1'
-
-# Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
-metricsEnabled: false
 
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50
@@ -432,18 +491,377 @@ overrideUnitConfig: {}
   #
   # access_log: /dev/stdout
 
-postgresql:
-  ## Deploy PostgreSQL using bundled chart
-  # To use an external database, set this to false and configure the settings
-  # under externalDatabase
-  enabled: true
+## @section Deployment parameters
 
+## @param replicaCount Number of replicas to deploy
+## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
+##
+replicaCount: 1
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+## @param persistence.enabled Enable persistence using PVC
+## @param persistence.storageClass PVC Storage Class for volume
+## @param persistence.accessMode PVC Access Mode for volume
+## @param persistence.size PVC Storage Request for volume
+## @param persistence.subPath Existing claim's subPath to use, e.g. "media" (optional)
+## @param persistence.existingClaim Name of an existing PVC to be used
+## @param persistence.annotations Annotations to add to the PVC
+##
+persistence:
+  enabled: true
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  subPath: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  existingClaim: ""
+  annotations: {}
+## Enable reports persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+## @param reportsPersistence.enabled Enable reports persistence using PVC
+## @param reportsPersistence.storageClass PVC Storage Class for volume
+## @param reportsPersistence.accessMode PVC Access Mode for volume
+## @param reportsPersistence.size PVC Storage Request for volume
+## @param reportsPersistence.subPath Existing claim's subPath to use, e.g. "media" (optional)
+## @param reportsPersistence.existingClaim Name of an existing PVC to be used
+## @param reportsPersistence.annotations Annotations to add to the PVC
+##
+reportsPersistence:
+  enabled: false
+  existingClaim: ""
+  subPath: ""
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+## @param updateStrategy.type Deployment strategy type
+## @param updateStrategy.rollingUpdate Deployment rolling update configuration parameters
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+## NOTE: Set it to `Recreate` if you use a PV that cannot be mounted on multiple pods
+## e.g:
+## updateStrategy:
+##  type: RollingUpdate
+##  rollingUpdate:
+##    maxSurge: 25%
+##    maxUnavailable: 25%
+##
+updateStrategy:
+  type: RollingUpdate
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+## @param master.serviceAccount.create Specifies whether a ServiceAccount should be created
+## @param master.serviceAccount.name Name of the service account to use. If not set and create is true, a name is generated using the fullname template.
+## @param master.serviceAccount.automountServiceAccountToken Automount service account token for the server service account
+## @param master.serviceAccount.annotations Annotations for service account. Evaluated as a template. Only used if `create` is `true`.
+##
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: false
+## @param hostAliases [array] Add deployment host aliases
+## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+##
+hostAliases: []
+## @param extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+##
+extraVolumes: []
+## @param extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+##
+extraVolumeMounts: []
+## @param sidecars Add additional sidecar containers to the pod
+## e.g:
+## sidecars:
+##   - name: your-image-name
+##     image: your-image
+##     imagePullPolicy: Always
+##     ports:
+##       - name: portname
+##         containerPort: 1234
+##
+sidecars: []
+## @param initContainers Add additional init containers to the pods
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+## e.g:
+## initContainers:
+##  - name: your-image-name
+##    image: your-image
+##    imagePullPolicy: Always
+##    command: ['sh', '-c', 'echo "init"']
+##
+initContainers: []
+## @param podLabels Extra labels for pods
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+##
+podLabels: {}
+## @param podAnnotations Annotations for pods
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+##
+podAnnotations: {}
+## @param affinity Affinity for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## Note: podAffinityPreset, podAntiAffinityPreset, and nodeAffinityPreset will be ignored when it's set
+##
+affinity: {}
+## @param nodeSelector Node labels for pod assignment
+## ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+## @param tolerations Tolerations for pod assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: []
+## @param topologySpreadConstraints Topology Spread Constraints for pod assignment
+## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+## The value is evaluated as a template.
+## e.g:
+## topologySpreadConstraints:
+##   - maxSkew: 1
+##     topologyKey: topology.kubernetes.io/zone
+##     whenUnsatisfiable: DoNotSchedule
+##     labelSelector:
+##       matchLabels:
+##         "app.kubernetes.io/component": netbox
+##         "app.kubernetes.io/name": netbox
+##
+topologySpreadConstraints: []
+## Container's resource requests and limits
+## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+## We usually recommend not to specify default resources and to leave this as a conscious
+## choice for the user. This also increases chances charts run on environments with little
+## resources, such as Minikube. If you do want to specify resources, uncomment the following
+## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
+## This is ignored if resources is set (resources is recommended for production).
+## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+##
+resourcesPreset: "small"
+## Containers' resource requests and limits
+## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+## @param resources.limits The resources limits for the container
+## @param resources.requests [object] The requested resources for the container
+## Example:
+## resources:
+##   requests:
+##     cpu: 2
+##     memory: 512Mi
+##   limits:
+##     cpu: 3
+##     memory: 1024Mi
+##
+resources: {}
+## Configure Pods Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext.enabled Enable pods' Security Context
+## @param podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
+## @param podSecurityContext.sysctls Set kernel settings using the sysctl interface
+## @param podSecurityContext.supplementalGroups Set filesystem extra groups
+## @param podSecurityContext.fsGroup Pods' group ID
+##
+podSecurityContext:
+  enabled: true
+  fsGroupChangePolicy: Always
+  sysctls: []
+  supplementalGroups: []
+  fsGroup: 1000
+## Configure Container Security Context (only main container)
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+## @param containerSecurityContext.enabled Enabled containers' Security Context
+## @param containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+## @param containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+## @param containerSecurityContext.runAsGroup Set containers' Security Context runAsGroup
+## @param containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+## @param containerSecurityContext.privileged Set container's Security Context privileged
+## @param containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+## @param containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+## @param containerSecurityContext.capabilities.drop List of capabilities to be dropped
+## @param containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
+##
+securityContext:
+  enabled: true
+  seLinuxOptions: {}
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  privileged: false
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
+## @param automountServiceAccountToken Mount Service Account token in pod
+##
+automountServiceAccountToken: false
+## Configure extra options for readiness probe
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+## @param readinessProbe.enabled Enable readinessProbe
+## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+## @param readinessProbe.periodSeconds Period seconds for readinessProbe
+## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
+## @param readinessProbe.successThreshold Success threshold for readinessProbe
+##
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 0
+  timeoutSeconds: 1
+  periodSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+## @param extraEnvs Extra environment variables to be set on containers
+## E.g:
+## extraEnvs:
+##   - name: FOO
+##     valueFrom:
+##       secretKeyRef:
+##         key: FOO
+##         name: secret-resource
+extraEnvs: []
+
+## @section Traffic Exposure Parameters
+
+## Service parameters
+## @param service.type Kubernetes Service type
+## @param service.loadBalancerSourceRanges Restricts access for LoadBalancer (only with `service.type: LoadBalancer`)
+## @param service.loadBalancerIP loadBalancerIP for the service (optional, cloud specific)
+## @param service.nodePort Kubernetes node port
+## @param service.externalTrafficPolicy Enable client source IP preservation
+## @param service.clusterIP Service Cluster IP
+## @param service.annotations Additional custom annotations for Matomo service
+##
+service:
+  annotations: {}
+  type: ClusterIP
+  port: 80
+  ## nodePort: <to set explicitly, choose port between 30000-32767>
+  ##
+  nodePort: ""
+  clusterIP: ""
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: ""
+  ## e.g:
+  ## loadBalancerSourceRanges:
+  ##   - 0.0.0.0/0
+  ##
+  loadBalancerSourceRanges: []
+  externalIPs: []
+  clusterIPs: []
+  ipFamilyPolicy: ""
+
+## Configure the ingress resource that allows you to access the app
+## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+##
+ingress:
+  ## @param ingress.enabled Enable ingress record generation
+  ##
+  enabled: false
+  ## @param ingress.pathType Ingress Path type
+  ##
+  pathType: ImplementationSpecific
+  ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  ##
+  className: ""
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  ## For a full list of possible ingress annotations, please see
+  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
+  ## Use this parameter to set the required annotations for cert-manager, see
+  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ##
+  ## e.g:
+  ## annotations:
+  ##   kubernetes.io/ingress.class: nginx
+  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+  ##
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        # You can manually specify the service name and service port if
+        # required. This could be useful if for exemple you are using the AWS
+        # ALB Ingress Controller and want to set up automatic SSL redirect.
+        # https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/tasks/ssl_redirect/#redirect-traffic-from-http-to-https
+        # - path: /*
+        #   backend:
+        #     serviceName: ssl-redirect
+        #     servicePort: use-annotation
+        #
+        # Or you can let the template set it for you.
+        # Both types of rule can be combined.
+        # NB: You may also want to set the basePath above
+        - /
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+## @section Metrics parameters
+
+## Prometheus Exporter / Metrics
+##
+metrics:
+  ## @param metrics.enabled Enable the export of Prometheus metrics
+  ##
+  enabled: false
+  ## Prometheus Operator ServiceMonitor configuration
+  ##
+  serviceMonitor:
+    ## @param metrics.serviceMonitor.enabled if `true`, creates a Prometheus Operator ServiceMonitor (also requires `metrics.enabled` to be `true`)
+    ##
+    enabled: false
+    ## @param metrics.serviceMonitor.interval Interval at which metrics should be scraped.
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ## e.g:
+    ## interval: 10s
+    ##
+    interval: ""
+    ## @param metrics.serviceMonitor.scrapeTimeout Timeout after which the scrape is ended
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ## e.g:
+    ## scrapeTimeout: 10s
+    ##
+    scrapeTimeout: ""
+    additionalLabels: {}
+
+## @section Databases parameters
+
+## PostgreSQL chart configuration
+## https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
+##
+postgresql:
+  ## @param postgresql.enabled Whether to deploy a PostgreSQL server to satisfy the applications database requirements
+  ## To use an external database set this to false and configure the externalDatabase parameters
+  ##
+  enabled: true
   auth:
     username: netbox
     database: netbox
 
-## External database settings
-# These are used if postgresql.enabled is false, and are ignored otherwise
+## External database configuration
+## @param externalDatabase.host Host of the existing database
+## @param externalDatabase.port Port of the existing database
+## @param externalDatabase.username Existing username in the external db
+## @param externalDatabase.password Password for the above username
+## @param externalDatabase.database Name of the existing database
+## @param externalDatabase.existingSecretName Name of a secret containing the database credentials
+## @param externalDatabase.existingSecretKey Key of a secret containing the database credentials
+##
 externalDatabase:
   host: localhost
   port: 5432
@@ -459,10 +877,11 @@ externalDatabase:
   disableServerSideCursors: false
   targetSessionAttrs: read-write
 
+## Redis chart configuration
+## https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
+## @param postgresql.enabled Whether to deploy a Redis server to satisfy the applications database requirements
+##
 redis:
-  ## Deploy Redis using bundled chart
-  # To use an external Redis instance, set this to false and configure the
-  # settings under *both* tasksRedis *and* cachingRedis
   enabled: true
 
 tasksRedis:
@@ -503,199 +922,16 @@ cachingRedis:
   existingSecretName: ""
   existingSecretKey: redis-password
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+## @section Autoscaling parameters
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-  # Existing secret name to use for container registry authentication
-  imagePullSecrets: []
-  # Set this to true to automatically mount the token in the containers using this service account
-  automountServiceAccountToken: false
-
-## Storage configuration for media
-persistence:
-  enabled: true
-  ##
-  ## Existing claim to use
-  existingClaim: ""
-  ## Existing claim's subPath to use, e.g. "media" (optional)
-  subPath: ""
-  ##
-  ## Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  storageClass: ""
-  ## Persistent Volume Selector
-  ## if enabled, define any Selectors for choosing existing Persistent Volumes here
-  # selector:
-  #   matchLabel:
-  #     netbox-storage: media
-  accessMode: ReadWriteOnce
-  ##
-  ## Persistant storage size request
-  size: 1Gi
-
-## Storage configuration for reports
-reportsPersistence:
-  enabled: false
-  ##
-  ## Existing claim to use
-  existingClaim: ""
-  ## Existing claim's subPath to use, e.g. "media" (optional)
-  subPath: ""
-  ##
-  ## Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  storageClass: ""
-  ## Persistent Volume Selector
-  ## if enabled, define any Selectors for choosing existing Persistent Volumes here
-  # selector:
-  #   matchLabel:
-  #     netbox-storage: reports
-  accessMode: ReadWriteOnce
-  ##
-  ## Persistant storage size request
-  size: 1Gi
-
-commonLabels: {}
-
-commonAnnotations: {}
-
-podAnnotations: {}
-
-podLabels: {}
-
-podSecurityContext:
-  fsGroup: 1000
-  runAsNonRoot: true
-  # runAsUser: 1000
-  # runAsGroup: 1000
-
-securityContext:
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-
-service:
-  annotations: {}
-    # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-    # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <acm_cert_arn>
-    # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: http
-  type: ClusterIP
-  port: 80
-  nodePort: ""
-  clusterIP: ""
-  clusterIPs: []
-  externalIPs: []
-  externalTrafficPolicy: ""
-  ipFamilyPolicy: ""
-  loadBalancerIP: ""
-  loadBalancerSourceRanges: []
-  # - 10.0.0.0/8
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        # You can manually specify the service name and service port if
-        # required. This could be useful if for exemple you are using the AWS
-        # ALB Ingress Controller and want to set up automatic SSL redirect.
-        # https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/tasks/ssl_redirect/#redirect-traffic-from-http-to-https
-        # - path: /*
-        #   backend:
-        #     serviceName: ssl-redirect
-        #     servicePort: use-annotation
-        #
-        # Or you can let the template set it for you.
-        # Both types of rule can be combined.
-        # NB: You may also want to set the basePath above
-        - /
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-# Set this to true to automatically mount the service account token in the main container
-automountServiceAccountToken: false
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-topologySpreadConstraints: []
-  #  - maxSkew: 1
-  #    topologyKey: topology.kubernetes.io/zone
-  #    whenUnsatisfiable: DoNotSchedule
-  #    labelSelector:
-  #      matchLabels:
-  #        "app.kubernetes.io/component": netbox
-  #        "app.kubernetes.io/name": netbox
-
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 0
-  timeoutSeconds: 1
-  periodSeconds: 10
-  successThreshold: 1
-
-init:
-  image:
-    repository: busybox
-    tag: 1.36.1
-    pullPolicy: IfNotPresent
-
-  resources: {}
-
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000  # Keep the same as securityContext.runAsGroup
-
-test:
-  image:
-    repository: busybox
-    tag: 1.36.1
-    pullPolicy: IfNotPresent
-
-  resources: {}
-
+## Autoscaling configuration
+## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+## @param autoscaling.enabled Enable Horizontal POD autoscaling
+## @param autoscaling.minReplicas Minimum number of replicas
+## @param autoscaling.maxReplicas Maximum number of replicas
+## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
+## @param autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+##
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -703,218 +939,433 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-nodeSelector: {}
+## @section Volume permissions parameters
 
-tolerations: []
+## Init Container parameters
+## Change the owner and group of the persistent volume mountpoint to 'runAsUser:fsGroup'
+## values from the securityContext section.
+##
+init:
+  ## @param init.image.registry [default: REGISTRY_NAME] Init container volume-permissions image registry
+  ## @param init.image.repository [default: REPOSITORY_NAME/os-shell] Init container volume-permissions image name
+  ## @param init.image.tag Init container volume-permissions image tag
+  ## @param init.image.digest Init container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param init.image.pullPolicy Init container volume-permissions image pull policy
+  ## @param init.image.pullSecrets Specify docker-registry secret names as an array
+  ##
+  image:
+    registry: docker.io
+    repository: busybox
+    tag: 1.36.1
+    digest: ""
+    ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  ## Init container resource requests and limits
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## @param init.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if init.resources is set (init.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "nano"
+  ## @param init.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ## Example:
+  ## resources:
+  ##   requests:
+  ##     cpu: 2
+  ##     memory: 512Mi
+  ##   limits:
+  ##     cpu: 3
+  ##     memory: 1024Mi
+  ##
+  resources: {}
+  ## Init container' Security Context
+  ## Note: the chown of the data folder is done to securityContext.runAsUser
+  ## and not the below init.securityContext.runAsUser
+  ## @param init.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+  ## @param init.securityContext.runAsUser User ID for the init container
+  ## @param init.securityContext.runAsGroup Group ID for the init container
+  ## @param init.securityContext.runAsNonRoot runAsNonRoot for the init container
+  ## @param init.securityContext.seccompProfile.type seccompProfile.type for the init container
+  ##
+  securityContext:
+    seLinuxOptions: {}
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
 
-hostAliases: []
+## @section Test parameters
 
-updateStrategy: {}
-  # type: RollingUpdate
+test:
+  ## @param test.image.registry [default: REGISTRY_NAME] test container volume-permissions image registry
+  ## @param test.image.repository [default: REPOSITORY_NAME/os-shell] test container volume-permissions image name
+  ## @param test.image.tag test container volume-permissions image tag
+  ## @param test.image.digest test container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param test.image.pullPolicy test container volume-permissions image pull policy
+  ## @param test.image.pullSecrets Specify docker-registry secret names as an array
+  ##
+  image:
+    registry: docker.io
+    repository: busybox
+    tag: 1.36.1
+    digest: ""
+    ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  ## test container resource requests and limits
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## @param test.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if test.resources is set (test.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "nano"
+  ## @param test.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ## Example:
+  ## resources:
+  ##   requests:
+  ##     cpu: 2
+  ##     memory: 512Mi
+  ##   limits:
+  ##     cpu: 3
+  ##     memory: 1024Mi
+  ##
+  resources: {}
+  ## test container' Security Context
+  ## Note: the chown of the data folder is done to securityContext.runAsUser
+  ## and not the below test.securityContext.runAsUser
+  ## @param test.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+  ## @param test.securityContext.runAsUser User ID for the test container
+  ## @param test.securityContext.runAsGroup Group ID for the test container
+  ## @param test.securityContext.runAsNonRoot runAsNonRoot for the test container
+  ## @param test.securityContext.seccompProfile.type seccompProfile.type for the test container
+  ##
+  securityContext:
+    seLinuxOptions: {}
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
 
-affinity: {}
+## @section Cron housekeeping job parameters
 
-## Additional environment variables to set
-extraEnvs: []
-#  - name: FOO
-#    valueFrom:
-#      secretKeyRef:
-#        key: FOO
-#        name: secret-resource
-
-## Additional volumes to mount
-extraVolumeMounts: []
-#  - name: extra-volume
-#    mountPath: /run/secrets/super-secret
-#    readOnly: true
-
-extraVolumes: []
-#  - name: extra-volume
-#    secret:
-#      secretName: super-secret
-
-## Additional containers to be added to the NetBox pod.
-extraContainers: []
-#  - name: my-sidecar
-#    image: nginx:latest
-
-## Containers which are run before the NetBox containers are started.
-extraInitContainers: []
-#  - name: init-myservice
-#    image: busybox
-#    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
-
-serviceMonitor:
-  enabled: false
-  additionalLabels: {}
-  interval: 1m
-  scrapeTimeout: 10s
-
-# Configuration of Cron settings
+## Configuration of Cron settings
+##
 housekeeping:
+  ## @param housekeeping.enabled Enable housekeeping job
+  ##
   enabled: true
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 5
-  restartPolicy: OnFailure
+  ## @param housekeeping.schedule Schedule in Cron format to save snapshots
+  ## See https://en.wikipedia.org/wiki/Cron
+  ##
   schedule: '0 0 * * *'
-  successfulJobsHistoryLimit: 5
+  ## @param housekeeping.historyLimit Number of successful finished jobs to retain
+  ##
+  historyLimit: 5
+  ## @param housekeeping.failedHistoryLimit Number of failed finished jobs to retain
+  ##
+  failedHistoryLimit: 5
+  ## @param housekeeping.podAnnotations Pod annotations
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+  ## K8s Security Context for Housekeeping Cronjob pods
+  ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param housekeeping.podSecurityContext.enabled Enable security context for InfluxDB&trade; housekeeping pods
+  ## @param housekeeping.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
+  ## @param housekeeping.podSecurityContext.sysctls Set kernel settings using the sysctl interface
+  ## @param housekeeping.podSecurityContext.supplementalGroups Set filesystem extra groups
+  ## @param housekeeping.podSecurityContext.fsGroup Group ID for the InfluxDB&trade; filesystem
+  ##
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1000
+    fsGroupChangePolicy: Always
+    sysctls: []
+    supplementalGroups: []
+  ## K8s Security Context for Housekeeping Cronjob containers
+  ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param housekeeping.securityContext.enabled Enabled containers' Security Context
+  ## @param housekeeping.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+  ## @param housekeeping.securityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param housekeeping.securityContext.runAsGroup Set containers' Security Context runAsGroup
+  ## @param housekeeping.securityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## @param housekeeping.securityContext.privileged Set container's Security Context privileged
+  ## @param housekeeping.securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+  ## @param housekeeping.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param housekeeping.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param housekeeping.securityContext.seccompProfile.type Set container's Security Context seccomp profile
+  securityContext:
+    enabled: true
+    seLinuxOptions: {}
+    seccompProfile:
+      type: "RuntimeDefault"
+    capabilities:
+      drop:
+        - ALL
+    privileged: false
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+  ## @param housekeeping.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if influxdb.resources is set (influxdb.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "none"
+  ## @param housekeeping.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ## Example:
+  ## resources:
+  ##   requests:
+  ##     cpu: 2
+  ##     memory: 512Mi
+  ##   limits:
+  ##     cpu: 3
+  ##     memory: 1024Mi
+  ##
+  resources: {}
+  ## @param housekeeping.extraEnvs Extra environment variables to be set on containers
+  ## E.g:
+  ## extraEnvs:
+  ##   - name: FOO
+  ##     valueFrom:
+  ##       secretKeyRef:
+  ##         key: FOO
+  ##         name: secret-resource
+  extraEnvs: []
+  ## @param housekeeping.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+  ##
+  extraVolumes: []
+  ## @param housekeeping.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+  ##
+  extraVolumeMounts: []
+  ## @param housekeeping.sidecars Add additional sidecar containers to the pod
+  ## e.g:
+  ## sidecars:
+  ##   - name: your-image-name
+  ##     image: your-image
+  ##     imagePullPolicy: Always
+  ##     ports:
+  ##       - name: portname
+  ##         containerPort: 1234
+  ##
+  sidecars: []
+  ## @param housekeeping.initContainers Add additional init containers to the pods
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "init"']
+  ##
+  initContainers: []
+  ## @param housekeeping.affinity Housekeeping&trade; Affinity for housekeeping pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+  ##
+  affinity: {}
+  ## @param housekeeping.nodeSelector Housekeeping&trade; Node labels for housekeeping pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## @param housekeeping.tolerations Housekeeping&trade; Tolerations for housekeeping pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  ## @param housekeeping.podLabels Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## @param housekeeping.automountServiceAccountToken Mount Service Account token in pod
+  ##
+  automountServiceAccountToken: false
+  concurrencyPolicy: Forbid
+  restartPolicy: OnFailure
   suspend: false
 
-  podAnnotations: {}
+## @section Worker for Netbox parameters
 
-  podLabels: {}
-
-  podSecurityContext:
-    fsGroup: 1000
-    runAsNonRoot: true
-    # runAsUser: 1000
-    # runAsGroup: 1000
-
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-
-  # Set this to true to automatically mount the service account token in the housekeeping container
-  automountServiceAccountToken: false
-
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-  resources: {}
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
-
-  ## Additional environment variables to set
-  extraEnvs: []
-  #  - name: FOO
-  #    valueFrom:
-  #      secretKeyRef:
-  #        key: FOO
-  #        name: secret-resource
-
-  ## Additional volumes to mount
-  extraVolumeMounts: []
-  #  - name: extra-volume
-  #    mountPath: /run/secrets/super-secret
-  #    readOnly: true
-
-  extraVolumes: []
-  #  - name: extra-volume
-  #    secret:
-  #      secretName: super-secret
-
-  ## Additional containers to be added to the NetBox pod.
-  extraContainers: []
-  #  - name: my-sidecar
-  #    image: nginx:latest
-
-  ## Containers which are run before the NetBox containers are started.
-  extraInitContainers: []
-  #  - name: init-myservice
-  #    image: busybox
-  #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
-
-# Worker for Netbox
-# Only required for Netbox Jobs, e.g. Webhooks
+## Worker for Netbox
+## Only required for Netbox Jobs, e.g. Webhooks
+##
 worker:
+  ## @param worker.enabled Enable worker job
+  ##
   enabled: true
-
+  ## @param worker.replicaCount Number of replicas to deploy
+  ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
+  ##
   replicaCount: 1
-
-  podAnnotations: {}
-
+  ## @param worker.podLabels Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
   podLabels: {}
-
+  ## @param worker.podAnnotations Pod annotations
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+  ## K8s Security Context for worker pods
+  ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param worker.podSecurityContext.enabled Enable security context for InfluxDB&trade; housekeeping pods
+  ## @param worker.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
+  ## @param worker.podSecurityContext.sysctls Set kernel settings using the sysctl interface
+  ## @param worker.podSecurityContext.supplementalGroups Set filesystem extra groups
+  ## @param worker.podSecurityContext.fsGroup Group ID for the InfluxDB&trade; filesystem
+  ##
   podSecurityContext:
+    enabled: true
     fsGroup: 1000
-    runAsNonRoot: true
-    # runAsUser: 1000
-    # runAsGroup: 1000
-
+    fsGroupChangePolicy: Always
+    sysctls: []
+    supplementalGroups: []
+  ## K8s Security Context for worker containers
+  ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param worker.securityContext.enabled Enabled containers' Security Context
+  ## @param worker.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+  ## @param worker.securityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param worker.securityContext.runAsGroup Set containers' Security Context runAsGroup
+  ## @param worker.securityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## @param worker.securityContext.privileged Set container's Security Context privileged
+  ## @param worker.securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+  ## @param worker.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param worker.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param worker.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
+    enabled: true
+    seLinuxOptions: {}
+    seccompProfile:
+      type: "RuntimeDefault"
     capabilities:
       drop:
         - ALL
+    privileged: false
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
-
-  # Set this to true to automatically mount the service account token in the worker container
-  automountServiceAccountToken: false
-
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  ## @param worker.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if influxdb.resources is set (influxdb.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "none"
+  ## @param worker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ## Example:
+  ## resources:
+  ##   requests:
+  ##     cpu: 2
+  ##     memory: 512Mi
+  ##   limits:
+  ##     cpu: 3
+  ##     memory: 1024Mi
+  ##
   resources: {}
-
+  ## @param worker.automountServiceAccountToken Mount Service Account token in pod
+  ##
+  automountServiceAccountToken: false
+  ## @param worker.affinity Affinity for worker pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+  ##
+  affinity: {}
+  ## @param worker.nodeSelector Node labels for worker pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## @param worker.tolerations Tolerations for worker pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  ## @param worker.hostAliases [array] Add deployment host aliases
+  ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  ##
+  hostAliases: []
+  ## @param worker.updateStrategy.type Deployment strategy type
+  ## @param worker.updateStrategy.rollingUpdate Deployment rolling update configuration parameters
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  ## NOTE: Set it to `Recreate` if you use a PV that cannot be mounted on multiple pods
+  ## e.g:
+  ## updateStrategy:
+  ##  type: RollingUpdate
+  ##  rollingUpdate:
+  ##    maxSurge: 25%
+  ##    maxUnavailable: 25%
+  ##
+  updateStrategy:
+    type: RollingUpdate
+  ## Autoscaling configuration
+  ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  ## @param worker.autoscaling.enabled Enable Horizontal POD autoscaling
+  ## @param worker.autoscaling.minReplicas Minimum number of replicas
+  ## @param worker.autoscaling.maxReplicas Maximum number of replicas
+  ## @param worker.autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
+  ## @param worker.autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+  ##
   autoscaling:
     enabled: false
     minReplicas: 1
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  hostAliases: []
-
-  updateStrategy: {}
-    # type: RollingUpdate
-
-  affinity: {}
-
-  ## Additional environment variables to set
+  ## @param worker.extraEnvs Extra environment variables to be set on containers
+  ## E.g:
+  ## extraEnvs:
+  ##   - name: FOO
+  ##     valueFrom:
+  ##       secretKeyRef:
+  ##         key: FOO
+  ##         name: secret-resource
   extraEnvs: []
-  #  - name: FOO
-  #    valueFrom:
-  #      secretKeyRef:
-  #        key: FOO
-  #        name: secret-resource
-
-  ## Additional volumes to mount
-  extraVolumeMounts: []
-  #  - name: extra-volume
-  #    mountPath: /run/secrets/super-secret
-  #    readOnly: true
-
+  ## @param worker.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+  ##
   extraVolumes: []
-  #  - name: extra-volume
-  #    secret:
-  #      secretName: super-secret
-
-  ## Additional containers to be added to the NetBox pod.
-  extraContainers: []
-  #  - name: my-sidecar
-  #    image: nginx:latest
-
-  ## Containers which are run before the NetBox containers are started.
-  extraInitContainers: []
-  #  - name: init-myservice
-  #    image: busybox
-  #    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+  ## @param worker.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+  ##
+  extraVolumeMounts: []
+  ## @param worker.sidecars Add additional sidecar containers to the pod
+  ## e.g:
+  ## sidecars:
+  ##   - name: your-image-name
+  ##     image: your-image
+  ##     imagePullPolicy: Always
+  ##     ports:
+  ##       - name: portname
+  ##         containerPort: 1234
+  ##
+  sidecars: []
+  ## @param worker.initContainers Add additional init containers to the pods
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "init"']
+  ##
+  initContainers: []

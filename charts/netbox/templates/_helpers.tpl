@@ -13,6 +13,13 @@ Return the proper image name
 {{- end -}}
 
 {{/*
+Return the proper image name (for the init container image)
+*/}}
+{{- define "netbox.init.image" -}}
+{{- include "common.images.image" (dict "imageRoot" .Values.init.image "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "netbox.serviceAccountName" -}}

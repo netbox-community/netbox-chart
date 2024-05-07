@@ -46,7 +46,7 @@ spec:
       automountServiceAccountToken: {{ .Values.worker.automountServiceAccountToken }}
       securityContext:
         {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
-      {{- with .Values.worker.extraInitContainers }}
+      {{- with .Values.worker.initContainers }}
       initContainers:
       {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -96,10 +96,11 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.worker.resources }}
-        resources:
-          {{- toYaml .Values.worker.resources | nindent 10 }}
+        resources: {{ toYaml .Values.worker.resources | nindent 10 }}
+        {{- else if ne .Values.worker.resourcesPreset "none" }}
+        resources: {{- include "common.resources.preset" (dict "type" .Values.worker.resourcesPreset) | nindent 10 }}
         {{- end }}
-      {{- with .Values.worker.extraContainers }}
+      {{- with .Values.worker.sidecars }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:

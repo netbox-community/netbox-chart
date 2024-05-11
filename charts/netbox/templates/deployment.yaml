@@ -53,7 +53,9 @@ spec:
         {{- else if ne .Values.init.resourcesPreset "none" }}
         resources: {{- include "common.resources.preset" (dict "type" .Values.init.resourcesPreset) | nindent 10 }}
         {{- end }}
-        securityContext: {{- .Values.init.securityContext | toYaml | nindent 10 }}
+        {{- if .Values.init.securityContext.enabled }}
+        securityContext: {{- omit .Values.init.securityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - name: optunit
           mountPath: /opt/unit

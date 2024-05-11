@@ -14,7 +14,8 @@ spec:
     command: ['wget']
     args: ['{{ include "common.names.fullname" . }}:{{ .Values.service.port }}']
     {{- if .Values.test.resources }}
-    resources:
-      {{- toYaml .Values.test.resources | nindent 6 }}
+    resources: {{ toYaml .Values.test.resources | nindent 6 }}
+    {{- else if ne .Values.test.resourcesPreset "none" }}
+    resources: {{- include "common.resources.preset" (dict "type" .Values.test.resourcesPreset) | nindent 6 }}
     {{- end }}
   restartPolicy: Never

@@ -44,15 +44,17 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.worker.automountServiceAccountToken }}
-      securityContext:
-        {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
-      {{- if .Values.worker.initContainers }}
+      {{- if .Values.worker.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.worker.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.initContainers }}
       {{- include "common.tplvalues.render" (dict "value" .Values.worker.initContainers "context" $) | trim | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}-worker
-        securityContext:
-          {{- toYaml .Values.worker.securityContext | nindent 10 }}
+        {{- if .Values.worker.securityContext.enabled }}
+        securityContext: {{- omit .Values.worker.securityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
         image: {{ include "netbox.image" . | quote }}
         command:
         - /opt/netbox/venv/bin/python

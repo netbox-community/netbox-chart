@@ -36,15 +36,17 @@ spec:
           {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 6 }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
           automountServiceAccountToken: {{ .Values.housekeeping.automountServiceAccountToken }}
-          securityContext:
-            {{- toYaml .Values.housekeeping.podSecurityContext | nindent 12 }}
+          {{- if .Values.housekeeping.podSecurityContext.enabled }}
+          securityContext: {{- omit .Values.housekeeping.podSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           {{- if .Values.housekeeping.initContainers }}
           {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.initContainers "context" $) | trim | nindent 10 }}
           {{- end }}
           containers:
           - name: {{ .Chart.Name }}-housekeeping
-            securityContext:
-              {{- toYaml .Values.housekeeping.securityContext | nindent 14 }}
+            {{- if .Values.housekeeping.securityContext.enabled }}
+            securityContext: {{- omit .Values.housekeeping.securityContext "enabled" | toYaml | nindent 14 }}
+            {{- end }}
             image: {{ include "netbox.image" . | quote }}
             command:
             - /opt/netbox/venv/bin/python

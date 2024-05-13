@@ -18,4 +18,7 @@ spec:
     {{- else if ne .Values.test.resourcesPreset "none" }}
     resources: {{- include "common.resources.preset" (dict "type" .Values.test.resourcesPreset) | nindent 6 }}
     {{- end }}
+    {{- if .Values.test.securityContext.enabled }}
+    securityContext: {{- omit .Values.test.securityContext "enabled" | toYaml | nindent 12 }}
+    {{- end }}
   restartPolicy: Never

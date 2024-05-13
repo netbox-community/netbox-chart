@@ -161,8 +161,8 @@ spec:
         {{- else if ne .Values.resourcesPreset "none" }}
         resources: {{- include "common.resources.preset" (dict "type" .Values.resourcesPreset) | nindent 10 }}
         {{- end }}
-      {{- with .Values.sidecars }}
-      {{- toYaml . | nindent 6 }}
+      {{- if .Values.sidecars }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.sidecars "context" $) | nindent 6 }}
       {{- end }}
       volumes:
       - name: config

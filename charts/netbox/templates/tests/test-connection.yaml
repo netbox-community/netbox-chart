@@ -17,4 +17,7 @@ spec:
     resources:
       {{- toYaml .Values.test.resources | nindent 6 }}
     {{- end }}
+    {{- if .Values.test.securityContext.enabled }}
+    securityContext: {{- omit .Values.test.securityContext "enabled" | toYaml | nindent 12 }}
+    {{- end }}
   restartPolicy: Never

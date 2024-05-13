@@ -679,16 +679,16 @@ podSecurityContext:
   fsGroup: 1000
 ## Configure Container Security Context (only main container)
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-## @param containerSecurityContext.enabled Enabled containers' Security Context
-## @param containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
-## @param containerSecurityContext.runAsUser Set containers' Security Context runAsUser
-## @param containerSecurityContext.runAsGroup Set containers' Security Context runAsGroup
-## @param containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
-## @param containerSecurityContext.privileged Set container's Security Context privileged
-## @param containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
-## @param containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
-## @param containerSecurityContext.capabilities.drop List of capabilities to be dropped
-## @param containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
+## @param securityContext.enabled Enabled containers' Security Context
+## @param securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+## @param securityContext.runAsUser Set containers' Security Context runAsUser
+## @param securityContext.runAsGroup Set containers' Security Context runAsGroup
+## @param securityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+## @param securityContext.privileged Set container's Security Context privileged
+## @param securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+## @param securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+## @param securityContext.capabilities.drop List of capabilities to be dropped
+## @param securityContext.seccompProfile.type Set container's Security Context seccomp profile
 ##
 securityContext:
   enabled: true
@@ -990,6 +990,7 @@ init:
   ## Init container' Security Context
   ## Note: the chown of the data folder is done to securityContext.runAsUser
   ## and not the below init.securityContext.runAsUser
+  ## @param init.securityContext.enabled Enabled containers' Security Context
   ## @param init.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param init.securityContext.runAsUser User ID for the init container
   ## @param init.securityContext.runAsGroup Group ID for the init container
@@ -997,6 +998,7 @@ init:
   ## @param init.securityContext.seccompProfile.type seccompProfile.type for the init container
   ##
   securityContext:
+    enabled: true
     seLinuxOptions: {}
     seccompProfile:
       type: RuntimeDefault
@@ -1055,6 +1057,7 @@ test:
   ## test container' Security Context
   ## Note: the chown of the data folder is done to securityContext.runAsUser
   ## and not the below test.securityContext.runAsUser
+  ## @param test.securityContext.enabled Enabled containers' Security Context
   ## @param test.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param test.securityContext.runAsUser User ID for the test container
   ## @param test.securityContext.runAsGroup Group ID for the test container
@@ -1062,6 +1065,7 @@ test:
   ## @param test.securityContext.seccompProfile.type seccompProfile.type for the test container
   ##
   securityContext:
+    enabled: false
     seLinuxOptions: {}
     seccompProfile:
       type: RuntimeDefault

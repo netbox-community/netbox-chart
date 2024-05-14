@@ -6,12 +6,12 @@ data center infrastructure management (DCIM) tool.
 ## TL;DR
 
 ```shell
-$ helm repo add bootc https://charts.boo.tc
+$ helm repo add netbox https://charts.netbox.oss.netboxlabs.com/
 $ helm install netbox \
   --set postgresql.auth.postgresPassword=[password1] \
   --set postgresql.auth.password=[password2] \
   --set redis.auth.password=[password3] \
-  bootc/netbox
+  netbox/netbox
 ```
 ⚠️ **WARNING:** Please see [Production Usage](#production-usage) below before using this chart for real.
 
@@ -26,12 +26,12 @@ $ helm install netbox \
 To install the chart with the release name `my-release` and default configuration:
 
 ```shell
-$ helm repo add bootc https://charts.boo.tc
+$ helm repo add netbox https://charts.netbox.oss.netboxlabs.com/
 $ helm install my-release \
   --set postgresql.auth.postgresPassword=[password1] \
   --set postgresql.auth.password=[password2] \
   --set redis.auth.password=[password3] \
-  bootc/netbox
+  netbox/netbox
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
@@ -413,7 +413,7 @@ The following table lists the configurable parameters for this chart and their d
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install` or provide a YAML file containing the values for the above parameters:
 
 ```shell
-$ helm install --name my-release bootc/netbox --values values.yaml
+$ helm install --name my-release netbox/netbox --values values.yaml
 ```
 
 ## Persistent storage pitfalls
@@ -525,7 +525,7 @@ extraConfig:
 > The following notice applies to all files contained within this Helm Chart and
 > the Git repository which contains it:
 >
-> Copyright 2019-2020 Chris Boot
+> Copyright 2019-2024 Chris Boot
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.

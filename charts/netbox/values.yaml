@@ -732,6 +732,10 @@ readinessProbe:
 ##         name: secret-resource
 extraEnvs: []
 
+## Configure revision history limit for deployments
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy
+revisionHistoryLimit: 10
+
 ## @section Traffic Exposure Parameters
 
 ## Service parameters

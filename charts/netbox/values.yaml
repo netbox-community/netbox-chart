@@ -547,6 +547,31 @@ reportsPersistence:
   accessMode: ReadWriteOnce
   size: 1Gi
   annotations: {}
+## Enable scripts persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+## @param scriptsPersistence.enabled Enable reports persistence using PVC
+## @param scriptsPersistence.storageClass PVC Storage Class for volume
+## @param scriptsPersistence.accessMode PVC Access Mode for volume
+## @param scriptsPersistence.size PVC Storage Request for volume
+## @param scriptsPersistence.subPath Existing claim's subPath to use, e.g. "media" (optional)
+## @param scriptsPersistence.existingClaim Name of an existing PVC to be used
+## @param scriptsPersistence.annotations Annotations to add to the PVC
+##
+scriptsPersistence:
+  enabled: false
+  existingClaim: ""
+  subPath: ""
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: {}
 ## @param updateStrategy.type Deployment strategy type
 ## @param updateStrategy.rollingUpdate Deployment rolling update configuration parameters
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy

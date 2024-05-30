@@ -513,7 +513,7 @@ persistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
   storageClass: ""
@@ -540,7 +540,7 @@ reportsPersistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
   storageClass: ""
@@ -565,7 +565,7 @@ scriptsPersistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the defaserviceMonitorult provisioner.  (gp2 on AWS, standard on
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
   storageClass: ""

@@ -53,8 +53,8 @@ extraDeploy: []
 ## @param image.pullSecrets Specify docker-registry secret names as an array
 ##
 image:
-  registry: docker.io
-  repository: netboxcommunity/netbox
+  registry: ghcr.io
+  repository: netbox-community/netbox
   pullPolicy: IfNotPresent
   ## Defaults to '{{ .Chart.AppVersion }}'
   ##

@@ -72,9 +72,15 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: SUPERUSER_NAME
-          value: {{ .Values.superuser.name | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
+              key: username
         - name: SUPERUSER_EMAIL
-          value: {{ .Values.superuser.email | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
+              key: email
         - name: SKIP_STARTUP_SCRIPTS
           value: {{ .Values.skipStartupScripts | quote }}
         {{- if .Values.dbWaitDebug }}
@@ -178,14 +184,8 @@ spec:
         projected:
           sources:
           - secret:
-              name: {{ .Values.existingSecret | default (include "common.names.fullname" .) | quote }}
+              name: {{ include "common.secrets.name" (dict "existingSecret" .Values.existingSecret "defaultNameSuffix" "config" "context" $) }}
               items:
-              # Used by netbox-docker entry scripts
-              - key: superuser_password
-                path: superuser_password
-              - key: superuser_api_token
-                path: superuser_api_token
-              # Used by our configuration
               - key: email_password
                 path: email_password
               - key: secret_key
@@ -196,6 +196,13 @@ spec:
                 path: ldap_bind_password
               {{- end }}
               {{- end }}
+          - secret:
+              name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
+              items:
+              - key: password
+                path: superuser_password
+              - key: api_token
+                path: superuser_api_token
           - secret:
               name: {{ include "netbox.postgresql.secret" . | quote }}
               items:

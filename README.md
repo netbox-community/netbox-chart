@@ -155,6 +155,7 @@ The following table lists the configurable parameters for this chart and their d
 | `superuser.email`                               | Email address for the initial super-user account                    | `admin@example.com`                          |
 | `superuser.password`                            | Password for the initial super-user account                         | `admin`                                      |
 | `superuser.apiToken`                            | API token created for the initial super-user account                | `0123456789abcdef0123456789abcdef01234567`   |
+| `superuser.existingSecret`                      | Use an existing Kubernetes `Secret` for secret values               | `""`                                         |
 | `skipStartupScripts`                            | Skip [netbox-docker startup scripts]                                | `true`                                       |
 | `allowedHosts`                                  | List of valid FQDNs for this NetBox instance                        | `["*"]`                                      |
 | `admins`                                        | List of admins to email about critical errors                       | `[]`                                         |
@@ -477,19 +478,40 @@ worker:
 ## Using an Existing Secret
 
 Rather than specifying passwords and secrets as part of the Helm release values,
-you may pass these to NetBox using a pre-existing `Secret` resource. When using
+you may pass these to NetBox using pre-existing `Secret` resources. When using
 this, the `Secret` must contain the following keys:
+
+### Superuser secret
+
+Type: `kubernetes.io/basic-auth`
+
+| Key                    | Description                                                   | Required?                                                                                         |
+| -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `username`             | Username for the initial super-user account                   | Yes                                                                                               |
+| `password`             | Password for the initial super-user account                   | Yes                                                                                               |
+| `email`                | Email address for the initial super-user account              | Yes                                                                                               |
+| `api_token`            | API token created for the initial super-user account          | Yes                                                                                               |
+
+### Config secret
+
+| Key                    | Description                                                   | Required?                                                                                         |
+| -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
+| `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
+| `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
+
+### PostgreSQL secret
 
 | Key                    | Description                                                   | Required?                                                                                         |
 | -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
-| `email_password`       | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
-| `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
+
+### Redis secret
+
+| Key                    | Description                                                   | Required?                                                                                         |
+| -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
 | `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
-| `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
-| `superuser_password`   | Password for the initial super-user account                   | Yes                                                                                               |
-| `superuser_api_token`  | API token created for the initial super-user account          | Yes                                                                                               |
 
 ## Using extraConfig for S3 storage configuration
 

@@ -150,6 +150,11 @@ spec:
           mountPath: /opt/netbox/netbox/reports
           subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
         {{- end }}
+        {{- if .Values.scriptsPersistence.enabled }}
+        - name: scripts
+          mountPath: /opt/netbox/netbox/scripts
+          subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
+        {{- end }}
         - name: optunit
           mountPath: /opt/unit
         - name: secrets
@@ -231,6 +236,11 @@ spec:
       - name: reports
         persistentVolumeClaim:
           claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
+      {{- end }}
+      {{- if .Values.scriptsPersistence.enabled }}
+      - name: scripts
+        persistentVolumeClaim:
+          claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
       {{- end }}
       {{- with .Values.extraVolumes }}
       {{- toYaml . | nindent 6 }}

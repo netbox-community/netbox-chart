@@ -96,6 +96,11 @@ spec:
           mountPath: /opt/netbox/netbox/reports
           subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
         {{- end }}
+        {{- if .Values.scriptsPersistence.enabled }}
+        - name: scripts
+          mountPath: /opt/netbox/netbox/scripts
+          subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
+        {{- end }}
         {{- with .Values.worker.extraVolumeMounts }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

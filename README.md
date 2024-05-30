@@ -336,6 +336,13 @@ The following table lists the configurable parameters for this chart and their d
 | `reportsPersistence.selector`                   | Set the selector for PVs, if desired                                | `{}`                                         |
 | `reportsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
 | `reportsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
+| `scriptsPersistence.enabled`                    | Enable storage persistence for NetBox reports                       | `false`                                      |
+| `scriptsPersistence.existingClaim`              | Use an existing `PersistentVolumeClaim` instead of creating one     | `""`                                         |
+| `scriptsPersistence.subPath`                    | Mount a sub-path of the volume into the container, not the root     | `""`                                         |
+| `scriptsPersistence.storageClass`               | Set the storage class of the PVC (use `-` to disable provisioning)  | `""`                                         |
+| `scriptsPersistence.selector`                   | Set the selector for PVs, if desired                                | `{}`                                         |
+| `scriptsPersistence.accessMode`                 | Access mode for the volume                                          | `ReadWriteOnce`                              |
+| `scriptsPersistence.size`                       | Size of persistent volume to request                                | `1Gi`                                        |
 | `podAnnotations`                                | Additional annotations for NetBox pods                              | `{}`                                         |
 | `podLabels`                                     | Additional labels for NetBox pods                                   | `{}`                                         |
 | `podSecurityContext`                            | Security context for NetBox pods                                    | *see `values.yaml`*                          |

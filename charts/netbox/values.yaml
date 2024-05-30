@@ -79,6 +79,7 @@ superuser:
   email: admin@example.com
   password: ""
   apiToken: ""
+  existingSecret: ""
 
 # Skip the netbox-docker startup scripts which can pre-populate objects into a
 # fresh NetBox installation. By default these do nothing, but they take a while

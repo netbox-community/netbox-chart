@@ -37,7 +37,7 @@ Name of the Secret that contains the PostgreSQL password
   {{- if .Values.postgresql.enabled }}
     {{- include "postgresql.v1.secretName" .Subcharts.postgresql -}}
   {{- else }}
-    {{ include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecretName "defaultNameSuffix" "postgresql" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecretName "defaultNameSuffix" "postgresql" "context" $) }}
   {{- end }}
 {{- end }}
 
@@ -61,7 +61,7 @@ Name of the Secret that contains the Redis tasks password
   {{- if .Values.redis.enabled }}
     {{- include "redis.secretName" .Subcharts.redis -}}
   {{- else }}
-    {{ include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
   {{- end }}
 {{- end }}
 
@@ -85,7 +85,7 @@ Name of the Secret that contains the Redis cache password
   {{- if .Values.redis.enabled }}
     {{- include "redis.secretName" .Subcharts.redis -}}
   {{- else }}
-    {{ include "common.secrets.name" (dict "existingSecret" .Values.cachingRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
   {{- end }}
 {{- end }}
 

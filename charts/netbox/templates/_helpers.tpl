@@ -36,10 +36,8 @@ Name of the Secret that contains the PostgreSQL password
 {{- define "netbox.postgresql.secret" -}}
   {{- if .Values.postgresql.enabled }}
     {{- include "postgresql.v1.secretName" .Subcharts.postgresql -}}
-  {{- else if .Values.externalDatabase.existingSecretName }}
-    {{- .Values.externalDatabase.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecretName "defaultNameSuffix" "postgresql" "context" $) }}
   {{- end }}
 {{- end }}
 
@@ -62,10 +60,8 @@ Name of the Secret that contains the Redis tasks password
 {{- define "netbox.tasksRedis.secret" -}}
   {{- if .Values.redis.enabled }}
     {{- include "redis.secretName" .Subcharts.redis -}}
-  {{- else if .Values.tasksRedis.existingSecretName }}
-    {{- .Values.tasksRedis.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
   {{- end }}
 {{- end }}
 
@@ -88,10 +84,8 @@ Name of the Secret that contains the Redis cache password
 {{- define "netbox.cachingRedis.secret" -}}
   {{- if .Values.redis.enabled }}
     {{- include "redis.secretName" .Subcharts.redis -}}
-  {{- else if .Values.cachingRedis.existingSecretName }}
-    {{- .Values.cachingRedis.existingSecretName }}
   {{- else }}
-    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
   {{- end }}
 {{- end }}
 

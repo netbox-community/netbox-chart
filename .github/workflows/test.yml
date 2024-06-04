@@ -42,4 +42,4 @@ jobs:
         if: startsWith(matrix.action, 'install')
 
       - name: Run chart-testing (${{ matrix.action }})
-        run: ct ${{ matrix.action }} --config config.yaml --debug
+        run: ct ${{ matrix.action }} --config config.yaml --debug --helm-extra-args '--timeout 10m'

@@ -2,7 +2,6 @@ owner: netbox-community
 repo: netbox-chart
 remote: origin
 target-branch: develop
-timeout: 10m
 sign: true
 key: builds@netboxlabs.com
 keyring: ~/.cr-gpg/secring.gpg
@@ -10,4 +9,5 @@ chart-dirs:
   - charts
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
+helm-extra-args: "--timeout 10m"
 generate-release-notes: true

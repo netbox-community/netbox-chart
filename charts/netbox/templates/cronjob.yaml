@@ -111,9 +111,8 @@ spec:
             projected:
               sources:
               - secret:
-                  name: {{ .Values.existingSecret | default (include "common.names.fullname" .) | quote }}
+                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.existingSecret "defaultNameSuffix" "config" "context" $) }}
                   items:
-                  # Used by our configuration
                   - key: email_password
                     path: email_password
                   - key: secret_key

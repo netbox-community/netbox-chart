@@ -1,0 +1,28 @@
+{{- if and .Values.scriptsPersistence.enabled (not .Values.scriptsPersistence.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-scripts" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.scriptsPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.scriptsPersistence.size | quote }}
+  {{- if .Values.scriptsPersistence.storageClass }}
+  {{- if (eq "-" .Values.scriptsPersistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.scriptsPersistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.scriptsPersistence.selector }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}

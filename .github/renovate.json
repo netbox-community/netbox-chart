@@ -1,12 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":disableDependencyDashboard"
   ],
   "labels": ["dependencies"],
   "rangeStrategy": "bump",
   "packageRules": [
+    {
+      "matchManagers": ["helmv3"],
+      "versioning": "helm"
+    },
     {
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["minor", "patch"],
@@ -23,8 +27,9 @@
       "automerge": true
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": ["(^|/)Chart.yaml$"],
       "matchStrings": [
         "\\nname: (?<depName>.*?)\\n",

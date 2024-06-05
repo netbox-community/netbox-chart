@@ -9,4 +9,5 @@ chart-dirs:
   - charts
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
+helm-extra-args: "--timeout 10m"
 generate-release-notes: true

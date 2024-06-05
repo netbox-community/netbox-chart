@@ -39,7 +39,7 @@ jobs:
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.10.0
-        if: startsWith(matrix.action, 'install')
+        if: contains(matrix.action, 'install')
 
       - name: Run chart-testing (${{ matrix.action }})
         run: ct ${{ matrix.action }} --config config.yaml --debug

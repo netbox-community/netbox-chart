@@ -298,12 +298,22 @@ The following table lists the configurable parameters for this chart and their d
 | `schedulerName`                                 | Name of the k8s scheduler (other than default) for pods             | `""`                                         |
 | `terminationGracePeriodSeconds`                 | Seconds pods need to terminate gracefully                           | `""`                                         |
 | `topologySpreadConstraints`                     | Configure Pod Topology Spread Constraints for NetBox                | `[]`                                         |
+| `livenessProbe.enabled`                         | Enable Kubernetes livenessProbe, see [liveness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) | *see `values.yaml`* |
+| `livenessProbe.initialDelaySeconds`             | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `livenessProbe.timeoutSeconds`                  | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `livenessProbe.periodSeconds`                   | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `livenessProbe.successThreshold`                | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.enabled`                        | Enable Kubernetes readinessProbe, see [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
 | `readinessProbe.initialDelaySeconds`            | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.timeoutSeconds`                 | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.periodSeconds`                  | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.successThreshold`               | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `lifecycleHooks`                                | Automate configuration before or after container startup            | `{}`                                         |
+| `startupProbe.enabled`                          | Enable Kubernetes startupProbe, see [startup probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
+| `startupProbe.initialDelaySeconds`              | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `startupProbe.timeoutSeconds`                   | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `startupProbe.periodSeconds`                    | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `startupProbe.successThreshold`                 | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `init.image.repository`                         | Init container image repository                                     | `busybox`                                    |
 | `init.image.tag`                                | Init container image tag                                            | `1.32.1`                                     |
 | `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |

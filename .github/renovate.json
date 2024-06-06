@@ -12,12 +12,12 @@
       "versioning": "helm"
     },
     {
-      "matchDatasources": ["helm"],
+      "matchManagers": ["helmv3"],
       "matchUpdateTypes": ["minor", "patch"],
       "bumpVersion": "patch"
     },
     {
-      "matchDatasources": ["helm"],
+      "matchManagers": ["helmv3"],
       "matchUpdateTypes": ["major"],
       "bumpVersion": "minor"
     },

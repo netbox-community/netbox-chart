@@ -156,7 +156,6 @@ The following table lists the configurable parameters for this chart and their d
 | `superuser.password`                            | Password for the initial super-user account                         | `admin`                                      |
 | `superuser.apiToken`                            | API token created for the initial super-user account                | `0123456789abcdef0123456789abcdef01234567`   |
 | `superuser.existingSecret`                      | Use an existing Kubernetes `Secret` for secret values               | `""`                                         |
-| `skipStartupScripts`                            | Skip [netbox-docker startup scripts]                                | `true`                                       |
 | `allowedHosts`                                  | List of valid FQDNs for this NetBox instance                        | `["*"]`                                      |
 | `admins`                                        | List of admins to email about critical errors                       | `[]`                                         |
 | `allowTokenRetrieval`                           | Permit the retrieval of API tokens after their creation             | `false`                                      |
@@ -413,7 +412,6 @@ The following table lists the configurable parameters for this chart and their d
 | `housekeeping.sidecars`                  | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
 | `housekeeping.initContainers`              | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
 
-[netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers
 [housekeeping]: https://demo.netbox.dev/static/docs/administration/housekeeping/
 [cron syntax]: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-schedule-syntax

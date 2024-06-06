@@ -81,12 +81,6 @@ superuser:
   apiToken: ""
   existingSecret: ""
 
-# Skip the netbox-docker startup scripts which can pre-populate objects into a
-# fresh NetBox installation. By default these do nothing, but they take a while
-# to run, so we skip them. See:
-# https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
-skipStartupScripts: true
-
 # This is a list of valid fully-qualified domain names (FQDNs) for the NetBox
 # server. NetBox will not permit write access to the server via any other
 # hostnames. The first FQDN in the list will be treated as the preferred name.

@@ -81,8 +81,6 @@ spec:
             secretKeyRef:
               name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
               key: email
-        - name: SKIP_STARTUP_SCRIPTS
-          value: {{ .Values.skipStartupScripts | quote }}
         {{- if .Values.dbWaitDebug }}
         - name: DB_WAIT_DEBUG
           value: "1"

@@ -73,7 +73,8 @@ metadata:
   namespace: netbox
 data:
   sso_pipeline_roles.py: |
-    from django.contrib.auth.models import Group
+    from netbox.authentication import Group
+
     def set_role(response, user, backend, *args, **kwargs):
       client_id = '<OAUTH_CLIENT_ID>'
       roles = []
@@ -88,9 +89,9 @@ data:
       for group in groups:
         try:
           if group.name in roles:
-            group.user_set.add(user)
+            group.users.add(user)
           else:
-            group.user_set.remove(user)
+            group.users.remove(user)
         except Group.DoesNotExist:
           continue
 ```
@@ -156,7 +157,8 @@ metadata:
   namespace: netbox
 data:
   sso_pipeline_roles.py: |
-    from django.contrib.auth.models import Group
+    from netbox.authentication import Group
+
     import jwt
     from jwt import PyJWKClient
     def set_role(response, user, backend, *args, **kwargs):
@@ -180,9 +182,9 @@ data:
       for group in groups:
         try:
           if group.name in roles:
-            group.user_set.add(user)
+            group.users.add(user)
           else:
-            group.user_set.remove(user)
+            group.users.remove(user)
         except Group.DoesNotExist:
           continue
 ```

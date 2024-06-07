@@ -22,7 +22,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^15.5.2
+    version: ^15.5.4
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis

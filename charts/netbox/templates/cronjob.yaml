@@ -40,7 +40,7 @@ spec:
           securityContext: {{- omit .Values.housekeeping.podSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           {{- if .Values.housekeeping.initContainers }}
-          {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.initContainers "context" $) | trim | nindent 10 }}
+          initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.initContainers "context" $) | trim | nindent 12 }}
           {{- end }}
           containers:
           - name: {{ .Chart.Name }}-housekeeping

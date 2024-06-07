@@ -1126,10 +1126,12 @@ housekeeping:
   ##
   failedHistoryLimit: 5
   ## @param housekeeping.command The command to execute in the housekeeping job
-  ## To append another command, in order to shut down a DB sidecar container, use something like
+  ## To append another command, e.g. in order to shut down a DB sidecar container, use something like
   ##   - /bin/bash
   ##   - -c
-  ##   - "/opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping && curl -X POST http://localhost:9190/quitquitquit"
+  ##   - >
+  ##     /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping
+  ##     && curl -X POST http://localhost:9190/quitquitquit"
   ##
   command:
     - /opt/netbox/venv/bin/python

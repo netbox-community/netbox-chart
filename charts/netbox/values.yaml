@@ -1125,6 +1125,16 @@ housekeeping:
   ## @param housekeeping.failedHistoryLimit Number of failed finished jobs to retain
   ##
   failedHistoryLimit: 5
+  ## @param housekeeping.command The command to execute in the housekeeping job
+  ## To append another command, in order to shut down a DB sidecar container, use something like
+  ##   - /bin/bash
+  ##   - -c
+  ##   - "/opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping && curl -X POST http://localhost:9190/quitquitquit"
+  ##
+  command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - housekeeping
   ## @param housekeeping.podAnnotations Pod annotations
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##

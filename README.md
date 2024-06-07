@@ -6,32 +6,23 @@ data center infrastructure management (DCIM) tool.
 ## TL;DR
 
 ```shell
-$ helm repo add netbox https://charts.netbox.oss.netboxlabs.com/
-$ helm install netbox \
-  --set postgresql.auth.postgresPassword=[password1] \
-  --set postgresql.auth.password=[password2] \
-  --set redis.auth.password=[password3] \
-  netbox/netbox
+helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
-⚠️ **WARNING:** Please see [Production Usage](#production-usage) below before using this chart for real.
+
+> [!tip]
+> Please see [Production Usage](#production-usage) below before using this chart for real.
 
 ## Prerequisites
 
-- Kubernetes 1.25.0+ (a [current](https://kubernetes.io/releases/) version)
-- Helm 3.10.0+ (a version [compatible](https://helm.sh/docs/topics/version_skew/) with your cluster)
-- This chart works with NetBox 3.5.0+ (3.6.4+ recommended)
+- Kubernetes [1.25+](https://kubernetes.io/releases/)
+- Helm [3.10+](https://helm.sh/docs/topics/version_skew/)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release` and default configuration:
 
 ```shell
-$ helm repo add netbox https://charts.netbox.oss.netboxlabs.com/
-$ helm install my-release \
-  --set postgresql.auth.postgresPassword=[password1] \
-  --set postgresql.auth.password=[password2] \
-  --set redis.auth.password=[password3] \
-  netbox/netbox
+helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
@@ -43,17 +34,17 @@ Always [use an existing Secret](#using-an-existing-secret) and supply all
 passwords and secret keys yourself to avoid Helm re-generating any of them for
 you.
 
-I strongly recommend setting both `postgresql.enabled` and `redis.enabled` to
+We recommend setting both `postgresql.enabled` and `redis.enabled` to
 `false` and using a separate external PostgreSQL and Redis instance. This
 de-couples those services from the chart's bundled versions which may have
-complex upgrade requirements. I also recommend using a clustered PostgreSQL
-server (e.g. using Zalando's
+complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando's
 [Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
 with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
-Set `persistence.enabled` to `false` and use the S3 `storageBackend` for object
-storage. This works well with Minio or Ceph RGW as well as Amazon S3. See [Using extraConfig for S3 storage configuration](#using-extraconfig-for-s3-storage-configuration) and [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
+Set `persistence.enabled` to `false` and use the S3 `storageBackend` and `storageConfig`
+for object storage. This works well with Minio or Ceph RGW as well as Amazon S3. 
+See [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
 Run multiple replicas of the NetBox web front-end to avoid interruptions during
 upgrades or at other times when the pods need to be restarted. There's no need
@@ -72,74 +63,6 @@ affinity:
             app.kubernetes.io/component: netbox
         topologyKey: kubernetes.io/hostname
 ```
-
-## Uninstalling the Chart
-
-To delete the chart:
-
-```shell
-$ helm delete my-release
-```
-
-## Upgrading
-
-### Bundled PostgreSQL
-
-When upgrading or changing settings and using the bundled Bitnami PostgreSQL
-sub-chart, you **must** provide the `postgresql.auth.password` at minimum.
-Ideally you should also supply the `postgresql.auth.postgresPassword` and,
-if using replication, the `postgresql.auth.replicationPassword`. Please see the
-[upstream documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
-for further information.
-
-### From 4.x to 5.x
-
-* NetBox has been updated to 3.6.4, but older 3.5+ versions should still work (this is not tested or supported, however).
-* **Potentially breaking changes:**
-  * The `extraContainers` setting has been renamed `sidecars` to match conventions.
-  * The `extraInitContainers` setting has been renamed `initContainers` to match conventions.
-  * The `metricsEnabled` setting has been renamed `metrics.enabled` to match conventions.
-  * The `serviceMonitor` setting has been moved to `metrics.serviceMonitor` to match conventions.
-  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in NetBox 3.5.
-  * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
-  * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
-  * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
-  * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 13.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 18.x; please read the upstream upgrade notes if you are using the bundled Redis.
-
-### From 3.x to 4.x
-
-* NetBox 3.0.0 or above is required
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 12.x to 15.x; please read the upstream upgrade notes if you are using the bundled Redis
-* The `cacheTimeout` and `releaseCheck.timeout` settings were removed
-
-### From 2.x to 3.x
-
-* NetBox 2.10.4 or above is required
-* Kubernetes 1.14 or above is required
-* Helm v3 or above is now required
-* The `netbox` Deployment selectors are changed, so the Deployment **must** be deleted on upgrades
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled Redis
-* The NGINX container is removed, on account of upstream's migration from Gunicorn to NGINX Unit
-* The `webhooksRedis` configuration key in `values.yaml` has been renamed to `tasksRedis` to match the upstream name
-* The `redis_password` key in the Secret has been renamed to `redis_tasks_password`
-
-### From 1.x to 2.x
-
-If you use an external Redis you will need to update your configuration values
-due to the chart reflecting upstream changes in how it uses Redis. There are
-now separate Redis configuration blocks for webhooks and for caching, though
-they can both point at the same Redis instance as long as the database numbers
-are different.
-
-### From 0.x to 1.x
-
-The chart dependencies on PostgreSQL and Redis have been upgraded, so you may
-need to take action depending on how you have configured the chart. The
-PostgreSQL chart was upgraded from 5.x.x to 7.x.x, and Redis from 8.x.x to
-9.x.x.
 
 ## Configuration
 
@@ -388,8 +311,8 @@ The following table lists the configurable parameters for this chart and their d
 | `extraEnvs`                                     | Additional environment variables to set in the NetBox container     | `[]`                                         |
 | `extraVolumeMounts`                             | Additional volumes to mount in the NetBox container                 | `[]`                                         |
 | `extraVolumes`                                  | Additional volumes to reference in pods                             | `[]`                                         |
-| `sidecars`                               | Additional sidecar containers to be added to pods                   | `[]`                                         |
-| `initContainers`                           | Additional init containers to run before starting main containers   | `[]`                                         |
+| `sidecars`                                      | Additional sidecar containers to be added to pods                   | `[]`                                         |
+| `initContainers`                                | Additional init containers to run before starting main containers   | `[]`                                         |
 | `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
 | `housekeeping.enabled`                          | Whether the [Housekeeping][housekeeping] `CronJob` should be active | `true`                                       |
 | `housekeeping.concurrencyPolicy`                | ConcurrencyPolicy for the Housekeeping CronJob.                     | `Forbid`                                     |
@@ -410,18 +333,19 @@ The following table lists the configurable parameters for this chart and their d
 | `housekeeping.extraEnvs`                        | Additional environment variables to set in housekeeping CronJob     | `[]`                                         |
 | `housekeeping.extraVolumeMounts`                | Additional volumes to mount in the housekeeping CronJob             | `[]`                                         |
 | `housekeeping.extraVolumes`                     | Additional volumes to reference in housekeeping CronJob pods        | `[]`                                         |
-| `housekeeping.sidecars`                  | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
-| `housekeeping.initContainers`              | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
+| `housekeeping.sidecars`                         | Additional sidecar containers to be added to housekeeping CronJob   | `[]`                                         |
+| `housekeeping.initContainers`                   | Additional init containers for housekeeping CronJob pods            | `[]`                                         |
 
 [netbox-docker startup scripts]: https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
 [CORS]: https://github.com/ottoyiu/django-cors-headers
-[housekeeping]: https://demo.netbox.dev/static/docs/administration/housekeeping/
+[housekeeping]: https://netboxlabs.com/docs/netbox/en/stable/administration/housekeeping/
 [cron syntax]: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-schedule-syntax
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install` or provide a YAML file containing the values for the above parameters:
 
 ```shell
-$ helm install --name my-release netbox/netbox --values values.yaml
+helm install my-release --values values.yaml \
+  oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 ## Persistent storage pitfalls
@@ -431,8 +355,8 @@ care you will run into issues. The most common issue is that one of the NetBox
 pods gets stuck in the `ContainerCreating` state. There are several ways around
 this problem:
 
-1. For production usage I recommend **disabling** persistent storage by setting
-   `persistence.enabled` to `false` and using the S3 `storageBackend`. This can
+1. Use the recommended S3 `storageBackend` and **disable** persistent storage
+   by setting `persistence.enabled` to `false`. This can
    be used with any S3-compatible storage provider including Amazon S3, Minio,
    Ceph RGW, and many others. See further down for an example of this.
 2. Use a `ReadWriteMany` volume that can be mounted by several pods across
@@ -513,57 +437,61 @@ Type: `kubernetes.io/basic-auth`
 | `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
 | `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
 
-## Using extraConfig for S3 storage configuration
-
-If you want to use S3 as your storage backend and not have the config in the `values.yaml` (credentials!)
-you can use an existing secret that is then referenced under the `extraConfig` key.
-
-The secret would look like this:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/instance: netbox
-  name: netbox-extra
-stringData:
-  s3-config.yaml: |
-    STORAGE_CONFIG:
-      AWS_S3_ENDPOINT_URL: <endpoint-URL>
-      AWS_S3_REGION_NAME: <region>
-      AWS_STORAGE_BUCKET_NAME: <bucket-name>
-      AWS_ACCESS_KEY_ID: <access-key>
-      AWS_SECRET_ACCESS_KEY: <secret-key>
-```
-
-And the secret then has to be referenced like this:
-
-```yaml
-extraConfig:
-  - secret: # same as pod.spec.volumes.secret
-      secretName: netbox-extra
-```
-
 ## Authentication
 * [Single Sign On](docs/auth.md#configuring-sso)
 * [LDAP Authentication](docs/auth.md#using-ldap-authentication)
 
+## Upgrading
+
+### From 4.x to 5.x
+
+* NetBox has been updated to version 4.x. This chart _should_ still work with 3.7.x as well by overriding the `image`, but it is not officially supported.
+* **Potentially breaking changes:**
+  * The `extraContainers` setting has been renamed `sidecars` to match conventions.
+  * The `extraInitContainers` setting has been renamed `initContainers` to match conventions.
+  * The `metricsEnabled` setting has been renamed `metrics.enabled` to match conventions.
+  * The `serviceMonitor` setting has been moved to `metrics.serviceMonitor` to match conventions.
+  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in more recent versions of NetBox.
+  * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
+  * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
+  * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
+  * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 15.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 19.x; please read the upstream upgrade notes if you are using the bundled Redis.
+
+### From 3.x to 4.x
+
+* NetBox 3.0.0 or above is required
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 12.x to 15.x; please read the upstream upgrade notes if you are using the bundled Redis
+* The `cacheTimeout` and `releaseCheck.timeout` settings were removed
+
+### From 2.x to 3.x
+
+* NetBox 2.10.4 or above is required
+* Kubernetes 1.14 or above is required
+* Helm v3 or above is now required
+* The `netbox` Deployment selectors are changed, so the Deployment **must** be deleted on upgrades
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) sub-chart was upgraded from 8.x to 10.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/master/bitnami/redis) sub-chart was upgraded from 10.x to 12.x; please read the upstream upgrade notes if you are using the bundled Redis
+* The NGINX container is removed, on account of upstream's migration from Gunicorn to NGINX Unit
+* The `webhooksRedis` configuration key in `values.yaml` has been renamed to `tasksRedis` to match the upstream name
+* The `redis_password` key in the Secret has been renamed to `redis_tasks_password`
+
+### From 1.x to 2.x
+
+If you use an external Redis you will need to update your configuration values
+due to the chart reflecting upstream changes in how it uses Redis. There are
+now separate Redis configuration blocks for webhooks and for caching, though
+they can both point at the same Redis instance as long as the database numbers
+are different.
+
+### From 0.x to 1.x
+
+The chart dependencies on PostgreSQL and Redis have been upgraded, so you may
+need to take action depending on how you have configured the chart. The
+PostgreSQL chart was upgraded from 5.x.x to 7.x.x, and Redis from 8.x.x to
+9.x.x.
+
 ## License
 
-> The following notice applies to all files contained within this Helm Chart and
-> the Git repository which contains it:
->
-> Copyright 2019-2024 Chris Boot
->
-> Licensed under the Apache License, Version 2.0 (the "License");
-> you may not use this file except in compliance with the License.
-> You may obtain a copy of the License at
->
->     http://www.apache.org/licenses/LICENSE-2.0
->
-> Unless required by applicable law or agreed to in writing, software
-> distributed under the License is distributed on an "AS IS" BASIS,
-> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-> See the License for the specific language governing permissions and
-> limitations under the License.
+This project is licensed under [Apache License, Version 2.0](LICENSE).

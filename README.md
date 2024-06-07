@@ -445,19 +445,19 @@ Type: `kubernetes.io/basic-auth`
 
 ### From 4.x to 5.x
 
-* NetBox has been updated to 3.6.4, but older 3.5+ versions should still work (this is not tested or supported, however).
+* NetBox has been updated to version 4.x. This chart _should_ still work with 3.7.x as well by overriding the `image`, but it is not officially supported.
 * **Potentially breaking changes:**
   * The `extraContainers` setting has been renamed `sidecars` to match conventions.
   * The `extraInitContainers` setting has been renamed `initContainers` to match conventions.
   * The `metricsEnabled` setting has been renamed `metrics.enabled` to match conventions.
   * The `serviceMonitor` setting has been moved to `metrics.serviceMonitor` to match conventions.
-  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in NetBox 3.5.
+  * The `jobResultRetention` setting has been renamed `jobRetention` to match the change in more recent versions of NetBox.
   * The `remoteAuth.backend` setting has been renamed `remoteAuth.backends` and is now an array.
   * The `remoteAuth.autoCreateUser` setting now defaults to `false`.
   * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
   * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
-* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 13.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 18.x; please read the upstream upgrade notes if you are using the bundled Redis.
+* The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 15.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 19.x; please read the upstream upgrade notes if you are using the bundled Redis.
 
 ### From 3.x to 4.x
 

@@ -49,9 +49,7 @@ spec:
             {{- end }}
             image: {{ include "netbox.image" . | quote }}
             command:
-            - /opt/netbox/venv/bin/python
-            - /opt/netbox/netbox/manage.py
-            - housekeeping
+            {{- .Values.housekeeping.command | toYaml | nindent 14 }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             {{- with .Values.housekeeping.extraEnvs }}
             env:

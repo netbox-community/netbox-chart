@@ -69,7 +69,7 @@ data:
     REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['caching']['SENTINELS']]
     {{- end }}
 
-    {{- if .Values.allowedHostsIncludesPodIp }}
+    {{- if .Values.allowedHostsIncludesPodIP }}
     ALLOWED_HOSTS.append(os.getenv("POD_IP"))
     {{- end }}
 

@@ -13,6 +13,7 @@ data:
     from pathlib import Path
 
     import yaml
+    import os
 
 
     def _deep_merge(source, destination):

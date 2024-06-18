@@ -13,6 +13,7 @@ data:
     from pathlib import Path
 
     import yaml
+    import os
 
 
     def _deep_merge(source, destination):
@@ -69,7 +70,7 @@ data:
     REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['caching']['SENTINELS']]
     {{- end }}
 
-    {{- if .Values.allowedHostsIncludesPodIp }}
+    {{- if .Values.allowedHostsIncludesPodIP }}
     ALLOWED_HOSTS.append(os.getenv("POD_IP"))
     {{- end }}
 

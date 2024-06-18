@@ -92,12 +92,12 @@ spec:
         {{- with .Values.extraEnvs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.allowedHostsIncludesPodIp }}
-         - name: POD_IP
-           valueFrom:
-             fieldRef:
-               apiVersion: v1
-               fieldPath: status.podIP
+        {{- if .Values.allowedHostsIncludesPodIP }}
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
         {{- end }}
         ports:
         - name: http

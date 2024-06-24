@@ -152,6 +152,11 @@ spec:
             persistentVolumeClaim:
               claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
           {{- end }}
+          {{- if .Values.scriptsPersistence.enabled }}
+          - name: scripts
+            persistentVolumeClaim:
+              claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
+          {{- end }}
           {{- with .Values.housekeeping.extraVolumes }}
           {{- toYaml . | nindent 10 }}
           {{- end }}

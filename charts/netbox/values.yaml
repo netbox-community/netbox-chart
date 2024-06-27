@@ -104,7 +104,7 @@ allowTokenRetrieval: false
 # password validators for local user accounts. If configured, these will be
 # applied whenever a user's password is updated to ensure that it meets minimum
 # criteria such as length or complexity.
-# https://docs.netbox.dev/en/stable/configuration/optional-settings/#auth_password_validators
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/security/#auth_password_validators
 authPasswordValidators: []
 
 # URL schemes that are allowed within links in NetBox
@@ -133,12 +133,12 @@ changelogRetention: 90
 
 # This is a mapping of models to custom validators that have been defined
 # locally to enforce custom validation logic.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#custom_validators
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/data-validation/#custom_validators
 customValidators: {}
 
 # This is a dictionary defining the default preferences to be set for newly-
 # created user accounts.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#default_user_preferences
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/default-values/#default_user_preferences
 defaultUserPreferences: {}
   # pagination:
   #   per_page: 100
@@ -154,7 +154,7 @@ cors:
   #  - '^(https?://)?(\w+\.)?example\.com$'
 
 # CSRF settings.  Needed for netbox v3.2.0 and newer. For more information
-# see https://docs.netbox.dev/en/stable/configuration/optional-settings/#csrf_trusted_origins
+# see https://netboxlabs.com/docs/netbox/en/stable/configuration/security/#csrf_trusted_origins
 csrf:
   # The name of the cookie to use for the cross-site request forgery (CSRF)
   # authentication token.
@@ -214,7 +214,7 @@ exemptViewPermissions: []
 # Some static choice fields on models can be configured with custom values.
 # Each choice in the list must have a database value and a human-friendly
 # label, and may optionally specify a color.
-# https://docs.netbox.dev/en/stable/configuration/optional-settings/#field_choices
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/data-validation/#field_choices
 fieldChoices: {}
   # 'dcim.Site.status':
   #   - [foo, Foo, red]
@@ -243,7 +243,7 @@ internalIPs: ['127.0.0.1', '::1']
 
 # The number of days to retain job results (scripts and reports). Set this to 0
 # to retain job results in the database indefinitely.
-# https://docs.netbox.dev/en/stable/configuration/miscellaneous/#job_retention
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/miscellaneous/#job_retention
 jobRetention: 90
 
 # Enable custom logging. Please see the Django documentation for detailed
@@ -303,16 +303,16 @@ plugins: []
 pluginsConfig: {}
 
 # The default value for the amperage field when creating new power feeds.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#powerfeed_default_amperage
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/default-values/#powerfeed_default_amperage
 powerFeedDefaultAmperage: 15
 
 # The default value (percentage) for the max_utilization field when creating
 # new power feeds.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#powerfeed_default_max_utilization
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/default-values/#powerfeed_default_max_utilization
 powerFeedMaxUtilisation: 80
 
 # The default value for the voltage field when creating new power feeds.
-# https://docs.netbox.dev/en/stable/configuration/dynamic-settings/#powerfeed_default_voltage
+# https://netboxlabs.com/docs/netbox/en/stable/configuration/default-values/#powerfeed_default_voltage
 powerFeedDefaultVoltage: 120
 
 # When determining the primary IP address for a device, IPv6 is preferred over

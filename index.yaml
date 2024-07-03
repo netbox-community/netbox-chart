@@ -8,6 +8,47 @@ entries:
           url: https://github.com/netbox-community/netbox
     apiVersion: v2
     appVersion: v4.0.6
+    created: "2024-07-03T19:02:44.169792374Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.20.3
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^15.5.13
+    - condition: redis.enabled
+      name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^19.6.0
+    description: IP address management (IPAM) and data center infrastructure management
+      (DCIM) tool
+    digest: d23ff3ac3cd687724a5b7f4e6b02de458f9df694de60b58199d0d0e6e3fe82ef
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    - name: bootc
+      url: https://github.com/bootc
+    name: netbox
+    sources:
+    - https://github.com/netbox-community/netbox
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-5.0.0-beta.45/netbox-5.0.0-beta.45.tgz
+    version: 5.0.0-beta.45
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox
+    apiVersion: v2
+    appVersion: v4.0.6
     created: "2024-07-02T17:12:34.746363803Z"
     dependencies:
     - name: common
@@ -1149,4 +1190,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-5.0.0-beta.15/netbox-5.0.0-beta.15.tgz
     version: 5.0.0-beta.15
-generated: "2024-07-02T17:12:34.746789569Z"
+generated: "2024-07-03T19:02:44.17017583Z"

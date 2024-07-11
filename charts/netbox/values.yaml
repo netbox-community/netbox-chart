@@ -892,7 +892,7 @@ externalDatabase:
   database: netbox
   username: netbox
   password: ""
-  existingSecretName: ""
+  # existingSecretName: ""
   existingSecretKey: postgresql-password
 
   # The following settings also apply when using the bundled PostgreSQL chart:
@@ -924,7 +924,7 @@ tasksRedis:
   sentinelTimeout: 300
   username: ""
   password: ""
-  existingSecretName: ""
+  # existingSecretName: ""
   existingSecretKey: redis-password
 
 cachingRedis:
@@ -943,7 +943,7 @@ cachingRedis:
   sentinelTimeout: 300
   username: ""
   password: ""
-  existingSecretName: ""
+  # existingSecretName: ""
   existingSecretKey: redis-password
 
 ## @section Autoscaling parameters

@@ -15,33 +15,41 @@ spec:
     targetPort: http
     protocol: TCP
     name: http
-    {{- if .Values.service.nodePort }}
+    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
     nodePort: {{ .Values.service.nodePort }}
+    {{- else if eq .Values.service.type "ClusterIP" }}
+    nodePort: null
     {{- end }}
   selector:
     {{- include "common.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: netbox
-  {{- if .Values.service.clusterIP }}
-  clusterIP: {{ .Values.service.clusterIP | quote }}
+  {{- if and .Values.service.clusterIP (eq .Values.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.service.clusterIP }}
   {{- end }}
-  {{- with .Values.service.clusterIPs }}
-  clusterIPs:
-  {{- toYaml . | nindent 2 }}
+  {{- if and .Values.service.clusterIPs (eq .Values.service.type "ClusterIP") }}
+  clusterIPs: {{- include "common.tplvalues.render" (dict "value" .Values.service.clusterIPs "context" $) | nindent 4 }}
   {{- end }}
-  {{- with .Values.service.externalIPs }}
-  externalIPs:
-  {{- toYaml . | nindent 2 }}
+  {{- if .Values.service.externalIPs }}
+  clusterIPs: {{- include "common.tplvalues.render" (dict "value" .Values.service.externalIPs "context" $) | nindent 4 }}
   {{- end }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | quote }}
+  {{- if .Values.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- end }}
+  {{- if .Values.service.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.service.sessionAffinityConfig "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy | quote }}
   {{- end }}
-  {{- if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP | quote }}
+  {{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | quote }}
   {{- end }}
-  {{- with .Values.service.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges:
-  {{- toYaml . | nindent 2 }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerSourceRanges)) }}
+  loadBalancerSourceRanges: {{ .Values.service.loadBalancerSourceRanges }}
+  {{- end }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerClass)) }}
+  loadBalancerClass: {{ .Values.service.loadBalancerClass | quote }}
   {{- end }}

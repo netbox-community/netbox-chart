@@ -644,6 +644,17 @@ nodeSelector: {}
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
+## @param priorityClassName Pods' priorityClassName
+##
+priorityClassName: ""
+## @param schedulerName Name of the k8s scheduler (other than default) for pods
+## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+##
+schedulerName: ""
+## @param terminationGracePeriodSeconds Seconds pods need to terminate gracefully
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+##
+terminationGracePeriodSeconds:
 ## @param topologySpreadConstraints Topology Spread Constraints for pod assignment
 ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 ## The value is evaluated as a template.
@@ -742,6 +753,9 @@ readinessProbe:
   periodSeconds: 10
   failureThreshold: 3
   successThreshold: 1
+## @param lifecycleHooks for containers to automate configuration before or after startup
+##
+lifecycleHooks: {}
 ## @param extraEnvs Extra environment variables to be set on containers
 ## E.g:
 ## extraEnvs:
@@ -762,6 +776,7 @@ revisionHistoryLimit: 10
 ## @param service.type Kubernetes Service type
 ## @param service.loadBalancerSourceRanges Restricts access for LoadBalancer (only with `service.type: LoadBalancer`)
 ## @param service.loadBalancerIP loadBalancerIP for the service (optional, cloud specific)
+## @param service.loadBalancerClass Load Balancer class (optional, cloud specific)
 ## @param service.nodePort Kubernetes node port
 ## @param service.externalTrafficPolicy Enable client source IP preservation
 ## @param service.clusterIP Service Cluster IP
@@ -782,9 +797,21 @@ service:
   ##   - 0.0.0.0/0
   ##
   loadBalancerSourceRanges: []
+  loadBalancerClass: ""
   externalIPs: []
   clusterIPs: []
   ipFamilyPolicy: ""
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
+  ## Values: ClientIP or None
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+  ##
+  sessionAffinity: None
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## sessionAffinityConfig:
+  ##   clientIP:
+  ##     timeoutSeconds: 300
+  ##
+  sessionAffinityConfig: {}
 
 ## Configure the ingress resource that allows you to access the app
 ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -849,6 +876,9 @@ metrics:
     ## @param metrics.serviceMonitor.enabled if `true`, creates a Prometheus Operator ServiceMonitor (also requires `metrics.enabled` to be `true`)
     ##
     enabled: false
+    ## @param metrics.serviceMonitor.honorLabels honorLabels chooses the metric's labels on collisions with target labels
+    ##
+    honorLabels: false
     ## @param metrics.serviceMonitor.interval Interval at which metrics should be scraped.
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
     ## e.g:
@@ -861,6 +891,18 @@ metrics:
     ## scrapeTimeout: 10s
     ##
     scrapeTimeout: ""
+    ## @param metrics.serviceMonitor.metricRelabelings Specify additional relabeling of metrics
+    ##
+    metricRelabelings: []
+    ## @param metrics.serviceMonitor.relabelings Specify general relabeling
+    ##
+    relabelings: []
+    ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## selector:
+    ##   prometheus: my-prometheus
+    ##
+    selector: {}
     additionalLabels: {}
 
 ## @section Databases parameters
@@ -1331,7 +1373,7 @@ worker:
   automountServiceAccountToken: false
   ## @param worker.affinity Affinity for worker pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+  ## Note: podAffinityPreset, podAntiAffinityPreset, and nodeAffinityPreset will be ignored when it's set
   ##
   affinity: {}
   ## @param worker.nodeSelector Node labels for worker pod assignment
@@ -1342,6 +1384,31 @@ worker:
   ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
+  ## @param worker.priorityClassName Pods' priorityClassName
+  ##
+  priorityClassName: ""
+  ## @param worker.schedulerName Name of the k8s scheduler (other than default) for pods
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  schedulerName: ""
+  ## @param worker.terminationGracePeriodSeconds Seconds pods need to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  ##
+  terminationGracePeriodSeconds:
+  ## @param worker.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## The value is evaluated as a template.
+  ## e.g:
+  ## topologySpreadConstraints:
+  ##   - maxSkew: 1
+  ##     topologyKey: topology.kubernetes.io/zone
+  ##     whenUnsatisfiable: DoNotSchedule
+  ##     labelSelector:
+  ##       matchLabels:
+  ##         "app.kubernetes.io/component": netbox
+  ##         "app.kubernetes.io/name": netbox
+  ##
+  topologySpreadConstraints: []
   ## @param worker.hostAliases [array] Add deployment host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##

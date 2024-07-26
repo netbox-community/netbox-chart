@@ -43,7 +43,7 @@ with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
 Set `persistence.enabled` to `false` and use the S3 `storageBackend` and `storageConfig`
-for object storage. This works well with Minio or Ceph RGW as well as Amazon S3. 
+for object storage. This works well with Minio or Ceph RGW as well as Amazon S3.
 See [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
 Run multiple replicas of the NetBox web front-end to avoid interruptions during
@@ -185,8 +185,12 @@ The following table lists the configurable parameters for this chart and their d
 | `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `metrics.serviceMonitor.enabled`                | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
 | `metrics.serviceMonitor.additionalLabels`       | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
-| `metrics.serviceMonitor.interval`               | Interval to scrape metrics.                                         | `1m`                                         |
-| `metrics.serviceMonitor.scrapeTimeout`          | Timeout duration for scraping metrics                               | `10s`                                        |
+| `metrics.serviceMonitor.honorLabels`            | honorLabels chooses the metric's labels on collisions               | `false`                                      |
+| `metrics.serviceMonitor.interval`               | Interval at which metrics should be scraped                         | `""`                                         |
+| `metrics.serviceMonitor.scrapeTimeout`          | Timeout duration for scraping metrics                               | `""`                                         |
+| `metrics.serviceMonitor.metricRelabelings`      | Specify additional relabeling of metrics                            | `[]`                                         |
+| `metrics.serviceMonitor.relabelings`            | Specify general relabeling                                          | `[]`                                         |
+| `metrics.serviceMonitor.selector`               | Prometheus instance selector labels                                 | `{}`                                         |
 | `shortTimeFormat`                               | Django date format for short-form time strings                      | `"H:i:s"`                                    |
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
@@ -276,10 +280,13 @@ The following table lists the configurable parameters for this chart and their d
 | `service.clusterIP`                             | The cluster IP address assigned to the service                      | `""`                                         |
 | `service.clusterIPs`                            | A list of cluster IP addresses assigned to the service              | `[]`                                         |
 | `service.externalIPs`                           | A list of external IP addresses aliased to this service             | `[]`                                         |
-| `service.externalTrafficPolicy`                 | Policy for routing external traffic                                 | `""`                                         |
+| `service.externalTrafficPolicy`                 | Policy for routing external traffic                                 | `Cluster`                                    |
 | `service.ipFamilyPolicy`                        | Represents the dual-stack-ness of the service                       | `""`                                         |
-| `service.loadBalancerIP`                        | Request a specific IP address when `service.type` is LoadBalancer   | `""`                                         |
-| `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is LoadBalancer     | `[]`                                         |
+| `service.loadBalancerIP`                        | Request a specific IP address when `service.type` is `LoadBalancer` | `""`                                         |
+| `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is `LoadBalancer`   | `[]`                                         |
+| `service.loadBalancerClass`                     | Load Balancer class if `service.type` is `LoadBalancer`             | `""`                                         |
+| `service.sessionAffinity`                       | Control where client requests go, to the same pod or round-robin    | `None`                                       |
+| `service.sessionAffinityConfig`                 | Additional settings for the sessionAffinity                         | `{}`                                         |
 | `ingress.enabled`                               | Create an `Ingress` resource for accessing NetBox                   | `false`                                      |
 | `ingress.className`                             | Use a named IngressClass                                            | `""`                                         |
 | `ingress.annotations`                           | Extra annotations to apply to the `Ingress` resource                | `{}`                                         |
@@ -287,12 +294,16 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
 | `automountServiceAccountToken`                  | Whether to automatically mount the serviceAccount token in the main container or not | `false`                     |
+| `priorityClassName`                             | Pods' priorityClassName                                             | `""`                                         |
+| `schedulerName`                                 | Name of the k8s scheduler (other than default) for pods             | `""`                                         |
+| `terminationGracePeriodSeconds`                 | Seconds pods need to terminate gracefully                           | `""`                                         |
 | `topologySpreadConstraints`                     | Configure Pod Topology Spread Constraints for NetBox                | `[]`                                         |
 | `readinessProbe.enabled`                        | Enable Kubernetes readinessProbe, see [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) | *see `values.yaml`* |
 | `readinessProbe.initialDelaySeconds`            | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.timeoutSeconds`                 | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.periodSeconds`                  | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `readinessProbe.successThreshold`               | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `lifecycleHooks`                                | Automate configuration before or after container startup            | `{}`                                         |
 | `init.image.repository`                         | Init container image repository                                     | `busybox`                                    |
 | `init.image.tag`                                | Init container image tag                                            | `1.32.1`                                     |
 | `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |

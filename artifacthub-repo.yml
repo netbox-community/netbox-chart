@@ -9,7 +9,7 @@
 # when the hash of the last commit in the branch you set up changes. This does
 # NOT apply to ownership claim operations, which are processed immediately.
 #
-repositoryID: ""
+repositoryID: 042f4ed2-ea1c-4fcd-b64e-eeb56fbe0952
 owners:
   - name: netbox-community
     email: builds@netboxlabs.com

@@ -54,11 +54,13 @@ spec:
         securityContext: {{- omit .Values.worker.securityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
         image: {{ include "netbox.image" . | quote }}
-        command:
-        - /opt/netbox/venv/bin/python
-        - /opt/netbox/netbox/manage.py
-        - rqworker
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.worker.command }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.worker.command "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.worker.args }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.worker.args "context" $) | nindent 10 }}
+        {{- end }}
         {{- with .Values.worker.extraEnvs }}
         env:
         {{- toYaml . | nindent 8 }}

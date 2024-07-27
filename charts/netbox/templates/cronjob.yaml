@@ -48,9 +48,13 @@ spec:
             securityContext: {{- omit .Values.housekeeping.securityContext "enabled" | toYaml | nindent 14 }}
             {{- end }}
             image: {{ include "netbox.image" . | quote }}
-            command:
-            {{- .Values.housekeeping.command | toYaml | nindent 14 }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- if .Values.housekeeping.command }}
+            command: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.command "context" $) | nindent 14 }}
+            {{- end }}
+            {{- if .Values.housekeeping.args }}
+            args: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.args "context" $) | nindent 14 }}
+            {{- end }}
             {{- with .Values.housekeeping.extraEnvs }}
             env:
             {{- toYaml . | nindent 12 }}

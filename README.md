@@ -333,11 +333,14 @@ The following table lists the configurable parameters for this chart and their d
 | `extraVolumes`                                  | Additional volumes to reference in pods                             | `[]`                                         |
 | `sidecars`                                      | Additional sidecar containers to be added to pods                   | `[]`                                         |
 | `initContainers`                                | Additional init containers to run before starting main containers   | `[]`                                         |
+| `command`                                       | NetBox container custom command/entrypoint                          | `[]`                                         |
+| `args`                                          | NetBox container custom args                                        | `[]`                                         |
 | `worker`                                        | Worker specific variables. Most global variables also apply here.   | *see `values.yaml`*                          |
 | `housekeeping.enabled`                          | Whether the [Housekeeping][housekeeping] `CronJob` should be active | `true`                                       |
 | `housekeeping.concurrencyPolicy`                | ConcurrencyPolicy for the Housekeeping CronJob.                     | `Forbid`                                     |
 | `housekeeping.failedJobsHistoryLimit`           | Number of failed jobs to keep in history                            | `5`                                          |
 | `housekeeping.command`                          | The shell command to execute in the housekeeping job.               | `[/opt/netbox/venv/bin/python, /opt/netbox/netbox/manage.py, housekeeping]`|
+| `housekeeping.args`                             | NetBox housekeeping container custom args                           | `[]`                                         |
 | `housekeeping.restartPolicy`                    | Restart Policy for the Housekeeping CronJob.                        | `OnFailure`                                  |
 | `housekeeping.schedule`                         | Schedule for the CronJob in [Cron syntax][cron syntax].             | `0 0 * * *` (Midnight daily)                 |
 | `housekeeping.successfulJobsHistoryLimit`       | Number of successful jobs to keep in history                        | `5`                                          |

@@ -488,6 +488,13 @@ overrideUnitConfig: {}
 
 ## @section Deployment parameters
 
+## @param command Override default container command (useful when using custom images)
+##
+command: []
+## @param args Override default container args (useful when using custom images)
+##
+args: []
+
 ## @param replicaCount Number of replicas to deploy
 ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
 ##
@@ -1214,6 +1221,9 @@ housekeeping:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
     - housekeeping
+  ## @param housekeeping.args Override default housekeeping args
+  ##
+  args: []
   ## @param housekeeping.podAnnotations Pod annotations
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
@@ -1342,6 +1352,15 @@ worker:
   ## @param worker.enabled Enable worker job
   ##
   enabled: true
+  ## @param worker.command The command to execute in the worker container
+  ##
+  command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - rqworker
+  ## @param worker.args Override worker container args
+  ##
+  args: []
   ## @param worker.replicaCount Number of replicas to deploy
   ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
   ##

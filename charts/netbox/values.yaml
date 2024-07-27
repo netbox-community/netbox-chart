@@ -488,6 +488,13 @@ overrideUnitConfig: {}
 
 ## @section Deployment parameters
 
+## @param command Override default container command (useful when using custom images)
+##
+command: []
+## @param args Override default container args (useful when using custom images)
+##
+args: []
+
 ## @param replicaCount Number of replicas to deploy
 ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
 ##

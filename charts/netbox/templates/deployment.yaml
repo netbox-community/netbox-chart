@@ -70,6 +70,12 @@ spec:
         {{- end }}
         image: {{ include "netbox.image" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.command }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.command "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.args }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.args "context" $) | nindent 10 }}
+        {{- end }}
         env:
         - name: SUPERUSER_NAME
           valueFrom:

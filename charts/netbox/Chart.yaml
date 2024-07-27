@@ -34,3 +34,9 @@ annotations:
   artifacthub.io/links: |
     - name: Upstream Project
       url: https://github.com/netbox-community/netbox
+  artifacthub.io/changes: |
+    - kind: changed
+      description: New release
+      links:
+        - name: Changelog on GitHub Releases
+          url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-

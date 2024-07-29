@@ -6,7 +6,7 @@ data center infrastructure management (DCIM) tool.
 ## TL;DR
 
 ```shell
-helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox
+helm install netbox --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 > [!tip]
@@ -22,7 +22,7 @@ helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox
 To install the chart with the release name `my-release` and default configuration:
 
 ```shell
-helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
+helm install my-release --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 The default configuration includes the required PostgreSQL and Redis database
@@ -357,7 +357,7 @@ The following table lists the configurable parameters for this chart and their d
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install` or provide a YAML file containing the values for the above parameters:
 
 ```shell
-helm install my-release --values values.yaml \
+helm install my-release --devel --values values.yaml \
   oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 

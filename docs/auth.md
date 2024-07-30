@@ -193,9 +193,8 @@ data:
 
 In order to enable LDAP authentication, please carry out the following steps:
 
-1. Set `image.tag` in your values to an image with LDAP support (e.g. `v3.0.11-ldap`)
-2. Configure the `remoteAuth` settings to enable the LDAP backend (see below)
-3. Make sure you set *all* of the `remoteAuth.ldap` settings shown in the `values.yaml` file
+1. Configure the `remoteAuth` settings to enable the LDAP backend (see below)
+2. Make sure you set *all* of the `remoteAuth.ldap` settings shown in the `values.yaml` file
 
 For example:
 
@@ -214,3 +213,19 @@ remoteAuth:
 
 Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
 to an empty string as in the example above.
+
+If you need to specify your own CA certificate, follow the instructions below.
+
+In your `values.yaml` file define your CA certificate content in `caCertData`:
+
+```yaml
+  ldap:
+    serverUri: 'ldap://domain.com'
+    startTls: true
+    ignoreCertErrors: false
+    caCertFile: /etc/netbox/config/ldap/ldap_ca.crt
+    caCertData: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+```

@@ -356,6 +356,8 @@ remoteAuth:
   #   serverUri: 'ldap://domain.com'
   #   startTls: true
   #   ignoreCertErrors: false
+  #   caCertFile: ''
+  #   caCertData: ''
   #   bindDn: 'CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=domain,dc=com'
   #   bindPassword: 'TopSecretPassword'
   #   userDnTemplate: null

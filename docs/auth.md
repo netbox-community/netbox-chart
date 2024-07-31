@@ -223,7 +223,6 @@ In your `values.yaml` file define your CA certificate content in `caCertData`:
     serverUri: 'ldap://domain.com'
     startTls: true
     ignoreCertErrors: false
-    caCertFile: /etc/netbox/config/ldap/ldap_ca.crt
     caCertData: |
       -----BEGIN CERTIFICATE-----
       ...

@@ -307,10 +307,10 @@ data:
     AUTH_LDAP_MIRROR_GROUPS: {{ toJson $.Values.remoteAuth.ldap.mirrorGroups }}
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson $.Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int $.Values.remoteAuth.ldap.cacheTimeout }}
-  {{- end }}
   {{- if .Values.remoteAuth.ldap.caCertData }}
   ldap_ca.crt: |-
-    {{ .Values.remoteAuth.ldap.caCertData | nindent 2 }}
+    {{- toYaml .Values.remoteAuth.ldap.caCertData | nindent 4 }}
+  {{- end }}
   {{- end }}
   {{- end }}
   {{- if .Values.overrideUnitConfig }}

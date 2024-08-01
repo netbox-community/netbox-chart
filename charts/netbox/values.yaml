@@ -43,6 +43,18 @@ clusterDomain: cluster.local
 ## @param extraDeploy Array of extra objects to deploy with the release
 ##
 extraDeploy: []
+# Example:
+# extraDeploy:
+#   - |
+#     apiVersion: v1
+#     kind: ConfigMap
+#     metadata:
+#       name: sso-pipeline-roles
+#       namespace: netbox
+#     data:
+#       sso_pipeline_roles.py: |
+#         from netbox.authentication import Group
+#         ...
 
 ## @section NetBox Image parameters
 ## @param image.registry Image registry

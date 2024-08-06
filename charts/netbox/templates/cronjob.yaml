@@ -180,7 +180,7 @@ spec:
           {{- end }}
           {{- with .Values.housekeeping.tolerations }}
           tolerations:
-          {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           restartPolicy: {{ .Values.housekeeping.restartPolicy }}
 {{- end -}}

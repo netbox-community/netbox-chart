@@ -160,7 +160,7 @@ spec:
           mountPath: /etc/netbox/config/ldap/ldap_config.py
           subPath: ldap_config.py
           readOnly: true
-        {{- if .Values.remoteAuth.ldap.caCertData }}
+        {{- if $.Values.remoteAuth.ldap.caCertData }}
         - name: config
           mountPath: /etc/netbox/config/ldap/ldap_ca.crt
           subPath: ldap_ca.crt

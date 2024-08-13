@@ -293,7 +293,7 @@ data:
     AUTH_LDAP_BIND_DN: {{ $.Values.remoteAuth.ldap.bindDn | quote }}
     AUTH_LDAP_START_TLS: {{ toJson $.Values.remoteAuth.ldap.startTls }}
     LDAP_IGNORE_CERT_ERRORS: {{ toJson $.Values.remoteAuth.ldap.ignoreCertErrors }}
-    {{- if .Values.remoteAuth.ldap.caCertData }}
+    {{- if $.Values.remoteAuth.ldap.caCertData }}
     LDAP_CA_CERT_FILE: /etc/netbox/config/ldap/ldap_ca.crt
     {{- end }}
     AUTH_LDAP_USER_DN_TEMPLATE: {{ default nil $.Values.remoteAuth.ldap.userDnTemplate }}
@@ -307,9 +307,9 @@ data:
     AUTH_LDAP_MIRROR_GROUPS: {{ toJson $.Values.remoteAuth.ldap.mirrorGroups }}
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson $.Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int $.Values.remoteAuth.ldap.cacheTimeout }}
-  {{- if .Values.remoteAuth.ldap.caCertData }}
+  {{- if $.Values.remoteAuth.ldap.caCertData }}
   ldap_ca.crt: |-
-    {{- toYaml .Values.remoteAuth.ldap.caCertData | nindent 4 }}
+    {{- toYaml $.Values.remoteAuth.ldap.caCertData | nindent 4 }}
   {{- end }}
   {{- end }}
   {{- end }}

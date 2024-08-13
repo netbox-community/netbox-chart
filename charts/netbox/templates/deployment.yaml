@@ -125,7 +125,7 @@ spec:
               value: {{ (index .Values.allowedHosts 0) | quote }}
             {{- end }}
         {{- end }}
-        {{- if .Values.customLivenessProbe }}
+        {{- if .Values.customReadinessProbe }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 10 }}
         {{- else if .Values.readinessProbe.enabled }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled") "context" $) | nindent 10 }}

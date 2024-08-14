@@ -10,7 +10,9 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- end }}
   {{- with .Values.ingress.tls }}
   tls:
   {{- range . }}

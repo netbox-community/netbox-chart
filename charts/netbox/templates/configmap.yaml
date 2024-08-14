@@ -309,7 +309,6 @@ data:
     AUTH_LDAP_CACHE_TIMEOUT: {{ int $.Values.remoteAuth.ldap.cacheTimeout }}
   {{- if $.Values.remoteAuth.ldap.caCertData }}
   ldap_ca.crt: {{- toYaml $.Values.remoteAuth.ldap.caCertData | indent 4 }}
-    {{- toYaml $.Values.remoteAuth.ldap.caCertData | indent 2 }}
   {{- end }}
   {{- end }}
   {{- end }}

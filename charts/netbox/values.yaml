@@ -441,17 +441,9 @@ secretKey: ""
 
 ## Provide passwords using existing secret
 # If set, this Secret must contain the following keys:
-# - db_password: database password (if postgresql.enabled is false and
-#     externalDatabase.existingSecretName is blank)
 # - email_password: SMTP user password
 # - ldap_bind_password: Password for LDAP bind DN
-# - redis_tasks_password: Redis password for tasks Redis instance (if
-#     redis.enabled is false and tasksRedis.existingSecretName is blank)
-# - redis_cache_password: Redis password for caching Redis instance (if
-#     redis.enabled is false and cachingRedis.existingSecretName is blank)
 # - secret_key: session encryption token (50+ random characters)
-# - superuser_password: Password for the initial super-user account
-# - superuser_api_token: API token created for the initial super-user account
 existingSecret: ""
 
 # Override the NGINX Unit configuration inside the container. When enabled, this

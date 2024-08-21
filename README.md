@@ -427,9 +427,9 @@ worker:
 
 Rather than specifying passwords and secrets as part of the Helm release values,
 you may pass these to NetBox using pre-existing `Secret` resources. When using
-this, the `Secret` must contain the following keys:
+this, the respective `Secret`s must contain the following keys.
 
-### Superuser secret
+### Superuser secret (`superuser.existingSecret`)
 
 Type: `kubernetes.io/basic-auth`
 
@@ -440,7 +440,7 @@ Type: `kubernetes.io/basic-auth`
 | `email`                | Email address for the initial super-user account              | Yes                                                                                               |
 | `api_token`            | API token created for the initial super-user account          | Yes                                                                                               |
 
-### Config secret
+### Config secret (`existingSecret`)
 
 | Key                    | Description                                                   | Required?                                                                                         |
 | -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -448,18 +448,17 @@ Type: `kubernetes.io/basic-auth`
 | `ldap_bind_password`   | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
 | `secret_key`           | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
 
-### PostgreSQL secret
+### PostgreSQL secret (`externalDatabase.existingSecretName`)
 
 | Key                    | Description                                                   | Required?                                                                                         |
 | -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| `db_password`          | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false` and `externalDatabase.existingSecretName` is unset             |
+| `postgresql-password`  | The password for the external PostgreSQL database             | If `postgresql.enabled` is `false`                                                                |
 
-### Redis secret
+### Redis secrets (`tasksRedis.existingSecretName` & `cachingRedis.existingSecretName`)
 
 | Key                    | Description                                                   | Required?                                                                                         |
 | -----------------------|---------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| `redis_tasks_password` | Password for the external Redis tasks database                | If `redis.enabled` is `false` and `tasksRedis.existingSecretName` is unset                        |
-| `redis_cache_password` | Password for the external Redis cache database                | If `redis.enabled` is `false` and `cachingRedis.existingSecretName` is unset                      |
+| `redis-password`       | Password for the external Redis database (tasks and/or cache) | If `redis.enabled` is `false`                                                                     |
 
 ## Authentication
 * [Single Sign On](docs/auth.md#configuring-sso)

@@ -276,7 +276,7 @@ data:
     )
     AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
 
-        # Required groups to be able to login to Netbox
+    # Required groups to be able to login to Netbox
     AUTH_LDAP_REQUIRE_GROUP = (
         {{- range $index, $group := $.Values.remoteAuth.ldap.requireGroupDn }}
         LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.requireGroupDn) }} | {{ end }}

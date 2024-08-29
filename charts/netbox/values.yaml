@@ -380,9 +380,9 @@ remoteAuth:
   #   requireGroupDn:
   #     - 'CN=Network Configuration Operators,CN=Builtin,DC=domain,dc=com'
   #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
-  #   isAdminDn: 
+  #   isAdminDn:
   #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
-  #   isSuperUserDn: 
+  #   isSuperUserDn:
   #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
   #   findGroupPerms: true
   #   mirrorGroups: true

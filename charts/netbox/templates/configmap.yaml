@@ -9,73 +9,11 @@ metadata:
   {{- end }}
 data:
   configuration.py: |-
-    import re
-    from pathlib import Path
-
-    import yaml
-    import os
-
-
-    def _deep_merge(source, destination):
-        """Inspired by https://stackoverflow.com/a/20666342"""
-        for key, value in source.items():
-            dst_value = destination.get(key)
-
-            if isinstance(value, dict) and isinstance(dst_value, dict):
-                _deep_merge(value, dst_value)
-            else:
-                destination[key] = value
-
-        return destination
-
-
-    def _load_yaml():
-        extraConfigBase = Path("/run/config/extra")
-        configFiles = [Path("/run/config/netbox/netbox.yaml")]
-
-        configFiles.extend(sorted(extraConfigBase.glob("*/*.yaml")))
-
-        for configFile in configFiles:
-            with open(configFile, "r") as f:
-                config = yaml.safe_load(f)
-
-            _deep_merge(config, globals())
-
-
-    def _load_secret(name, key):
-        path = "/run/secrets/{name}/{key}".format(name=name, key=key)
-        with open(path, "r") as f:
-            return f.read()
-
-
-    CORS_ORIGIN_REGEX_WHITELIST = list()
-    DATABASE = dict()
-    EMAIL = dict()
-    REDIS = dict()
-
-    _load_yaml()
-
-    DATABASE["PASSWORD"] = _load_secret("netbox", "db_password")
-    EMAIL["PASSWORD"] = _load_secret("netbox", "email_password")
-    REDIS["tasks"]["PASSWORD"] = _load_secret("netbox", "redis_tasks_password")
-    REDIS["caching"]["PASSWORD"] = _load_secret("netbox", "redis_cache_password")
-    SECRET_KEY = _load_secret("netbox", "secret_key")
-
-    # Post-process certain values
-    CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]
-    {{- if and (not .Values.redis.enabled) .Values.tasksRedis.sentinels }}
-    REDIS['tasks']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['tasks']['SENTINELS']]
-    {{- end }}
-    {{- if and (not .Values.redis.enabled) .Values.cachingRedis.sentinels }}
-    REDIS['caching']['SENTINELS'] = [tuple(x.split(r":")) for x in REDIS['caching']['SENTINELS']]
-    {{- end }}
-
-    {{- if .Values.allowedHostsIncludesPodIP }}
-    ALLOWED_HOSTS.append(os.getenv("POD_IP"))
-    {{- end }}
+    {{ .Files.Get "files/configuration.py" | nindent 4 }}
 
   netbox.yaml: |-
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
+    ALLOWED_HOSTS_INCLUDES_POD_ID: {{ .Values.allowedHostsIncludesPodIP }}
 
     DATABASE:
       {{ if .Values.postgresql.enabled -}}
@@ -186,7 +124,7 @@ data:
         SENTINEL_TIMEOUT: {{ .Values.tasksRedis.sentinelTimeout | int }}
         {{- else }}
         HOST: {{ .Values.tasksRedis.host | quote }}
-        PORT: {{ .Values.tasksRedis.port | int}}
+        PORT: {{ .Values.tasksRedis.port | int }}
         {{- end }}
         USERNAME: {{ .Values.tasksRedis.username | quote }}
         DATABASE: {{ int .Values.tasksRedis.database }}
@@ -229,85 +167,7 @@ data:
   {{- if eq . "netbox.authentication.LDAPBackend" }}
 
   ldap_config.py: |-
-    from importlib import import_module
-
-    from django_auth_ldap.config import LDAPSearch, LDAPGroupQuery
-
-    import ldap
-
-    import yaml
-
-
-    def _load_yaml():
-        with open("/run/config/netbox/ldap.yaml", "r") as f:
-            config = yaml.safe_load(f)
-        globals().update(config)
-
-
-    def _load_secret(name, key):
-        path = "/run/secrets/{name}/{key}".format(name=name, key=key)
-        with open(path, "r") as f:
-            return f.read()
-
-
-    # Import and return the group type based on string name
-    def _import_group_type(group_type_name):
-        mod = import_module("django_auth_ldap.config")
-        try:
-            return getattr(mod, group_type_name)()
-        except AttributeError:
-            return None
-
-
-    _load_yaml()
-
-    AUTH_LDAP_BIND_PASSWORD = _load_secret("netbox", "ldap_bind_password")
-    # The following may be needed if you are binding to Active Directory.
-    AUTH_LDAP_CONNECTION_OPTIONS = {ldap.OPT_REFERRALS: 0}
-    AUTH_LDAP_USER_SEARCH = LDAPSearch(
-        AUTH_LDAP_USER_SEARCH_BASEDN,
-        ldap.SCOPE_SUBTREE,
-        "(" + AUTH_LDAP_USER_SEARCH_ATTR + "=%(user)s)",
-    )
-    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-        AUTH_LDAP_GROUP_SEARCH_BASEDN,
-        ldap.SCOPE_SUBTREE,
-        "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")",
-    )
-    AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
-
-    # Required groups to be able to login to Netbox
-    AUTH_LDAP_REQUIRE_GROUP = (
-        {{- range $index, $group := $.Values.remoteAuth.ldap.requireGroupDn }}
-        LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.requireGroupDn) }} | {{ end }}
-        {{- end }}
-    )
-
-    # Define special user types using groups. Exercise great caution when assigning superuser status.
-    AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-        "is_active": (
-            {{- range $index, $group := $.Values.remoteAuth.ldap.requireGroupDn }}
-            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.requireGroupDn) }} | {{ end }}
-            {{- end }}
-        ),
-        "is_staff": (
-            {{- range $index, $group := $.Values.remoteAuth.ldap.isAdminDn }}
-            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.isAdminDn) }} | {{ end }}
-            {{- end }}
-        ),
-        "is_superuser": (
-            {{- range $index, $group := $.Values.remoteAuth.ldap.isSuperUserDn }}
-            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.isSuperUserDn) }} | {{ end }}
-            {{- end }}
-        ),
-    }
-
-    # Populate the Django user from the LDAP directory.
-    AUTH_LDAP_USER_ATTR_MAP = {
-        "first_name": {{ $.Values.remoteAuth.ldap.attrFirstName | quote }},
-        "last_name": {{ $.Values.remoteAuth.ldap.attrLastName | quote }},
-        "email": {{ $.Values.remoteAuth.ldap.attrMail | quote }},
-    }
+    {{ .Files.Get "files/ldap_config.py" | nindent 4 }}
 
   ldap.yaml: |-
     AUTH_LDAP_SERVER_URI: {{ $.Values.remoteAuth.ldap.serverUri | quote }}
@@ -327,6 +187,16 @@ data:
     AUTH_LDAP_MIRROR_GROUPS: {{ toJson $.Values.remoteAuth.ldap.mirrorGroups }}
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson $.Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int $.Values.remoteAuth.ldap.cacheTimeout }}
+
+    AUTH_LDAP_REQUIRE_GROUP_LIST: {{ toJson $.Values.remoteAuth.ldap.requireGroupDn }}
+    AUTH_LDAP_IS_ADMIN_LIST: {{ toJson $.Values.remoteAuth.ldap.isAdminDn }}
+    AUTH_LDAP_IS_SUPERUSER_LIST: {{ toJson $.Values.remoteAuth.ldap.isSuperUserDn }}
+
+    # Populate the Django user from the LDAP directory.
+    AUTH_LDAP_USER_ATTR_MAP:
+      first_name: {{ $.Values.remoteAuth.ldap.attrFirstName | quote }}
+      last_name: {{ $.Values.remoteAuth.ldap.attrLastName | quote }}
+      email: {{ $.Values.remoteAuth.ldap.attrMail | quote }}
 
   {{- if $.Values.remoteAuth.ldap.caCertData }}
   ldap_ca.crt: {{- toYaml $.Values.remoteAuth.ldap.caCertData | indent 4 }}

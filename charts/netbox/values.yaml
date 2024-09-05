@@ -106,8 +106,9 @@ allowedHostsIncludesPodIP: true
 # Specify one or more name and email address tuples representing NetBox
 # administrators. These people will be notified of application errors (assuming
 # correct email settings are provided).
+# admins:
+#   - ['John Doe', 'jdoe@example.com']
 admins: []
-  # - ['John Doe', 'jdoe@example.com']
 
 # Permit the retrieval of API tokens after their creation.
 allowTokenRetrieval: false
@@ -120,8 +121,21 @@ allowTokenRetrieval: false
 authPasswordValidators: []
 
 # URL schemes that are allowed within links in NetBox
-allowedUrlSchemes: [file, ftp, ftps, http, https, irc, mailto, sftp, ssh, tel,
-                    telnet, tftp, vnc, xmpp]
+allowedUrlSchemes:
+  - file
+  - ftp
+  - ftps
+  - http
+  - https
+  - irc
+  - mailto
+  - sftp
+  - ssh
+  - tel
+  - telnet
+  - tftp
+  - vnc
+  - xmpp
 
 banner:
   # Optionally display a persistent banner at the top and/or bottom of every
@@ -151,9 +165,10 @@ customValidators: {}
 # This is a dictionary defining the default preferences to be set for newly-
 # created user accounts.
 # https://netboxlabs.com/docs/netbox/en/stable/configuration/default-values/#default_user_preferences
+# defaultUserPreferences:
+#   pagination:
+#     per_page: 100
 defaultUserPreferences: {}
-  # pagination:
-  #   per_page: 100
 
 # API Cross-Origin Resource Sharing (CORS) settings. If originAllowAll
 # is set to true, all origins will be allowed. Otherwise, define a list of
@@ -207,7 +222,8 @@ email:
   useTLS: false
   sslCertFile: ""
   sslKeyFile: ""
-  timeout: 10  # seconds
+  # Timeout in seconds
+  timeout: 10
   from: ""
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce
@@ -227,13 +243,14 @@ exemptViewPermissions: []
 # Each choice in the list must have a database value and a human-friendly
 # label, and may optionally specify a color.
 # https://netboxlabs.com/docs/netbox/en/stable/configuration/data-validation/#field_choices
+# fieldChoices:
+#   'dcim.Site.status':
+#     - [foo, Foo, red]
+#     - [bar, Bar, green]
+#     - [baz, Baz, blue]
+#   'dcim.Site.status+':
+#     ...
 fieldChoices: {}
-  # 'dcim.Site.status':
-  #   - [foo, Foo, red]
-  #   - [bar, Bar, green]
-  #   - [baz, Baz, blue]
-  # 'dcim.Site.status+':
-  #   ...
 
 # The maximum amount (in bytes) of uploaded data that will be held in memory before being written to the filesystem.
 # Changing this setting can be useful for example to be able to upload files bigger than 2.5MB to custom scripts
@@ -245,13 +262,14 @@ graphQlEnabled: true
 
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for
 # webhooks).
+# httpProxies:
+#   http: http://10.10.1.10:3128
+#   https: http://10.10.1.10:1080
 httpProxies: null
-  # http: http://10.10.1.10:3128
-  # https: http://10.10.1.10:1080
 
 # IP addresses recognized as internal to the system. The debugging toolbar will
 # be available only to clients accessing NetBox from an internal IP.
-internalIPs: ['127.0.0.1', '::1']
+internalIPs: ["127.0.0.1", "::1"]
 
 # The number of days to retain job results (scripts and reports). Set this to 0
 # to retain job results in the database indefinitely.
@@ -274,7 +292,8 @@ loginRequired: false
 
 # The length of time (in seconds) for which a user will remain logged into the
 # web UI before being prompted to re-authenticate.
-loginTimeout: 1209600  # 14 days
+# Default value 1209600 is 14 days
+loginTimeout: 1209600
 
 # The view name or URL to which users are redirected after logging out.
 logoutRedirectUrl: home
@@ -284,7 +303,7 @@ logoutRedirectUrl: home
 maintenanceMode: false
 
 # The URL to use when mapping physical addresses or GPS coordinates
-mapsUrl: 'https://maps.google.com/?q='
+mapsUrl: "https://maps.google.com/?q="
 
 # An API consumer can request an arbitrary number of objects by appending the
 # "limit" parameter to the URL (e.g. "?limit=1000"). This setting defines the
@@ -295,13 +314,15 @@ maxPageSize: 1000
 # By default uploaded media is stored in an attached volume. Using
 # Django-storages is also supported. Provide the class path of the storage
 # driver in storageBackend and any configuration options in storageConfig.
-storageBackend: null  # storages.backends.s3boto3.S3Boto3Storage
+# storageBackend: storages.backends.s3boto3.S3Boto3Storage
+# storageConfig:
+#   AWS_ACCESS_KEY_ID: 'Key ID'
+#   AWS_SECRET_ACCESS_KEY: 'Secret'
+#   AWS_STORAGE_BUCKET_NAME: 'netbox'
+#   AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
+#   AWS_S3_REGION_NAME: 'eu-west-1'
+storageBackend: null
 storageConfig: {}
-  # AWS_ACCESS_KEY_ID: 'Key ID'
-  # AWS_SECRET_ACCESS_KEY: 'Secret'
-  # AWS_STORAGE_BUCKET_NAME: 'netbox'
-  # AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
-  # AWS_S3_REGION_NAME: 'eu-west-1'
 
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50
@@ -355,7 +376,7 @@ remoteAuth:
   superusers: []
   staffGroups: []
   staffUsers: []
-  groupSeparator: '|'
+  groupSeparator: "|"
 
   # The following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
@@ -396,7 +417,8 @@ releaseCheck:
   # url: https://api.github.com/repos/netbox-community/netbox/releases
 
 # Maximum execution time for background tasks, in seconds.
-rqDefaultTimeout: 300  # 5 mins
+# Default value 300 is 5 minutes
+rqDefaultTimeout: 300
 
 # The name to use for the session cookie.
 sessionCookieName: sessionid
@@ -409,29 +431,30 @@ timeZone: UTC
 
 # Date/time formatting. See the following link for supported formats:
 # https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
-dateFormat: 'N j, Y'
-shortDateFormat: 'Y-m-d'
-timeFormat: 'g:i a'
-shortTimeFormat: 'H:i:s'
-dateTimeFormat: 'N j, Y g:i a'
-shortDateTimeFormat: 'Y-m-d H:i'
+dateFormat: "N j, Y"
+shortDateFormat: "Y-m-d"
+timeFormat: "g:i a"
+shortTimeFormat: "H:i:s"
+dateTimeFormat: "N j, Y g:i a"
+shortDateTimeFormat: "Y-m-d H:i"
 
 ## Extra configuration settings
 # You can pass additional YAML files to be loaded into NetBox's configuration.
 # These can be passed as arbitrary configuration values set in the chart, or
 # you can load arbitrary *.yaml keys from ConfigMaps and Secrets.
+# extraConfig:
+#   - values:
+#       EXTRA_SETTING_ONE: example
+#       ANOTHER_SETTING: foobar
+#   - configMap: # pod.spec.volumes.configMap
+#       name: netbox-extra
+#       items: []
+#       optional: false
+#   - secret: # same as pod.spec.volumes.secret
+#       secretName: netbox-extra
+#       items: []
+#       optional: false
 extraConfig: []
-  # - values:
-  #     EXTRA_SETTING_ONE: example
-  #     ANOTHER_SETTING: foobar
-  # - configMap: # pod.spec.volumes.configMap
-  #     name: netbox-extra
-  #     items: []
-  #     optional: false
-  # - secret: # same as pod.spec.volumes.secret
-  #     secretName: netbox-extra
-  #     items: []
-  #     optional: false
 
 # If provided, this should be a 50+ character string of random characters. It
 # will be randomly generated if left blank.
@@ -452,44 +475,41 @@ existingSecret: ""
 # Remember that JSON is valid YAML: you can safely copy-and-paste from the above
 # into your values.yaml, or you can copy the YAML version from below as a
 # starting point.
+# overrideUnitConfig:
+#   listeners:
+#     "0.0.0.0:8080":
+#       pass: routes/main
+#     "[::]:8080":
+#       pass: routes/main
+#     "0.0.0.0:8081":
+#       pass: routes/status
+#     "[::]:8081":
+#       pass: routes/status
+#   routes:
+#     main:
+#       - match:
+#           uri: "/static/*"
+#         action:
+#           share: "/opt/netbox/netbox${uri}"
+#       - action:
+#           pass: applications/netbox
+#     status:
+#       - match:
+#           uri: "/status/*"
+#         action:
+#           proxy: "http://unix:/opt/unit/unit.sock"
+#   applications:
+#     netbox:
+#       type: "python 3"
+#       path: /opt/netbox/netbox/
+#       module: netbox.wsgi
+#       home: /opt/netbox/venv
+#       processes:
+#         max: 4
+#         spare: 1
+#         idle_timeout: 120
+#   access_log: /dev/stdout
 overrideUnitConfig: {}
-  # listeners:
-  #   "0.0.0.0:8080":
-  #     pass: routes/main
-  #   "[::]:8080":
-  #     pass: routes/main
-  #   "0.0.0.0:8081":
-  #     pass: routes/status
-  #   "[::]:8081":
-  #     pass: routes/status
-  #
-  # routes:
-  #   main:
-  #     - match:
-  #         uri: "/static/*"
-  #       action:
-  #         share: "/opt/netbox/netbox${uri}"
-  #     - action:
-  #         pass: applications/netbox
-  #
-  #   status:
-  #     - match:
-  #         uri: "/status/*"
-  #       action:
-  #         proxy: "http://unix:/opt/unit/unit.sock"
-  #
-  # applications:
-  #   netbox:
-  #     type: "python 3"
-  #     path: /opt/netbox/netbox/
-  #     module: netbox.wsgi
-  #     home: /opt/netbox/venv
-  #     processes:
-  #       max: 4
-  #       spare: 1
-  #       idle_timeout: 120
-  #
-  # access_log: /dev/stdout
 
 ## @section Deployment parameters
 
@@ -1207,7 +1227,7 @@ housekeeping:
   ## @param housekeeping.schedule Schedule in Cron format to save snapshots
   ## See https://en.wikipedia.org/wiki/Cron
   ##
-  schedule: '0 0 * * *'
+  schedule: "0 0 * * *"
   ## @param housekeeping.historyLimit Number of successful finished jobs to retain
   ##
   historyLimit: 5

@@ -10,7 +10,7 @@ on:
     branches:
       - develop
   schedule:
-    - cron: '43 2 * * 6'
+    - cron: "43 2 * * 6"
   workflow_dispatch:
 
 jobs:

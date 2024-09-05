@@ -1,0 +1,29 @@
+[tool.black]
+line_length = 100
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.git
+    | \.venv
+    | \.netbox
+    | \.vscode
+    | configuration
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 100
+
+[tool.pylint.main]
+disable = ["duplicate-code", "import-error", "used-before-assignment", "undefined-variable"]
+
+[tool.pylint.format]
+max-line-length = "100"
+
+[tool.ruff.lint]
+ignore = ["F821"]

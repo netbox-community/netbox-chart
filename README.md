@@ -480,7 +480,7 @@ Type: `kubernetes.io/basic-auth`
   * NAPALM support has been moved into a plugin since NetBox 3.5, so all NAPALM configuration has been **removed from this chart**.
   * Please consult the [NetBox](https://docs.netbox.dev/en/stable/release-notes/) and [netbox-docker](https://github.com/netbox-community/netbox-docker) release notes in case there are any other changes that may affect your configuration.
 * The Bitnami [PostgreSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) sub-chart was upgraded from 10.x to 15.x; please read the upstream upgrade notes if you are using the bundled PostgreSQL.
-* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 19.x; please read the upstream upgrade notes if you are using the bundled Redis.
+* The Bitnami [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis) sub-chart was upgraded from 15.x to 20.x; please read the upstream upgrade notes if you are using the bundled Redis.
 
 ### From 3.x to 4.x
 

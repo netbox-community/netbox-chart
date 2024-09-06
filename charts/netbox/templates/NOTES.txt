@@ -2,20 +2,34 @@ CHART NAME: {{ .Chart.Name  }}
 CHART VERSION: {{ .Chart.Version  }}
 APP VERSION: {{ .Chart.AppVersion  }}
 
+** Please be patient while the chart is being deployed **
+
+Netbox can be accessed through the following DNS name from within the cluster:
+
+    {{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }} (port {{ .Values.service.port }})
+
+To access Netbox site from outside the cluster follow the steps below.
+
 {{- if .Values.ingress.enabled }}
-NetBox should be available at the following URL(s) shortly:
+
+You have configured NetBox to use an ingress controller, exposing the following URL(s):
+
 {{ range $host := .Values.ingress.hosts }}
   {{- range .paths }}
-  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
+  - http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
   {{- end }}
 {{- end }}
+
 {{- else if contains "NodePort" .Values.service.type }}
+
 Get the application URL by running these commands:
 
   export NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . | quote }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "common.names.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . | quote }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
+
 {{- else if contains "LoadBalancer" .Values.service.type }}
+
 Get the application URL by running these commands:
 
   export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . | quote }} {{ include "common.names.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -23,10 +37,24 @@ Get the application URL by running these commands:
 
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ include "common.names.namespace" . | quote }} svc -w {{ include "common.names.fullname" . }}'
+
 {{- else if contains "ClusterIP" .Values.service.type }}
+
 Get the application URL by running these commands:
 
   export POD_NAME=$(kubectl get pods --namespace {{ include "common.names.namespace" . | quote }} -l "app.kubernetes.io/name={{ include "common.names.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl port-forward $POD_NAME 8080:8080
+
 {{- end }}
+
+{{- include "netbox.validateValues" . }}
+{{- include "common.warnings.rollingTag" .Values.image }}
+{{- include "common.warnings.rollingTag" .Values.init.image }}
+{{- include "common.warnings.resources" (dict "sections" (list "" "worker") "context" $) }}
+{{- $passwordValidationErrors := list -}}
+{{- if not .Values.superuser.existingSecret -}}
+    {{- $superuserPasswordValidationErrors := include "common.validations.values.single.empty" (dict "valueKey" "superuser.password" "secret" (include "common.secrets.name" (dict "defaultNameSuffix" "superuser" "context" .)) "field" "password" "context" $) -}}
+    {{- $passwordValidationErrors = append $passwordValidationErrors $superuserPasswordValidationErrors -}}
+{{- end }}
+{{- include "common.errors.upgrade.passwords.empty" (dict "validationErrors" $passwordValidationErrors "context" $) -}}

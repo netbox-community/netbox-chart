@@ -129,3 +129,31 @@ Volume mounts for .Values.extraConfig entries
   readOnly: true
 {{ end -}}
 {{- end }}
+
+{{/*
+Compile all warnings into a single message.
+*/}}
+{{- define "netbox.validateValues" -}}
+{{- $messages := list -}}
+{{- $messages := append $messages (include "netbox.validateValues.postgresql" .) -}}
+{{- $messages := without $messages "" -}}
+{{- $message := join "\n" $messages -}}
+{{- if $message -}}
+{{-   printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate values of Netbox Chart - PostgreSQL
+*/}}
+{{- define "netbox.validateValues.postgresql" -}}
+{{- if and (not .Values.postgresql.enabled) (or (empty .Values.externalDatabase.host) (empty .Values.externalDatabase.port) (empty .Values.externalDatabase.database)) -}}
+netbox: postgresql
+    PostgreSQL installation has been disabled but without the required parameters
+    to use an external database. To use an external database, please ensure you provide
+    (at least) the following values:
+        externalDatabase.host=DB_SERVER_HOST
+        externalDatabase.database=DB_NAME
+        externalDatabase.port=DB_SERVER_PORT
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,31 @@
+remoteAuth:
+  enabled: true
+  backends:
+    - netbox.authentication.LDAPBackend
+
+  ldap:
+    serverUri: "ldap://ldap.forumsys.com"
+    startTls: true
+    ignoreCertErrors: true
+    caCertData: ""
+    bindDn: "cn=read-only-admin,dc=example,dc=com"
+    bindPassword: password
+    userDnTemplate: null
+    userSearchBaseDn: "dc=example,dc=com"
+    userSearchAttr: "sAMAccountName"
+    groupSearchBaseDn: "dc=example,dc=com"
+    groupSearchClass: "group"
+    groupType: "GroupOfNamesType"
+    requireGroupDn:
+      - "cn=read-only-admin,dc=example,dc=com"
+    findGroupPerms: true
+    mirrorGroups: true
+    mirrorGroupsExcept: null
+    cacheTimeout: 3600
+    isAdminDn:
+      - "ou=mathematicians,cn=read-only-admin,dc=example,dc=com"
+    isSuperUserDn:
+      - "ou=scientists,cn=read-only-admin,dc=example,dc=com"
+    attrFirstName: "givenName"
+    attrLastName: "sn"
+    attrMail: "mail"

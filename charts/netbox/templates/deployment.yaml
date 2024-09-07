@@ -117,13 +117,8 @@ spec:
         {{- else if .Values.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
-            path: /{{ .Values.basePath }}login/
-            port: http
-            {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
-            httpHeaders:
-            - name: Host
-              value: {{ (index .Values.allowedHosts 0) | quote }}
-            {{- end }}
+            path: /status/applications/netbox/processes/running
+            port: nginx-status
         {{- end }}
         {{- if .Values.customReadinessProbe }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 10 }}
@@ -143,8 +138,13 @@ spec:
         {{- else if .Values.startupProbe.enabled }}
         startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.startupProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
-            path: /status/applications/netbox/processes/running
-            port: nginx-status
+            path: /{{ .Values.basePath }}login/
+            port: http
+            {{- if (not (eq (index .Values.allowedHosts 0) "*")) }}
+            httpHeaders:
+            - name: Host
+              value: {{ (index .Values.allowedHosts 0) | quote }}
+            {{- end }}
         {{- end }}
         {{- if .Values.lifecycleHooks }}
         lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleHooks "context" $) | nindent 10 }}

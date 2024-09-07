@@ -784,7 +784,7 @@ automountServiceAccountToken: false
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 5
+  initialDelaySeconds: 0
   periodSeconds: 10
   timeoutSeconds: 1
   failureThreshold: 3
@@ -801,8 +801,8 @@ livenessProbe:
 readinessProbe:
   enabled: true
   initialDelaySeconds: 0
-  timeoutSeconds: 1
   periodSeconds: 10
+  timeoutSeconds: 1
   failureThreshold: 3
   successThreshold: 1
 ## Configure extra options for startupProbe probe

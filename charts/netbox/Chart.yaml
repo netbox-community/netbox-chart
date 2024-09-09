@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta.88
+version: 5.0.0-beta.89
 appVersion: "v4.1.0"
 type: application
 kubeVersion: ^1.25.0-0

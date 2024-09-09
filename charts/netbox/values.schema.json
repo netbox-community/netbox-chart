@@ -599,7 +599,15 @@
       "type": "object"
     },
     "httpProxies": {
-      "type": "string"
+      "properties": {
+        "http": {
+          "type": "string"
+        },
+        "https": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "image": {
       "$ref": "#/$defs/image"

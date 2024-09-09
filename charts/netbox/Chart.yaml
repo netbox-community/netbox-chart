@@ -25,10 +25,10 @@ dependencies:
     version: ^15.5.28
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-  - name: redis
-    version: ^20.0.5
+  - name: valkey
+    version: ^0.3.15
     repository: oci://registry-1.docker.io/bitnamicharts
-    condition: redis.enabled
+    condition: valkey.enabled
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |

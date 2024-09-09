@@ -50,22 +50,22 @@ Name of the key in Secret that contains the PostgreSQL password
 {{- end }}
 
 {{/*
-Name of the Secret that contains the Redis tasks password
+Name of the Secret that contains the Valkey tasks password
 */}}
 {{- define "netbox.tasksRedis.secret" -}}
-  {{- if .Values.redis.enabled }}
-    {{- include "redis.secretName" .Subcharts.redis -}}
+  {{- if .Values.valkey.enabled }}
+    {{- include "valkey.secretName" .Subcharts.valkey -}}
   {{- else }}
-    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "valkey" "context" $) }}
   {{- end }}
 {{- end }}
 
 {{/*
-Name of the key in Secret that contains the Redis tasks password
+Name of the key in Secret that contains the Valkey tasks password
 */}}
 {{- define "netbox.tasksRedis.secretKey" -}}
-  {{- if .Values.redis.enabled -}}
-    {{- include "redis.secretPasswordKey" .Subcharts.redis -}}
+  {{- if .Values.valkey.enabled -}}
+    {{- include "valkey.secretPasswordKey" .Subcharts.valkey -}}
   {{- else if .Values.tasksRedis.existingSecretName -}}
     {{ .Values.tasksRedis.existingSecretKey }}
   {{- else -}}
@@ -74,22 +74,22 @@ Name of the key in Secret that contains the Redis tasks password
 {{- end }}
 
 {{/*
-Name of the Secret that contains the Redis cache password
+Name of the Secret that contains the Valkey cache password
 */}}
 {{- define "netbox.cachingRedis.secret" -}}
-  {{- if .Values.redis.enabled }}
-    {{- include "redis.secretName" .Subcharts.redis -}}
+  {{- if .Values.valkey.enabled }}
+    {{- include "valkey.secretName" .Subcharts.valkey -}}
   {{- else }}
-    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingRedis.existingSecretName "defaultNameSuffix" "redis" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingRedis.existingSecretName "defaultNameSuffix" "valkey" "context" $) }}
   {{- end }}
 {{- end }}
 
 {{/*
-Name of the key in Secret that contains the Redis cache password
+Name of the key in Secret that contains the Valkey cache password
 */}}
 {{- define "netbox.cachingRedis.secretKey" -}}
-  {{- if .Values.redis.enabled -}}
-    {{- include "redis.secretPasswordKey" .Subcharts.redis -}}
+  {{- if .Values.valkey.enabled -}}
+    {{- include "valkey.secretPasswordKey" .Subcharts.valkey -}}
   {{- else if .Values.cachingRedis.existingSecretName -}}
     {{ .Values.cachingRedis.existingSecretKey }}
   {{- else -}}

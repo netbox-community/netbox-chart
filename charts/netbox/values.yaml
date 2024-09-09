@@ -1020,11 +1020,11 @@ externalDatabase:
   disableServerSideCursors: false
   targetSessionAttrs: read-write
 
-## Redis chart configuration
-## https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
-## @param postgresql.enabled Whether to deploy a Redis server to satisfy the applications database requirements
+## Valkey chart configuration
+## https://github.com/bitnami/charts/blob/main/bitnami/valkey/values.yaml
+## @param postgresql.enabled Whether to deploy a Valkey server to satisfy the applications database requirements
 ##
-redis:
+valkey:
   enabled: true
 
 tasksRedis:
@@ -1033,18 +1033,18 @@ tasksRedis:
   insecureSkipTlsVerify: false
   caCertPath: ""
 
-  # Used only when redis.enabled is false. host and port are not used if
+  # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-redis
+  host: netbox-valkey
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-redis
+  sentinelService: netbox-valkey
   sentinelTimeout: 300
   username: ""
   password: ""
   existingSecretName: ""
-  existingSecretKey: redis-password
+  existingSecretKey: valkey-password
 
 cachingRedis:
   database: 1
@@ -1052,18 +1052,18 @@ cachingRedis:
   insecureSkipTlsVerify: false
   caCertPath: ""
 
-  # Used only when redis.enabled is false. host and port are not used if
+  # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-redis
+  host: netbox-valkey
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-redis
+  sentinelService: netbox-valkey
   sentinelTimeout: 300
   username: ""
   password: ""
   existingSecretName: ""
-  existingSecretKey: redis-password
+  existingSecretKey: valkey-password
 
 ## @section Autoscaling parameters
 

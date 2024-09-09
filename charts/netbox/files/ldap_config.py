@@ -22,15 +22,15 @@ def _load_yaml() -> None:
 def _read_secret(secret_name: str, secret_key: str, default: str | None = None) -> str | None:
     """Read secret from file"""
     try:
-        f = open(
+        secret = open(
             f"/run/secrets/{secret_name}/{secret_key}",
             "r",
             encoding="utf-8",
         )
     except EnvironmentError:
         return default
-    with f:
-        return f.readline().strip()
+    with secret:
+        return secret.readline().strip()
 
 
 def _import_group_type(group_type_name: str) -> Any | None:
@@ -61,18 +61,32 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
     AUTH_LDAP_GROUP_SEARCH_BASEDN,
     ldap.SCOPE_SUBTREE,
-    "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")",
+    f"(objectClass={AUTH_LDAP_GROUP_SEARCH_CLASS})",
 )
 AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
 
 # Define a group required to login.
 AUTH_LDAP_REQUIRE_GROUP = reduce(
-    lambda x, y: x | LDAPGroupQuery(y), AUTH_LDAP_REQUIRE_GROUP_LIST, False
+    lambda query, group: query | LDAPGroupQuery(group),
+    AUTH_LDAP_REQUIRE_GROUP_LIST,
+    LDAPGroupQuery(""),
 )
 
 # Define special user types using groups. Exercise great caution when assigning superuser status.
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_active": reduce(lambda x, y: x | LDAPGroupQuery(y), AUTH_LDAP_REQUIRE_GROUP_LIST, False),
-    "is_staff": reduce(lambda x, y: x | LDAPGroupQuery(y), AUTH_LDAP_IS_ADMIN_LIST, False),
-    "is_superuser": reduce(lambda x, y: x | LDAPGroupQuery(y), AUTH_LDAP_IS_SUPERUSER_LIST, False),
+    "is_active": reduce(
+        lambda query, group: query | LDAPGroupQuery(group),
+        AUTH_LDAP_REQUIRE_GROUP_LIST,
+        LDAPGroupQuery(""),
+    ),
+    "is_staff": reduce(
+        lambda query, group: query | LDAPGroupQuery(group),
+        AUTH_LDAP_IS_ADMIN_LIST,
+        LDAPGroupQuery(""),
+    ),
+    "is_superuser": reduce(
+        lambda query, group: query | LDAPGroupQuery(group),
+        AUTH_LDAP_IS_SUPERUSER_LIST,
+        LDAPGroupQuery(""),
+    ),
 }

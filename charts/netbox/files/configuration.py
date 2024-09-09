@@ -39,15 +39,15 @@ def _load_yaml() -> None:
 def _read_secret(secret_name: str, secret_key: str, default: str | None = None) -> str | None:
     """Read secret from file"""
     try:
-        f = open(
+        secret = open(
             f"/run/secrets/{secret_name}/{secret_key}",
             "r",
             encoding="utf-8",
         )
     except EnvironmentError:
         return default
-    with f:
-        return f.readline().strip()
+    with secret:
+        return secret.readline().strip()
 
 
 CORS_ORIGIN_REGEX_WHITELIST = []

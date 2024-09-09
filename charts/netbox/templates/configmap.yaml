@@ -167,7 +167,7 @@ data:
   {{- if eq . "netbox.authentication.LDAPBackend" }}
 
   ldap_config.py: |-
-    {{ .Files.Get "files/ldap_config.py" | nindent 4 }}
+    {{ $.Files.Get "files/ldap_config.py" | nindent 4 }}
 
   ldap.yaml: |-
     AUTH_LDAP_SERVER_URI: {{ $.Values.remoteAuth.ldap.serverUri | quote }}

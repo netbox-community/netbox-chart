@@ -231,7 +231,7 @@ data:
   ldap_config.py: |-
     from importlib import import_module
 
-    from django_auth_ldap.config import LDAPSearch
+    from django_auth_ldap.config import LDAPSearch, LDAPGroupQuery
 
     import ldap
 
@@ -275,12 +275,33 @@ data:
         "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")",
     )
     AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
+
+    # Required groups to be able to login to Netbox
+    AUTH_LDAP_REQUIRE_GROUP = (
+        {{- range $index, $group := $.Values.remoteAuth.ldap.requireGroupDn }}
+        LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.requireGroupDn) }} | {{ end }}
+        {{- end }}
+    )
+
     # Define special user types using groups. Exercise great caution when assigning superuser status.
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-        "is_active": AUTH_LDAP_REQUIRE_GROUP,
-        "is_staff": {{ $.Values.remoteAuth.ldap.isAdminDn | quote }},
-        "is_superuser": {{ $.Values.remoteAuth.ldap.isSuperUserDn | quote }},
+        "is_active": (
+            {{- range $index, $group := $.Values.remoteAuth.ldap.requireGroupDn }}
+            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.requireGroupDn) }} | {{ end }}
+            {{- end }}
+        ),
+        "is_staff": (
+            {{- range $index, $group := $.Values.remoteAuth.ldap.isAdminDn }}
+            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.isAdminDn) }} | {{ end }}
+            {{- end }}
+        ),
+        "is_superuser": (
+            {{- range $index, $group := $.Values.remoteAuth.ldap.isSuperUserDn }}
+            LDAPGroupQuery({{ $group | quote }}){{ if ne (add $index 1) (len $.Values.remoteAuth.ldap.isSuperUserDn) }} | {{ end }}
+            {{- end }}
+        ),
     }
+
     # Populate the Django user from the LDAP directory.
     AUTH_LDAP_USER_ATTR_MAP = {
         "first_name": {{ $.Values.remoteAuth.ldap.attrFirstName | quote }},
@@ -302,11 +323,11 @@ data:
     AUTH_LDAP_GROUP_SEARCH_BASEDN: {{ $.Values.remoteAuth.ldap.groupSearchBaseDn | quote }}
     AUTH_LDAP_GROUP_SEARCH_CLASS: {{ $.Values.remoteAuth.ldap.groupSearchClass | quote }}
     AUTH_LDAP_GROUP_TYPE: {{ $.Values.remoteAuth.ldap.groupType | quote }}
-    AUTH_LDAP_REQUIRE_GROUP: {{ $.Values.remoteAuth.ldap.requireGroupDn | quote }}
     AUTH_LDAP_FIND_GROUP_PERMS: {{ toJson $.Values.remoteAuth.ldap.findGroupPerms }}
     AUTH_LDAP_MIRROR_GROUPS: {{ toJson $.Values.remoteAuth.ldap.mirrorGroups }}
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT: {{ toJson $.Values.remoteAuth.ldap.mirrorGroupsExcept }}
     AUTH_LDAP_CACHE_TIMEOUT: {{ int $.Values.remoteAuth.ldap.cacheTimeout }}
+
   {{- if $.Values.remoteAuth.ldap.caCertData }}
   ldap_ca.crt: {{- toYaml $.Values.remoteAuth.ldap.caCertData | indent 4 }}
   {{- end }}

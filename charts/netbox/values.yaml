@@ -377,13 +377,17 @@ remoteAuth:
   #   groupSearchBaseDn: 'OU=Groups,OU=MyCompany,DC=domain,dc=com'
   #   groupSearchClass: 'group'
   #   groupType: 'GroupOfNamesType'
-  #   requireGroupDn: ''
+  #   requireGroupDn:
+  #     - 'CN=Network Configuration Operators,CN=Builtin,DC=domain,dc=com'
+  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
+  #   isAdminDn:
+  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
+  #   isSuperUserDn:
+  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
   #   findGroupPerms: true
   #   mirrorGroups: true
   #   mirrorGroupsExcept: null
   #   cacheTimeout: 3600
-  #   isAdminDn: 'CN=Network Configuration Operators,CN=Builtin,DC=domain,dc=com'
-  #   isSuperUserDn: 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
   #   attrFirstName: 'givenName'
   #   attrLastName: 'sn'
   #   attrMail: 'mail'

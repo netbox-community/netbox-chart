@@ -32,7 +32,7 @@ jobs:
         run: |
           changed=$(ct list-changed --config config.yaml)
           if [[ -n "$changed" ]]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
   test:
@@ -46,11 +46,7 @@ jobs:
 
   release:
     name: Release
-    if:
-      contains('
-        refs/heads/master
-        refs/heads/develop
-      ', github.ref)
+    if: contains(fromJSON('["refs/heads/master", "refs/heads/develop"]'), github.ref)
     uses: ./.github/workflows/release.yml
     permissions:
       contents: write

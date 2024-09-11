@@ -14,7 +14,10 @@ Using custom auth pipelines you can assign groups based on the roles supplied by
 ```yaml
 remoteAuth:
   enabled: true
-  backend: social_core.backends.keycloak.KeycloakOAuth2
+  backends:
+  - social_core.backends.keycloak.KeycloakOAuth2
+  - django.contrib.auth.backends.ModelBackend
+  
   autoCreateUser: true
 
 extraConfig:
@@ -95,6 +98,16 @@ data:
         except Group.DoesNotExist:
           continue
 ```
+
+Finally on the keycloak side, you'll have to add the audiance mapper.  
+To do so : 
+1. Go on your Keycloak admin board
+2. Go on your client
+3. On the Mappers tab, click create
+4. * Name : "aud"
+   * Type : Audiance
+   * Included Custom Audience : \<Your Client Name\>
+5. Click save 
 
 ### Example config for GitLab backend
 ```yaml
@@ -228,3 +241,4 @@ In your `values.yaml` file define your CA certificate content in `caCertData`:
       ...
       -----END CERTIFICATE-----
 ```
+

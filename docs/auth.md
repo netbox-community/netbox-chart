@@ -17,7 +17,6 @@ remoteAuth:
   backends:
   - social_core.backends.keycloak.KeycloakOAuth2
   - django.contrib.auth.backends.ModelBackend
-  
   autoCreateUser: true
 
 extraConfig:

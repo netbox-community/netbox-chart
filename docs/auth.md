@@ -14,7 +14,8 @@ Using custom auth pipelines you can assign groups based on the roles supplied by
 ```yaml
 remoteAuth:
   enabled: true
-  backend: social_core.backends.keycloak.KeycloakOAuth2
+  backends:
+    - social_core.backends.keycloak.KeycloakOAuth2
   autoCreateUser: true
 
 extraConfig:
@@ -100,7 +101,8 @@ data:
 ```yaml
 remoteAuth:
   enabled: true
-  backend: social_core.backends.gitlab.GitLabOAuth2
+  backends:
+    - social_core.backends.gitlab.GitLabOAuth2
   autoCreateUser: true
 extraConfig:
   - secret:
@@ -201,7 +203,8 @@ For example:
 ```yaml
 remoteAuth:
   enabled: true
-  backend: netbox.authentication.LDAPBackend
+  backends:
+    - netbox.authentication.LDAPBackend
   ldap:
     serverUri: 'ldap://domain.com'
     startTls: true

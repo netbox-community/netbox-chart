@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta.101
+version: 5.0.0
 appVersion: "v4.1.1"
 type: application
 kubeVersion: ^1.25.0-0
@@ -34,3 +34,9 @@ annotations:
   artifacthub.io/links: |
     - name: Upstream Project
       url: https://github.com/netbox-community/netbox
+  artifacthub.io/changes: |
+    - kind: changed
+      description: New release
+      links:
+        - name: Changelog on GitHub Releases
+          url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-

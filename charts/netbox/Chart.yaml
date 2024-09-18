@@ -18,7 +18,7 @@ maintainers:
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: ^2.22.0
+    version: ^2.23.0
     tags:
       - bitnami-common
   - name: postgresql

@@ -242,4 +242,3 @@ In your `values.yaml` file define your CA certificate content in `caCertData`:
       ...
       -----END CERTIFICATE-----
 ```
-

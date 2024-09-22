@@ -100,7 +100,7 @@ data:
 > [!note]
 > A hardcoded custom audience mapper is required on Keycloak.
 >
-> For the audience name to be in the token, enter the Client Name/ID
+> For the audience name to be in the token, enter the Client ID
 > in the _Included **Custom** Audience_ field instead of the _Included **Client** Audience_ field.
 >
 > Refer to the Keycloak usage materials:

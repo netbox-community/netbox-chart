@@ -15,8 +15,7 @@ Using custom auth pipelines you can assign groups based on the roles supplied by
 remoteAuth:
   enabled: true
   backends:
-  - social_core.backends.keycloak.KeycloakOAuth2
-  - django.contrib.auth.backends.ModelBackend
+    - social_core.backends.keycloak.KeycloakOAuth2
   autoCreateUser: true
 
 extraConfig:
@@ -98,21 +97,23 @@ data:
           continue
 ```
 
-Finally on the keycloak side, you'll have to add the audiance mapper.  
-To do so : 
-1. Go on your Keycloak admin board
-2. Go on your client
-3. On the Mappers tab, click create
-4. * Name : "aud"
-   * Type : Audiance
-   * Included Custom Audience : \<Your Client Name\>
-5. Click save 
+> [!note] 
+> A hardcoded custom audience mapper is required on Keycloak.
+> 
+> For the audience name to be in the token, enter the Client Name/ID 
+> in the _Included **Custom** Audience_ field instead of the _Included **Client** Audience_ field.
+> 
+> Refer to the Keycloak usage materials:
+> - https://python-social-auth.readthedocs.io/en/latest/backends/keycloak.html
+> - https://github.com/python-social-auth/social-core/blob/d9554fa40e751c85ae60231fe2f5bd5a528c4452/social_core/backends/keycloak.py#L7-L96
+> - https://www.keycloak.org/docs/latest/server_admin/#_audience_hardcoded
 
 ### Example config for GitLab backend
 ```yaml
 remoteAuth:
   enabled: true
-  backend: social_core.backends.gitlab.GitLabOAuth2
+  backends:
+    - social_core.backends.gitlab.GitLabOAuth2
   autoCreateUser: true
 extraConfig:
   - secret:
@@ -213,7 +214,8 @@ For example:
 ```yaml
 remoteAuth:
   enabled: true
-  backend: netbox.authentication.LDAPBackend
+  backends:
+    - netbox.authentication.LDAPBackend
   ldap:
     serverUri: 'ldap://domain.com'
     startTls: true

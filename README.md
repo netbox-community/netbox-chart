@@ -25,17 +25,9 @@ To install the chart with the release name `my-release` and default configuratio
 helm install my-release --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
-The default configuration includes the required PostgreSQL and Redis database
-services, but both should be managed externally in production deployments; see below.
-
 ### Production Usage
 
-Always [use an existing Secret](#using-an-existing-secret) and supply all
-passwords and secret keys yourself to avoid Helm re-generating any of them for
-you.
-
-We recommend setting both `postgresql.enabled` and `redis.enabled` to
-`false` and using a separate external PostgreSQL and Redis instance. This
+We recommend using separate external PostgreSQL and Redis instances. This
 de-couples those services from the chart's bundled versions which may have
 complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando's
 [Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis

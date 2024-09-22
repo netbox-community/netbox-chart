@@ -784,7 +784,7 @@ automountServiceAccountToken: false
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 5
+  initialDelaySeconds: 0
   periodSeconds: 10
   timeoutSeconds: 1
   failureThreshold: 3
@@ -801,8 +801,8 @@ livenessProbe:
 readinessProbe:
   enabled: true
   initialDelaySeconds: 0
-  timeoutSeconds: 1
   periodSeconds: 10
+  timeoutSeconds: 1
   failureThreshold: 3
   successThreshold: 1
 ## Configure extra options for startupProbe probe
@@ -1022,7 +1022,7 @@ externalDatabase:
 
 ## Redis chart configuration
 ## https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
-## @param postgresql.enabled Whether to deploy a Redis server to satisfy the applications database requirements
+## @param redis.enabled Deploy Redis using bundled Bitnami Redis chart
 ##
 redis:
   enabled: true

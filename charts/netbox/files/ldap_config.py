@@ -1,6 +1,7 @@
 """
 This file serves as a LDAP configuration for Netbox
-https://netboxlabs.com/docs/netbox/en/stable/configuration/
+https://netboxlabs.com/docs/netbox/en/stable/installation/6-ldap/#configuration
+https://django-auth-ldap.readthedocs.io/en/latest/reference.html
 """
 
 from functools import reduce

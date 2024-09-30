@@ -5,7 +5,7 @@ labels:
 body:
   - type: markdown
     attributes:
-      value: >
+      value: |
         > [!NOTE]
         > This form is only for submitting well-formed proposals to extend or modify
         > NetBox **Helm charts** in some way.
@@ -15,7 +15,7 @@ body:
   - type: textarea
     attributes:
       label: Proposed functionality
-      description: >
+      description: |
         Describe in detail the new feature or behavior you are proposing. Include any specific changes
         to work flows, data models, and/or the user interface. The more detail you provide here, the
         greater chance your proposal has of being discussed. Feature requests which don't include an
@@ -25,7 +25,7 @@ body:
   - type: textarea
     attributes:
       label: Use case
-      description: >
+      description: |
         Explain how adding this functionality would benefit NetBox users when using its Helm chart.
         What need does it address?
     validations:

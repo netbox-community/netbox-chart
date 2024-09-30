@@ -1,6 +1,6 @@
 name: ✨ Feature Request
 description: Propose a new NetBox feature or enhancement
-labels: 
+labels:
   - enhancement
 body:
   - type: markdown

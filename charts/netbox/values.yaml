@@ -1149,6 +1149,7 @@ init:
       drop:
         - ALL
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
@@ -1216,6 +1217,7 @@ test:
       drop:
         - ALL
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000

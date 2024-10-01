@@ -1,4 +1,4 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) -}}
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -26,8 +26,8 @@ spec:
   selector:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end -}}
-{{- if and .Values.reportsPersistence.enabled (not .Values.reportsPersistence.existingClaim) -}}
+{{- end }}
+{{- if and .Values.reportsPersistence.enabled (not .Values.reportsPersistence.existingClaim) }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -55,8 +55,8 @@ spec:
   selector:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end -}}
-{{- if and .Values.scriptsPersistence.enabled (not .Values.scriptsPersistence.existingClaim) -}}
+{{- end }}
+{{- if and .Values.scriptsPersistence.enabled (not .Values.scriptsPersistence.existingClaim) }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -84,4 +84,4 @@ spec:
   selector:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end -}}
+{{- end }}

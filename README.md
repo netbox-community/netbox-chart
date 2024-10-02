@@ -62,9 +62,9 @@ The following table lists the configurable parameters for this chart and their d
 
 | Parameter                                       | Description                                                         | Default                                      |
 | ------------------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
-| `global.imageRegistry`                          | Used for Bitnami PostgreSQL and Redis                               | `""`                                          |
-| `global.imagePullSecrets`                       | Used for Bitnami PostgreSQL and Redis                               | `[]`                                          |
-| `global.storageClass`                           | Used for Bitnami PostgreSQL and Redis                               | `""`                                          |
+| `global.imageRegistry`                          | Netbox and subchart image registry for pulling container images     | `""`                                         |
+| `global.imagePullSecrets`                       | Netbox and subchart registry secret names as an array               | `[]`                                         |
+| `global.storageClass`                           | Netbox and subchart default StorageClass for Persistent Volume(s)   | `""`                                         |
 | `replicaCount`                                  | The desired number of NetBox pods                                   | `1`                                          |
 | `image.registry`                                | NetBox container image registry                                     | `ghcr.io`                                    |
 | `image.repository`                              | NetBox container image repository                                   | `netboxcommunity/netbox`                     |

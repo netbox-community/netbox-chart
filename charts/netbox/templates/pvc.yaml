@@ -15,17 +15,10 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  {{- if .Values.persistence.storageClass }}
-  {{- if (eq "-" .Values.persistence.storageClass) }}
-  storageClassName: ""
-  {{- else }}
-  storageClassName: {{ .Values.persistence.storageClass | quote }}
+  {{- if .Values.persistence.selector }}
+  selector: {{- include "common.tplvalues.render" (dict "value" .Values.persistence.selector "context" $) | nindent 4 }}
   {{- end }}
-  {{- end }}
-  {{- with .Values.persistence.selector }}
-  selector:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "common.storage.class" (dict "persistence" .Values.persistence "global" .Values.global) | nindent 2 }}
 {{- end }}
 {{- if and .Values.reportsPersistence.enabled (not .Values.reportsPersistence.existingClaim) }}
 ---
@@ -44,17 +37,10 @@ spec:
   resources:
     requests:
       storage: {{ .Values.reportsPersistence.size | quote }}
-  {{- if .Values.reportsPersistence.storageClass }}
-  {{- if (eq "-" .Values.reportsPersistence.storageClass) }}
-  storageClassName: ""
-  {{- else }}
-  storageClassName: {{ .Values.reportsPersistence.storageClass | quote }}
+  {{- if .Values.reportsPersistence.selector }}
+  selector: {{- include "common.tplvalues.render" (dict "value" .Values.reportsPersistence.selector "context" $) | nindent 4 }}
   {{- end }}
-  {{- end }}
-  {{- with .Values.reportsPersistence.selector }}
-  selector:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "common.storage.class" (dict "persistence" .Values.reportsPersistence "global" .Values.global) | nindent 2 }}
 {{- end }}
 {{- if and .Values.scriptsPersistence.enabled (not .Values.scriptsPersistence.existingClaim) }}
 ---
@@ -73,15 +59,8 @@ spec:
   resources:
     requests:
       storage: {{ .Values.scriptsPersistence.size | quote }}
-  {{- if .Values.scriptsPersistence.storageClass }}
-  {{- if (eq "-" .Values.scriptsPersistence.storageClass) }}
-  storageClassName: ""
-  {{- else }}
-  storageClassName: {{ .Values.scriptsPersistence.storageClass | quote }}
+  {{- if .Values.scriptsPersistence.selector }}
+  selector: {{- include "common.tplvalues.render" (dict "value" .Values.scriptsPersistence.selector "context" $) | nindent 4 }}
   {{- end }}
-  {{- end }}
-  {{- with .Values.scriptsPersistence.selector }}
-  selector:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "common.storage.class" (dict "persistence" .Values.scriptsPersistence "global" .Values.global) | nindent 2 }}
 {{- end }}

@@ -26,7 +26,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: ^20.1.5
+    version: ^20.1.6
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
 annotations:

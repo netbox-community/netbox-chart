@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta.120
+version: 5.0.0-beta.121
 appVersion: "v4.1.3"
 type: application
 kubeVersion: ^1.25.0-0
@@ -18,7 +18,7 @@ maintainers:
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: ^2.23.0
+    version: ^2.24.0
     tags:
       - bitnami-common
   - name: postgresql

@@ -172,7 +172,7 @@ spec:
         - name: secrets
           mountPath: /run/secrets/netbox
           readOnly: true
-        {{- include "netbox.extraConfig.volumeMounts" . | nindent 8 -}}
+        {{- include "netbox.extraConfig.volumeMounts" . | nindent 8 }}
         - name: netbox-tmp
           mountPath: /tmp
         - name: media
@@ -249,7 +249,7 @@ spec:
               items:
               - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
                 path: redis_cache_password
-      {{- include "netbox.extraConfig.volumes" . | nindent 6 -}}
+      {{- include "netbox.extraConfig.volumes" . | nindent 6 }}
       - name: netbox-tmp
         emptyDir:
           medium: Memory

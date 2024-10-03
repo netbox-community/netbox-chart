@@ -1,0 +1,83 @@
+name: 🐛 Bug Report
+description: Create a report about a malfunction of the Helm chart setup
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!NOTE]
+        > This form is only for reporting _reproducible bugs_ in a current NetBox
+        > installation **using its Helm chart**.
+        > If you're looking for assistance with using NetBox, please visit our
+        > [discussion forum](https://github.com/netbox-community/netbox/discussions) instead.
+
+        > [!TIP]
+        > Please don't open an issue to open a PR. Just submit the PR, that's good enough.
+  - type: input
+    id: chart-version
+    attributes:
+      label: The Helm chart version
+      description: What version of the Helm chart are you running?
+      placeholder: netbox-5.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: context-version
+    attributes:
+      label: Environment Versions
+      description: What version of relevant tools are you using?
+      render: text
+      placeholder: |
+        Kubernetes: 1.31
+        Helm: 3.12
+        FluxCD: 1.0
+    validations:
+      required: true
+  - type: textarea
+    id: chart-values-yml
+    attributes:
+      label: Custom chart values
+      description: Please provide your custom values (`values.yaml`)
+      render: yaml
+      placeholder: |
+        remoteAuth:
+          enabled: true
+          backends:
+            - netbox.authentication.RemoteUserBackend
+        ingress:
+          enabled: true
+    validations:
+      required: true
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior & Steps to Reproduce
+      description: Please describe what you did and how you think it misbehaved
+      placeholder: I tried to … by doing …, but it …
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: I expected that … when I do …
+    validations:
+      required: true
+  - type: textarea
+    id: netbox-logs
+    attributes:
+      label: NetBox Logs
+      description: Please paste the output of the deploy Pod logs
+      render: text
+      placeholder: |
+        netbox_1  | ⚙️ Applying database migrations
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/configuration.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/a.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/extra.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/logging.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/plugins.py'
+        ...
+    validations:
+      required: false

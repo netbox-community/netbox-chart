@@ -62,7 +62,11 @@ The following table lists the configurable parameters for this chart and their d
 
 | Parameter                                       | Description                                                         | Default                                      |
 | ------------------------------------------------|---------------------------------------------------------------------|----------------------------------------------|
+| `global.imageRegistry`                          | Netbox and subchart image registry for pulling container images     | `""`                                         |
+| `global.imagePullSecrets`                       | Netbox and subchart registry secret names as an array               | `[]`                                         |
+| `global.storageClass`                           | Netbox and subchart default StorageClass for Persistent Volume(s)   | `""`                                         |
 | `replicaCount`                                  | The desired number of NetBox pods                                   | `1`                                          |
+| `image.registry`                                | NetBox container image registry                                     | `ghcr.io`                                    |
 | `image.repository`                              | NetBox container image repository                                   | `netboxcommunity/netbox`                     |
 | `image.tag`                                     | NetBox container image tag                                          | `""`                                         |
 | `image.pullPolicy`                              | NetBox container image pull policy                                  | `IfNotPresent`                               |
@@ -307,11 +311,20 @@ The following table lists the configurable parameters for this chart and their d
 | `startupProbe.timeoutSeconds`                   | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `startupProbe.periodSeconds`                    | Number of seconds                                                   |  *see `values.yaml`*                         |
 | `startupProbe.successThreshold`                 | Number of seconds                                                   |  *see `values.yaml`*                         |
+| `init.image.registry`                           | Init container image registry                                       | `ghcr.io`                                    |
 | `init.image.repository`                         | Init container image repository                                     | `busybox`                                    |
-| `init.image.tag`                                | Init container image tag                                            | `1.32.1`                                     |
+| `init.image.tag`                                | Init container image tag                                            | `1.37.0`                                     |
 | `init.image.pullPolicy`                         | Init container image pull policy                                    | `IfNotPresent`                               |
+| `init.resourcesPreset`                          | Configure a preset for requests or limits for init container        | `nano`                                       |
 | `init.resources`                                | Configure resource requests or limits for init container            | `{}`                                         |
 | `init.securityContext`                          | Security context for init container                                 | *see `values.yaml`*                          |
+| `test.image.registry`                           | Test container image registry                                       | `ghcr.io`                                    |
+| `test.image.repository`                         | Test container image repository                                     | `busybox`                                    |
+| `test.image.tag`                                | Test container image tag                                            | `1.37.0`                                     |
+| `test.image.pullPolicy`                         | Test container image pull policy                                    | `IfNotPresent`                               |
+| `test.resourcesPreset`                          | Configure a preset for requests or limits for test container        | `nano`                                       |
+| `test.resources`                                | Configure resource requests or limits for test container            | `{}`                                         |
+| `test.securityContext`                          | Security context for test container                                 | *see `values.yaml`*                          |
 | `autoscaling.enabled`                           | Whether to enable the HorizontalPodAutoscaler                       | `false`                                      |
 | `autoscaling.minReplicas`                       | Minimum number of replicas when autoscaling is enabled              | `1`                                          |
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |

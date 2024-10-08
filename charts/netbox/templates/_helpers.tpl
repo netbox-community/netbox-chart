@@ -115,8 +115,8 @@ Volumes that need to be mounted for .Values.extraConfig entries
   {{- else if $config.secret }}
   secret:
     {{- toYaml $config.secret | nindent 4 }}
-  {{- end }}
-{{- end }}
+  {{ end }}
+{{ end }}
 {{- end }}
 
 {{/*
@@ -127,7 +127,7 @@ Volume mounts for .Values.extraConfig entries
 - name: extra-config-{{ $index }}
   mountPath: /run/config/extra/{{ $index }}
   readOnly: true
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{/*

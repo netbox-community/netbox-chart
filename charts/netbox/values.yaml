@@ -633,10 +633,17 @@ hostAliases: []
 ##
 extraVolumes: []
 ## @param extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
-##
+## e.g:
+## - name: redis-ca
+##   secret:
+##     secretName: redis-ca
 extraVolumeMounts: []
 ## @param sidecars Add additional sidecar containers to the pod
 ## e.g:
+## - name: redis-ca
+##   mountPath: /tmp/redis-ca
+##   subPath: redis_ca
+##   readOnly: true
 ## sidecars:
 ##   - name: your-image-name
 ##     image: your-image
@@ -1028,6 +1035,7 @@ tasksRedis:
   database: 0
   ssl: false
   insecureSkipTlsVerify: false
+  # When defining caCertPath, make sure you mount the secret containing the CA certificate on Netbox, Netbox-worker and Housekeeping
   caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -1047,6 +1055,7 @@ cachingRedis:
   database: 1
   ssl: false
   insecureSkipTlsVerify: false
+  # When defining caCertPath, make sure you mount the secret containing the CA certificate on Netbox, Netbox-worker and Housekeeping
   caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -1324,10 +1333,17 @@ housekeeping:
   ##
   extraVolumes: []
   ## @param housekeeping.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
-  ##
+  ## e.g:
+  ## - name: redis-ca
+  ##   secret:
+  ##     secretName: redis-ca
   extraVolumeMounts: []
   ## @param housekeeping.sidecars Add additional sidecar containers to the pod
   ## e.g:
+  ## - name: redis-ca
+  ##   mountPath: /tmp/redis-ca
+  ##   subPath: redis_ca
+  ##   readOnly: true
   ## sidecars:
   ##   - name: your-image-name
   ##     image: your-image
@@ -1541,10 +1557,17 @@ worker:
   ##
   extraVolumes: []
   ## @param worker.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
-  ##
+  ## e.g:
+  ## - name: redis-ca
+  ##   secret:
+  ##     secretName: redis-ca
   extraVolumeMounts: []
   ## @param worker.sidecars Add additional sidecar containers to the pod
   ## e.g:
+  ## - name: redis-ca
+  ##   mountPath: /tmp/redis-ca
+  ##   subPath: redis_ca
+  ##   readOnly: true
   ## sidecars:
   ##   - name: your-image-name
   ##     image: your-image

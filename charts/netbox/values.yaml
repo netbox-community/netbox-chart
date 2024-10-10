@@ -1563,7 +1563,7 @@ worker:
   extraEnvs: []
   ## @param worker.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
   ## e.g:
-  ## extraVolumes!
+  ## extraVolumes:
   ##   - name: redis-ca
   ##     secret:
   ##       secretName: redis-ca

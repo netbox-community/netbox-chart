@@ -206,7 +206,7 @@ data:
     {{- toPrettyJson .Values.overrideUnitConfig | nindent 4 }}
   {{- end }}
 
-  {{- range $index, $config := .Values.extraConfig -}}
+  {{- range $index, $config := .Values.extraConfig }}
   {{- if $config.values }}
   extra-{{ $index }}.yaml: |-
     {{- toYaml $config.values | nindent 4 }}

@@ -1,6 +1,6 @@
 [tool.black]
 line_length = 100
-target-version = ['py38']
+target-version = ["py38"]
 include = '\.pyi?$'
 exclude = '''
 (
@@ -20,7 +20,13 @@ multi_line_output = 3
 line_length = 100
 
 [tool.pylint.main]
-disable = ["duplicate-code", "import-error", "used-before-assignment", "undefined-variable"]
+disable = [
+  "duplicate-code",
+  "import-error",
+  "possibly-used-before-assignment",
+  "used-before-assignment",
+  "undefined-variable",
+]
 
 [tool.pylint.format]
 max-line-length = "100"

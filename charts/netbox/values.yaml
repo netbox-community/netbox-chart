@@ -22,9 +22,6 @@ global:
 
 ## @section Common parameters
 
-## @param kubeVersion Override Kubernetes version
-##
-kubeVersion: ""
 ## @param nameOverride String to partially override common.names.fullname
 ##
 nameOverride: ""
@@ -265,7 +262,7 @@ graphQlEnabled: true
 # httpProxies:
 #   http: http://10.10.1.10:3128
 #   https: http://10.10.1.10:1080
-httpProxies: null
+httpProxies: {}
 
 # IP addresses recognized as internal to the system. The debugging toolbar will
 # be available only to clients accessing NetBox from an internal IP.
@@ -315,13 +312,13 @@ maxPageSize: 1000
 # Django-storages is also supported. Provide the class path of the storage
 # driver in storageBackend and any configuration options in storageConfig.
 # storageBackend: storages.backends.s3boto3.S3Boto3Storage
+storageBackend: ""
 # storageConfig:
 #   AWS_ACCESS_KEY_ID: 'Key ID'
 #   AWS_SECRET_ACCESS_KEY: 'Secret'
 #   AWS_STORAGE_BUCKET_NAME: 'netbox'
 #   AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
 #   AWS_S3_REGION_NAME: 'eu-west-1'
-storageBackend: null
 storageConfig: {}
 
 # Determine how many objects to display per page within a list. (Default: 50)
@@ -417,8 +414,8 @@ releaseCheck:
   # This repository is used to check whether there is a new release of NetBox
   # available. Set to null to disable the version check or use the URL below to
   # check for release in the official NetBox repository.
-  url: null
   # url: https://api.github.com/repos/netbox-community/netbox/releases
+  url: ""
 
 # Maximum execution time for background tasks, in seconds.
 # Default value 300 is 5 minutes
@@ -633,9 +630,20 @@ serviceAccount:
 ##
 hostAliases: []
 ## @param extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+## e.g:
+## extraVolumes:
+##   - name: redis-ca
+##     secret:
+##       secretName: redis-ca
 ##
 extraVolumes: []
 ## @param extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+## e.g:
+## extraVolumeMounts:
+##   - name: redis-ca
+##     mountPath: /tmp/redis-ca
+##     subPath: redis_ca
+##     readOnly: true
 ##
 extraVolumeMounts: []
 ## @param sidecars Add additional sidecar containers to the pod
@@ -1031,6 +1039,7 @@ tasksRedis:
   database: 0
   ssl: false
   insecureSkipTlsVerify: false
+  # When defining caCertPath, make sure you mount the secret containing the CA certificate on all the necessary containers
   caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -1050,6 +1059,7 @@ cachingRedis:
   database: 1
   ssl: false
   insecureSkipTlsVerify: false
+  # When defining caCertPath, make sure you mount the secret containing the CA certificate on all the necessary containers
   caCertPath: ""
 
   # Used only when redis.enabled is false. host and port are not used if
@@ -1099,7 +1109,7 @@ init:
   image:
     registry: docker.io
     repository: busybox
-    tag: 1.36.1
+    tag: 1.37.0
     digest: ""
     ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1149,6 +1159,7 @@ init:
       drop:
         - ALL
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
@@ -1166,7 +1177,7 @@ test:
   image:
     registry: docker.io
     repository: busybox
-    tag: 1.36.1
+    tag: 1.37.0
     digest: ""
     ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1216,6 +1227,7 @@ test:
       drop:
         - ALL
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
@@ -1322,9 +1334,20 @@ housekeeping:
   ##         name: secret-resource
   extraEnvs: []
   ## @param housekeeping.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+  ## e.g:
+  ## extraVolumes:
+  ##   - name: redis-ca
+  ##     secret:
+  ##       secretName: redis-ca
   ##
   extraVolumes: []
   ## @param housekeeping.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+  ## e.g:
+  ## extraVolumeMounts:
+  ##   - name: redis-ca
+  ##     mountPath: /tmp/redis-ca
+  ##     subPath: redis_ca
+  ##     readOnly: true
   ##
   extraVolumeMounts: []
   ## @param housekeeping.sidecars Add additional sidecar containers to the pod
@@ -1539,9 +1562,20 @@ worker:
   ##         name: secret-resource
   extraEnvs: []
   ## @param worker.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+  ## e.g:
+  ## extraVolumes:
+  ##   - name: redis-ca
+  ##     secret:
+  ##       secretName: redis-ca
   ##
   extraVolumes: []
   ## @param worker.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+  ## e.g:
+  ## extraVolumeMounts:
+  ##   - name: redis-ca
+  ##     mountPath: /tmp/redis-ca
+  ##     subPath: redis_ca
+  ##     readOnly: true
   ##
   extraVolumeMounts: []
   ## @param worker.sidecars Add additional sidecar containers to the pod

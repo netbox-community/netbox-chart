@@ -64,18 +64,16 @@ spec:
               mountPath: /etc/netbox/config/configuration.py
               subPath: configuration.py
               readOnly: true
-            {{- range .Values.remoteAuth.backends }}
-            {{- if eq . "netbox.authentication.LDAPBackend" }}
+            {{- if has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends }}
             - name: config
               mountPath: /etc/netbox/config/ldap/ldap_config.py
               subPath: ldap_config.py
               readOnly: true
-            {{- if $.Values.remoteAuth.ldap.caCertData }}
+            {{- if .Values.remoteAuth.ldap.caCertData }}
             - name: config
               mountPath: /etc/netbox/config/ldap/ldap_ca.crt
               subPath: ldap_ca.crt
               readOnly: true
-            {{- end }}
             {{- end }}
             {{- end }}
             - name: config
@@ -84,7 +82,7 @@ spec:
             - name: secrets
               mountPath: /run/secrets/netbox
               readOnly: true
-            {{- include "netbox.extraConfig.volumeMounts" . | nindent 12 -}}
+            {{- include "netbox.extraConfig.volumeMounts" . | nindent 12 }}
             - name: netbox-tmp
               mountPath: /tmp
             - name: media
@@ -125,11 +123,9 @@ spec:
                     path: email_password
                   - key: secret_key
                     path: secret_key
-                  {{- range .Values.remoteAuth.backends }}
-                  {{- if eq . "netbox.authentication.LDAPBackend" }}
+                  {{- if has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends }}
                   - key: ldap_bind_password
                     path: ldap_bind_password
-                  {{- end }}
                   {{- end }}
               - secret:
                   name: {{ include "netbox.postgresql.secret" . | quote }}
@@ -146,7 +142,7 @@ spec:
                   items:
                   - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
                     path: redis_cache_password
-          {{- include "netbox.extraConfig.volumes" . | nindent 10 -}}
+          {{- include "netbox.extraConfig.volumes" . | nindent 10 }}
           - name: netbox-tmp
             emptyDir:
               medium: Memory

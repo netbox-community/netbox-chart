@@ -14,7 +14,7 @@ To access Netbox site from outside the cluster follow the steps below.
 
 You have configured NetBox to use an ingress controller, exposing the following URL(s):
 
-{{ range $host := .Values.ingress.hosts }}
+{{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
   - http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
   {{- end }}

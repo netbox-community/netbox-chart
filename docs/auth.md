@@ -97,6 +97,17 @@ data:
           continue
 ```
 
+> [!note]
+> A hardcoded custom audience mapper is required on Keycloak.
+>
+> For the audience name to be in the token, enter the Client ID
+> in the _Included **Custom** Audience_ field instead of the _Included **Client** Audience_ field.
+>
+> Refer to the Keycloak usage materials:
+> - [Python Social Auth Documentation](https://python-social-auth.readthedocs.io/en/latest/backends/keycloak.html)
+> - [Python Social Auth Source Code](https://github.com/python-social-auth/social-core/blob/d9554fa40e751c85ae60231fe2f5bd5a528c4452/social_core/backends/keycloak.py#L7-L96)
+> - [Keycloak Documentation](https://www.keycloak.org/docs/latest/server_admin/#_audience_hardcoded)
+
 ### Example config for GitLab backend
 ```yaml
 remoteAuth:
@@ -196,7 +207,7 @@ data:
 In order to enable LDAP authentication, please carry out the following steps:
 
 1. Configure the `remoteAuth` settings to enable the LDAP backend (see below)
-2. Make sure you set *all* of the `remoteAuth.ldap` settings shown in the `values.yaml` file
+2. Make sure you set _all_ of the `remoteAuth.ldap` settings shown in the `values.yaml` file
 
 For example:
 

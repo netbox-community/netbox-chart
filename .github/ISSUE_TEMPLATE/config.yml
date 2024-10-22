@@ -1,0 +1,9 @@
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ Question
+    url: https://github.com/netbox-community/netbox/discussions
+    about: The Github Discussions are the right place to ask questions about how to use or do certain things with NetBox.
+  - name: 💬 Community Slack
+    url: https://netdev.chat
+    about: "Join #netbox-chart on the NetDev Community Slack for assistance with installation issues and other problems."

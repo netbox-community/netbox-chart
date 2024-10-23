@@ -378,37 +378,33 @@ remoteAuth:
   # The following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io
-  #
-  # When enabling LDAP support please see "Using LDAP Authentication" in README.md and
-  # uncomment ALL of the configuration settings below, or your configuration will be invalid.
-  #
-  # ldap:
-  #   serverUri: 'ldap://domain.com'
-  #   startTls: true
-  #   ignoreCertErrors: false
-  #   caCertData: ''
-  #   bindDn: 'CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=domain,dc=com'
-  #   bindPassword: 'TopSecretPassword'
-  #   userDnTemplate: null
-  #   userSearchBaseDn: 'OU=Users,OU=MyCompany,DC=domain,dc=com'
-  #   userSearchAttr: 'sAMAccountName'
-  #   groupSearchBaseDn: 'OU=Groups,OU=MyCompany,DC=domain,dc=com'
-  #   groupSearchClass: 'group'
-  #   groupType: 'GroupOfNamesType'
-  #   requireGroupDn:
-  #     - 'CN=Network Configuration Operators,CN=Builtin,DC=domain,dc=com'
-  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
-  #   isAdminDn:
-  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
-  #   isSuperUserDn:
-  #     - 'CN=Domain Admins,CN=Users,DC=domain,dc=com'
-  #   findGroupPerms: true
-  #   mirrorGroups: true
-  #   mirrorGroupsExcept: null
-  #   cacheTimeout: 3600
-  #   attrFirstName: 'givenName'
-  #   attrLastName: 'sn'
-  #   attrMail: 'mail'
+  ldap:
+    serverUri: ldap://example.com
+    startTls: true
+    ignoreCertErrors: false
+    caCertData: ""
+    bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
+    bindPassword: ""
+    userDnTemplate: null
+    userSearchBaseDn: OU=Users,OU=MyCompany,DC=example,dc=com
+    userSearchAttr: sAMAccountName
+    groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com
+    groupSearchClass: group
+    groupType: GroupOfNamesType
+    requireGroupDn:
+      - CN=Network Configuration Operators,CN=Builtin,DC=example,dc=com
+      - CN=Domain Admins,CN=Users,DC=example,dc=com
+    isAdminDn:
+      - CN=Domain Admins,CN=Users,DC=example,dc=com
+    isSuperUserDn:
+      - CN=Domain Admins,CN=Users,DC=example,dc=com
+    findGroupPerms: true
+    mirrorGroups: true
+    mirrorGroupsExcept: null
+    cacheTimeout: 3600
+    attrFirstName: givenName
+    attrLastName: sn
+    attrMail: mail
 
 releaseCheck:
   # This repository is used to check whether there is a new release of NetBox

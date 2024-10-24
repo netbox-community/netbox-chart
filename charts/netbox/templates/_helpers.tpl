@@ -32,7 +32,7 @@ Name of the Secret that contains the PostgreSQL password
   {{- if .Values.postgresql.enabled }}
     {{- include "postgresql.v1.secretName" .Subcharts.postgresql -}}
   {{- else }}
-    {{- include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecretName "defaultNameSuffix" "postgresql" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.postgresql.existingSecret "defaultNameSuffix" "postgresql" "context" $) }}
   {{- end }}
 {{- end }}
 
@@ -42,10 +42,10 @@ Name of the key in Secret that contains the PostgreSQL password
 {{- define "netbox.postgresql.secretKey" -}}
   {{- if .Values.postgresql.enabled -}}
     {{- include "postgresql.v1.userPasswordKey" .Subcharts.postgresql -}}
-  {{- else if .Values.externalDatabase.existingSecretName -}}
-    {{- .Values.externalDatabase.existingSecretKey -}}
+  {{- else if .Values.postgresql.auth.existingSecret -}}
+    {{- .Values.postgresql.auth.secretKeys.userPasswordKey -}}
   {{- else -}}
-    db_password
+    password
   {{- end -}}
 {{- end }}
 

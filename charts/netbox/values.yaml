@@ -997,32 +997,37 @@ metrics:
 ##
 postgresql:
   ## @param postgresql.enabled Whether to deploy a PostgreSQL server to satisfy the applications database requirements
-  ## To use an external database set this to false and configure the externalDatabase parameters
+  ## To use an external database set this to false and configure the externalHost parameters
   ##
   enabled: true
+  externalHost: localhost
+  ## Authentication parameters
   auth:
-    username: netbox
-    database: netbox
+    ## @param postgresql.auth.username Name for a custom user to create
+    ##
+    username: ""
+    ## @param postgresql.auth.password Password for the custom user to create. Ignored if `auth.existingSecret` is provided
+    ##
+    password: ""
+    ## @param postgresql.auth.database Name for a custom database to create
+    ##
+    database: ""
+    ## @param postgresql.auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
+    ##
+    existingSecret: ""
+    ## @param postgresql.auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param postgresql.auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ##
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+  ## @param postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+  ##
+  service:
+    ports:
+      postgresql: ""
 
-## External database configuration
-## @param externalDatabase.host Host of the existing database
-## @param externalDatabase.port Port of the existing database
-## @param externalDatabase.username Existing username in the external db
-## @param externalDatabase.password Password for the above username
-## @param externalDatabase.database Name of the existing database
-## @param externalDatabase.existingSecretName Name of a secret containing the database credentials
-## @param externalDatabase.existingSecretKey Key of a secret containing the database credentials
-##
-externalDatabase:
-  host: localhost
-  port: 5432
-  database: netbox
-  username: netbox
-  password: ""
-  existingSecretName: ""
-  existingSecretKey: postgresql-password
-
-  # The following settings also apply when using the bundled PostgreSQL chart:
+  # The following settings are made available for NetBox
   sslMode: prefer
   connMaxAge: 300
   disableServerSideCursors: false

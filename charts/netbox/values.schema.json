@@ -1038,32 +1038,40 @@
     "schedulerName": {
       "type": "string"
     },
-    "scriptsPersistence": {
+    "scripts": {
+      "type": "object",
       "properties": {
-        "accessMode": {
-          "type": "string"
-        },
-        "annotations": {
-          "properties": {},
-          "type": "object"
-        },
         "enabled": {
           "type": "boolean"
         },
-        "existingClaim": {
-          "type": "string"
-        },
-        "size": {
-          "type": "string"
-        },
-        "storageClass": {
-          "type": "string"
-        },
-        "subPath": {
-          "type": "string"
+        "persistence": {
+          "properties": {
+            "accessMode": {
+              "type": "string"
+            },
+            "annotations": {
+              "properties": {},
+              "type": "object"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "existingClaim": {
+              "type": "string"
+            },
+            "size": {
+              "type": "string"
+            },
+            "storageClass": {
+              "type": "string"
+            },
+            "subPath": {
+              "type": "string"
+            }
+          },
+          "type": "object"
         }
-      },
-      "type": "object"
+      }
     },
     "secretKey": {
       "type": "string"

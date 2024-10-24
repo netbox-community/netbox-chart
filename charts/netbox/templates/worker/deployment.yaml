@@ -99,10 +99,10 @@ spec:
           mountPath: /opt/netbox/netbox/reports
           subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
         {{- end }}
-        {{- if .Values.scriptsPersistence.enabled }}
+        {{- if .Values.scripts.enabled }}
         - name: scripts
           mountPath: /opt/netbox/netbox/scripts
-          subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
+          subPath: {{ .Values.scripts.persistence.subPath | default "" | quote }}
         {{- end }}
         {{- with .Values.worker.extraVolumeMounts }}
         {{- toYaml . | nindent 8 }}
@@ -171,10 +171,14 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
       {{- end }}
-      {{- if .Values.scriptsPersistence.enabled }}
+      {{- if .Values.scripts.enabled }}
       - name: scripts
+        {{- if .Values.scripts.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
+          claimName: {{ .Values.scripts.persistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
       {{- end }}
       {{- with .Values.worker.extraVolumes }}
       {{- toYaml . | nindent 6 }}

@@ -20,7 +20,7 @@ and ask for help in the [`#netbox-chart`](https://netdev-community.slack.com/arc
 ## Quickstart
 
 ```shell
-helm install my-release --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
+helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 See docs on your preferred sources:
@@ -29,7 +29,11 @@ See docs on your preferred sources:
 - [Charts respective readmes](charts)
 - [Charts discovery](https://helm.sh/docs/helm/helm_search/)
   ```sh
-  helm search netbox
+  helm search hub netbox
+  ```
+- [Charts repository](https://helm.sh/docs/helm/helm_repo/)
+  ```sh
+  helm repo add netbox https://charts.netbox.oss.netboxlabs.com/
   ```
 
 ## License

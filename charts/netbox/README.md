@@ -6,7 +6,7 @@ data center infrastructure management (DCIM) tool.
 ## TL;DR
 
 ```shell
-helm install netbox --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
+helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 > [!tip]
@@ -22,7 +22,7 @@ helm install netbox --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
 To install the chart with the release name `my-release` and default configuration:
 
 ```shell
-helm install my-release --devel oci://ghcr.io/netbox-community/netbox-chart/netbox
+helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 ### Production Usage

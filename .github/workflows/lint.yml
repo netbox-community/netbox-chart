@@ -32,7 +32,7 @@ jobs:
           VALIDATE_JSCPD: false
           VALIDATE_PYTHON_MYPY: false
           VALIDATE_PYTHON_PYINK: false
-          FILTER_REGEX_EXCLUDE: charts/\w+/templates/.*\.yaml
+          FILTER_REGEX_EXCLUDE: charts/[^/]+/[^/]+/.*\.yaml
           LINTER_RULES_PATH: /
           PYTHON_BLACK_CONFIG_FILE: pyproject.toml
           PYTHON_PYLINT_CONFIG_FILE: pyproject.toml

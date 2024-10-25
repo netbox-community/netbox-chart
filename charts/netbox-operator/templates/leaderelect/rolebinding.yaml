@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ printf "%s-leader-election" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ printf "%s-leader-election" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+subjects:
+{{- if .Values.serviceAccount.create }}
+  - kind: ServiceAccount
+    name: {{ include "netbox-operator.serviceAccountName" . }}
+    namespace: {{ include "common.names.namespace" . | quote }}
+{{- end }}

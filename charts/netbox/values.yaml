@@ -1324,6 +1324,9 @@ housekeeping:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param housekeeping.readOnlyPersistence Whether to mount media, script, and report directories as read-only
+  ##
+  readOnlyPersistence: false
   ## @param housekeeping.extraEnvs Extra environment variables to be set on containers
   ## E.g:
   ## extraEnvs:
@@ -1480,6 +1483,9 @@ worker:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param worker.readOnlyPersistence Whether to mount media, script, and report directories as read-only
+  ##
+  readOnlyPersistence: false
   ## @param worker.automountServiceAccountToken Mount Service Account token in pod
   ##
   automountServiceAccountToken: false

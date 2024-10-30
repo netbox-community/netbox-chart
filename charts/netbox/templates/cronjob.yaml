@@ -88,15 +88,18 @@ spec:
             - name: media
               mountPath: /opt/netbox/netbox/media
               subPath: {{ .Values.persistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- if .Values.reportsPersistence.enabled }}
             - name: reports
               mountPath: /opt/netbox/netbox/reports
               subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- end }}
             {{- if .Values.scriptsPersistence.enabled }}
             - name: scripts
               mountPath: /opt/netbox/netbox/scripts
               subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- end }}
             {{- with .Values.housekeeping.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
@@ -150,6 +153,7 @@ spec:
             {{- if .Values.persistence.enabled }}
             persistentVolumeClaim:
               claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- else }}
             emptyDir: {}
             {{- end }}
@@ -157,11 +161,13 @@ spec:
           - name: reports
             persistentVolumeClaim:
               claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
           {{- end }}
           {{- if .Values.scriptsPersistence.enabled }}
           - name: scripts
             persistentVolumeClaim:
               claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
           {{- end }}
           {{- with .Values.housekeeping.extraVolumes }}
           {{- toYaml . | nindent 10 }}

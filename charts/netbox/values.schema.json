@@ -525,6 +525,9 @@
           },
           "type": "object"
         },
+        "readOnlyPersistence": {
+          "type": "boolean"
+        },
         "resources": {
           "$ref": "#/$defs/resources"
         },
@@ -1443,6 +1446,9 @@
         },
         "replicaCount": {
           "type": "integer"
+        },
+        "readOnlyPersistence": {
+          "type": "boolean"
         },
         "resources": {
           "properties": {},

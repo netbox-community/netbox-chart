@@ -850,6 +850,12 @@ lifecycleHooks: {}
 ##         key: FOO
 ##         name: secret-resource
 extraEnvs: []
+## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars for containers
+##
+extraEnvVarsCM: ""
+## @param extraEnvVarsSecret Name of existing Secret containing extra env vars for containers
+##
+extraEnvVarsSecret: ""
 
 ## Configure revision history limit for deployments
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy
@@ -1336,6 +1342,12 @@ housekeeping:
   ##         key: FOO
   ##         name: secret-resource
   extraEnvs: []
+  ## @param housekeeping.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for housekeeping containers
+  ##
+  extraEnvVarsCM: ""
+  ## @param housekeeping.extraEnvVarsSecret Name of existing Secret containing extra env vars for housekeeping containers
+  ##
+  extraEnvVarsSecret: ""
   ## @param housekeeping.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
   ## e.g:
   ## extraVolumes:
@@ -1567,6 +1579,12 @@ worker:
   ##         key: FOO
   ##         name: secret-resource
   extraEnvs: []
+  ## @param worker.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for worker containers
+  ##
+  extraEnvVarsCM: ""
+  ## @param worker.extraEnvVarsSecret Name of existing Secret containing extra env vars for worker containers
+  ##
+  extraEnvVarsSecret: ""
   ## @param worker.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
   ## e.g:
   ## extraVolumes:

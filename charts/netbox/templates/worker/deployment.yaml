@@ -15,35 +15,29 @@ spec:
   {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
-    matchLabels:
-      {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "common.labels.matchLabels" (dict "customLabels" .Values.worker.podLabels "context" $) | nindent 6 }}
       app.kubernetes.io/component: worker
   {{- if .Values.worker.updateStrategy }}
-  strategy:
-    {{- toYaml .Values.worker.updateStrategy | nindent 4 }}
+  strategy: {{- include "common.tplvalues.render" (dict "value" .Values.worker.updateStrategy "context" $) | nindent 4 }}
   {{- end }}
   template:
     metadata:
       annotations:
+        {{- if .Values.worker.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.worker.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if (not .Values.existingSecret) }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- with .Values.worker.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      labels:
-        {{- include "common.labels.matchLabels" . | nindent 8 }}
+      labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.worker.podLabels "context" $ ) | nindent 8 }}
         app.kubernetes.io/component: worker
-        {{- with .Values.worker.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 6 }}
       serviceAccountName: {{ include "netbox.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.worker.automountServiceAccountToken }}
       {{- if .Values.worker.podSecurityContext.enabled }}
-      securityContext: {{- omit .Values.worker.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.worker.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.worker.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.worker.initContainers "context" $) | trim | nindent 8 }}
@@ -51,7 +45,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}-worker
         {{- if .Values.worker.securityContext.enabled }}
-        securityContext: {{- omit .Values.worker.securityContext "enabled" | toYaml | nindent 10 }}
+        securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.worker.securityContext "context" $) | nindent 10 }}
         {{- end }}
         image: {{ include "netbox.image" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -61,9 +55,19 @@ spec:
         {{- if .Values.worker.args }}
         args: {{- include "common.tplvalues.render" (dict "value" .Values.worker.args "context" $) | nindent 10 }}
         {{- end }}
-        {{- with .Values.worker.extraEnvs }}
-        env:
-        {{- toYaml . | nindent 8 }}
+        {{- if .Values.worker.extraEnvs }}
+        env: {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraEnvs "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if or .Values.worker.extraEnvVarsCM .Values.worker.extraEnvVarsSecret }}
+        envFrom:
+          {{- if .Values.worker.extraEnvVarsCM }}
+          - configMapRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.worker.extraEnvVarsCM "context" $) }}
+          {{- end }}
+          {{- if .Values.worker.extraEnvVarsSecret }}
+          - secretRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.worker.extraEnvVarsSecret "context" $) }}
+          {{- end }}
         {{- end }}
         volumeMounts:
         - name: config
@@ -107,8 +111,8 @@ spec:
           subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
           readOnly: {{ .Values.worker.readOnlyPersistence | default false }}
         {{- end }}
-        {{- with .Values.worker.extraVolumeMounts }}
-        {{- toYaml . | nindent 8 }}
+        {{- if .Values.worker.extraVolumeMounts }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraVolumeMounts "context" $) | nindent 8 }}
         {{- end }}
         {{- if .Values.worker.resources }}
         resources: {{ toYaml .Values.worker.resources | nindent 10 }}
@@ -182,8 +186,8 @@ spec:
           claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
           readOnly: {{ .Values.worker.readOnlyPersistence | default false }}
       {{- end }}
-      {{- with .Values.worker.extraVolumes }}
-      {{- toYaml . | nindent 6 }}
+      {{- if .Values.worker.extraVolumes }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraVolumes "context" $) | nindent 6 }}
       {{- end }}
       {{- if .Values.worker.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.worker.nodeSelector "context" $) | nindent 8 }}

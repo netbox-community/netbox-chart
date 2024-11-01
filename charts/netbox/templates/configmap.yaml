@@ -82,7 +82,7 @@ data:
     MEDIA_ROOT: /opt/netbox/netbox/media
     {{- if .Values.storageBackend }}
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
-    STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
+    STORAGE_CONFIG: {{ toJson .Values.storageConfig }}
     {{- end }}
     METRICS_ENABLED: {{ toJson .Values.metrics.enabled }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
@@ -208,7 +208,7 @@ data:
 
   {{- range $index, $config := .Values.extraConfig }}
   {{- if $config.values }}
-  extra-{{ $index }}.yaml: |-
-    {{- toYaml $config.values | nindent 4 }}
+  {{ printf "extra-%s.yaml" $index }}: |-
+    {{- include "common.tplvalues.render" (dict "value" $config.values "context" $) | nindent 4 }}
   {{- end }}
   {{- end }}

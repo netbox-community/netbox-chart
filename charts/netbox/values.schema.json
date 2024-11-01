@@ -415,6 +415,16 @@
     "extraEnvs": {
       "type": "array"
     },
+    "extraEnvVarsCM": {
+      "type": "string",
+      "description": "Name of existing ConfigMap containing extra env vars",
+      "default": ""
+    },
+    "extraEnvVarsSecret": {
+      "type": "string",
+      "description": "Name of existing Secret containing extra env vars",
+      "default": ""
+    },
     "extraVolumeMounts": {
       "type": "array"
     },
@@ -477,6 +487,16 @@
         },
         "extraEnvs": {
           "type": "array"
+        },
+        "extraEnvVarsCM": {
+          "type": "string",
+          "description": "Name of existing ConfigMap containing extra env vars",
+          "default": ""
+        },
+        "extraEnvVarsSecret": {
+          "type": "string",
+          "description": "Name of existing Secret containing extra env vars",
+          "default": ""
         },
         "extraVolumeMounts": {
           "type": "array"
@@ -1396,6 +1416,16 @@
         },
         "extraEnvs": {
           "type": "array"
+        },
+        "extraEnvVarsCM": {
+          "type": "string",
+          "description": "Name of existing ConfigMap containing extra env vars",
+          "default": ""
+        },
+        "extraEnvVarsSecret": {
+          "type": "string",
+          "description": "Name of existing Secret containing extra env vars",
+          "default": ""
         },
         "extraVolumeMounts": {
           "type": "array"

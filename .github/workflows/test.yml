@@ -42,4 +42,6 @@ jobs:
         if: contains(matrix.action, 'install')
 
       - name: Run chart-testing (${{ matrix.action }})
-        run: ct ${{ matrix.action }} --config config.yaml --debug
+        run: ct ${{ matrix.action }} --config config.yaml --debug --helm-extra-set-args="$CT_HELM_EXTRA_SET_ARGS"
+        env:
+          CT_HELM_EXTRA_SET_ARGS: --set=host=${{ secrets.NETBOX_URL }} --set=auth.apiToken=${{ secrets.NETBOX_TOKEN }}

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: netbox
 version: 5.0.0-beta.144
-appVersion: "v4.1.6"
+appVersion: "v4.1.7"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool

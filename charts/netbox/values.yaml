@@ -7,6 +7,8 @@
 ## Please, note that this will override the image parameters, including dependencies, configured to use the global value
 ## Current available global container image parameters: imageRegistry, imagePullSecrets and storageClass
 
+# test
+
 ## @param global.imageRegistry Global container image registry
 ## @param global.imagePullSecrets Global container registry secret names as an array
 ## @param global.storageClass Global StorageClass for Persistent Volume(s)

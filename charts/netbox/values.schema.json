@@ -991,6 +991,87 @@
         },
         "userLastName": {
           "type": "string"
+        },
+        "ldap": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "serverUri": {
+              "type": "string"
+            },
+            "startTls": {
+              "type": "boolean"
+            },
+            "ignoreCertErrors": {
+              "type": "boolean"
+            },
+            "caCertData": {
+              "type": "string"
+            },
+            "bindDn": {
+              "type": "string"
+            },
+            "bindPassword": {
+              "type": "string"
+            },
+            "userDnTemplate": {
+              "type": "null"
+            },
+            "userSearchBaseDn": {
+              "type": "string"
+            },
+            "userSearchAttr": {
+              "type": "string"
+            },
+            "groupSearchBaseDn": {
+              "type": "string"
+            },
+            "groupSearchClass": {
+              "type": "string"
+            },
+            "groupType": {
+              "type": "string"
+            },
+            "requireGroupDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "isAdminDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "isSuperUserDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "findGroupPerms": {
+              "type": "boolean"
+            },
+            "mirrorGroups": {
+              "type": "boolean"
+            },
+            "mirrorGroupsExcept": {
+              "type": "null"
+            },
+            "cacheTimeout": {
+              "type": "integer"
+            },
+            "attrFirstName": {
+              "type": "string"
+            },
+            "attrLastName": {
+              "type": "string"
+            },
+            "attrMail": {
+              "type": "string"
+            }
+          }
         }
       },
       "type": "object"

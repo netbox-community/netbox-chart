@@ -136,6 +136,7 @@ Compile all warnings into a single message.
 {{- define "netbox.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages := append $messages (include "netbox.validateValues.postgresql" .) -}}
+{{- $messages := append $messages (include "netbox.validateValues.ldap" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 {{- if $message -}}
@@ -155,5 +156,16 @@ netbox: postgresql
         externalDatabase.host=DB_SERVER_HOST
         externalDatabase.database=DB_NAME
         externalDatabase.port=DB_SERVER_PORT
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate values of Netbox Chart - LDAP
+*/}}
+{{- define "netbox.validateValues.ldap" -}}
+{{- if and (has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends) (or (empty .Values.remoteAuth.ldap.serverUri) (empty .Values.remoteAuth.ldap.bindDn)) -}}
+netbox: remoteAuth.ldap
+    When LDAP backend is activated, you must provide all the necessary parameters.
+    Review the values under `remoteAuth.ldap`.
 {{- end -}}
 {{- end -}}

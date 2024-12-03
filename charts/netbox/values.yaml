@@ -222,6 +222,8 @@ email:
   # Timeout in seconds
   timeout: 10
   from: ""
+  existingSecretName: ""
+  existingSecretKey: email-password
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce
 # unique IP space within the global table (all prefixes and IP addresses not

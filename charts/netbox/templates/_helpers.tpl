@@ -102,7 +102,7 @@ Volumes that need to be mounted for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumes" -}}
 {{- range $index, $config := .Values.extraConfig }}
-- name: {{ printf "extra-config-%s" $index | quote }}
+- name: {{ printf "extra-config-%d" $index | quote }}
   {{- if $config.values }}
   configMap:
     name: {{ include "common.names.fullname" $ }}

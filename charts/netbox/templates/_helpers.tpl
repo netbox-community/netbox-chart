@@ -26,17 +26,6 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Name of the Secret that contains the email password
-*/}}
-{{- define "netbox.email.secret" -}}
-  {{- if .Values.email.existingSecretName }}
-    {{- .Values.email.existingSecretName }}
-  {{- else }}
-    {{- .Values.existingSecret | default (include "common.names.fullname" .) }}
-  {{- end }}
-{{- end }}
-
-{{/*
 Name of the key in Secret that contains the email password
 */}}
 {{- define "netbox.email.secretKey" -}}

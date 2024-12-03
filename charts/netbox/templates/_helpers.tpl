@@ -102,13 +102,13 @@ Volumes that need to be mounted for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumes" -}}
 {{- range $index, $config := .Values.extraConfig }}
-- name: {{ printf "extra-config-%s" $index | quote }}
+- name: {{ printf "extra-config-%d" $index | quote }}
   {{- if $config.values }}
   configMap:
     name: {{ include "common.names.fullname" $ }}
     items:
-    - key: extra-{{ $index }}.yaml
-      path: extra-{{ $index }}.yaml
+    - key: {{ printf "extra-%d.yaml" $index | quote }}
+      path: {{ printf "extra-%d.yaml" $index | quote }}
   {{- else if $config.configMap }}
   configMap:
     {{- include "common.tplvalues.render" (dict "value" $config.configMap "context" $) | nindent 4 }}

@@ -892,18 +892,11 @@
     "postgresql": {
       "title": "PostgreSQL chart configuration",
       "description": "https://artifacthub.io/packages/helm/bitnami/postgresql",
-      "allOf": [
-        {
-          "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/postgresql/values.schema.json"
-        },
-        {
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            }
-          }
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
-      ],
+      },
       "type": "object"
     },
     "powerFeedDefaultAmperage": {
@@ -933,18 +926,11 @@
     "redis": {
       "title": "Redis chart configuration",
       "description": "https://artifacthub.io/packages/helm/bitnami/redis",
-      "allOf": [
-        {
-          "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/redis/values.schema.json"
-        },
-        {
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            }
-          }
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
-      ],
+      },
       "type": "object"
     },
     "releaseCheck": {

@@ -124,7 +124,7 @@ Volume mounts for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumeMounts" -}}
 {{- range $index, $config := .Values.extraConfig }}
-- name: {{ printf "extra-config-%s" $index | quote }}
+- name: {{ printf "extra-config-%d" $index | quote }}
   mountPath: /run/config/extra/{{ $index }}
   readOnly: true
 {{- end }}

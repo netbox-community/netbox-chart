@@ -208,7 +208,7 @@ data:
 
   {{- range $index, $config := .Values.extraConfig }}
   {{- if $config.values }}
-  {{ printf "extra-%s.yaml" $index }}: |-
+  {{ printf "extra-%d.yaml" $index }}: |-
     {{- include "common.tplvalues.render" (dict "value" $config.values "context" $) | nindent 4 }}
   {{- end }}
   {{- end }}

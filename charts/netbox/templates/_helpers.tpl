@@ -26,6 +26,17 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Name of the key in Secret that contains the email password
+*/}}
+{{- define "netbox.email.secretKey" -}}
+  {{- if .Values.email.existingSecretName -}}
+    {{- .Values.email.existingSecretKey -}}
+  {{- else -}}
+    email_password
+  {{- end -}}
+{{- end }}
+
+{{/*
 Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}

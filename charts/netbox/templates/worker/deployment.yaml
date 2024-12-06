@@ -132,14 +132,17 @@ spec:
           - secret:
               name: {{ include "common.secrets.name" (dict "existingSecret" .Values.existingSecret "defaultNameSuffix" "config" "context" $) }}
               items:
-              - key: email_password
-                path: email_password
               - key: secret_key
                 path: secret_key
               {{- if has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends }}
               - key: ldap_bind_password
                 path: ldap_bind_password
               {{- end }}
+          - secret:
+              name: {{ include "common.secrets.name" (dict "existingSecret" (default .Values.email.existingSecretName .Values.existingSecret) "defaultNameSuffix" "config" "context" $) }}
+              items:
+              - key: {{ include "netbox.email.secretKey" . | quote }}
+                path: email_password
           - secret:
               name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
               items:

@@ -209,7 +209,7 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.existingSecretName`           | Fetch password for external PostgreSQL from a different `Secret`    | `""`                                         |
 | `externalDatabase.existingSecretKey`            | Key to fetch the password in the above `Secret`                     | `postgresql-password`                        |
 | `externalDatabase.sslMode`                      | PostgreSQL client SSL Mode setting                                  | `prefer`                                     |
-| `externalDatabase.sslRootCert`                  | PostgreSQL client SSL Root Certificate setting                      | `null`                                       |
+| `externalDatabase.sslRootCert`                  | PostgreSQL client SSL Root Certificate setting                      | `""`                                         |
 | `externalDatabase.connMaxAge`                   | The lifetime of a database connection, as an integer of seconds     | `300`                                        |
 | `externalDatabase.disableServerSideCursors`     | Disable the use of server-side cursors transaction pooling          | `false`                                      |
 | `externalDatabase.targetSessionAttrs`           | Determines whether the session must have certain properties         | `read-write`                                 |

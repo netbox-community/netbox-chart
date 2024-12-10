@@ -1028,6 +1028,7 @@ externalDatabase:
 
   # The following settings also apply when using the bundled PostgreSQL chart:
   sslMode: prefer
+  sslRootCert: ""
   connMaxAge: 300
   disableServerSideCursors: false
   targetSessionAttrs: read-write

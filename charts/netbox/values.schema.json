@@ -397,6 +397,9 @@
         "sslMode": {
           "type": "string"
         },
+        "sslRootCert": {
+          "type": "string"
+        },
         "targetSessionAttrs": {
           "type": "string"
         },

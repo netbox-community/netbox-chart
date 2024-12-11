@@ -402,7 +402,7 @@ remoteAuth:
       - CN=Domain Admins,CN=Users,DC=example,dc=com
     findGroupPerms: true
     mirrorGroups: true
-    mirrorGroupsExcept: null
+    mirrorGroupsExcept: ""
     cacheTimeout: 3600
     attrFirstName: givenName
     attrLastName: sn

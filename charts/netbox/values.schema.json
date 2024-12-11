@@ -1063,7 +1063,7 @@
               "type": "boolean"
             },
             "mirrorGroupsExcept": {
-              "type": "null"
+              "type": "string"
             },
             "cacheTimeout": {
               "type": "integer"
@@ -1364,7 +1364,7 @@
       "type": "object"
     },
     "terminationGracePeriodSeconds": {
-      "type": "null"
+      "type": ["null", "number"]
     },
     "test": {
       "properties": {
@@ -1610,7 +1610,7 @@
           "type": "array"
         },
         "terminationGracePeriodSeconds": {
-          "type": "null"
+          "type": ["null", "number"]
         },
         "tolerations": {
           "type": "array"

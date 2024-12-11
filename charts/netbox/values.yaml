@@ -387,7 +387,7 @@ remoteAuth:
     caCertData: ""
     bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
     bindPassword: ""
-    userDnTemplate: null
+    userDnTemplate: ""
     userSearchBaseDn: OU=Users,OU=MyCompany,DC=example,dc=com
     userSearchAttr: sAMAccountName
     groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com

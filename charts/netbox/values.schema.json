@@ -1021,7 +1021,7 @@
               "type": "string"
             },
             "userDnTemplate": {
-              "type": "null"
+              "type": "string"
             },
             "userSearchBaseDn": {
               "type": "string"

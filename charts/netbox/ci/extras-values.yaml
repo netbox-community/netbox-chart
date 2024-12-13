@@ -1,0 +1,30 @@
+extraConfig:
+  - values:
+    DUNGEON: synth
+    QUEEN: "will rock you"
+  - configMap:
+    name: extraconfig-cm
+    items: []
+    optional: true
+  - secret:
+    name: extraconfig-secret
+    secretName: "not so secret"
+  - volumes:
+      - name: extraconfig-volume
+        emptyDir:
+          medium: Memory
+          sizeLimit: 2Mi
+
+extraVolumes:
+  - name: test-volume
+    emptyDir:
+      medium: Memory
+      sizeLimit: 2Mi
+extraVolumeMounts:
+  - name: test-volume
+    mountPath: /mnt/test
+    readOnly: false
+podLabels:
+  mylabel: "rules"
+podAnnotations:
+  myannotation: "sucks"

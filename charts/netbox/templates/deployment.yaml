@@ -97,7 +97,7 @@ spec:
               fieldPath: status.podIP
         {{- end }}
         {{- if .Values.extraEnvs }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvs "context" $) | nindent 10 }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvs "context" $) | nindent 8 }}
         {{- end }}
         {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
         envFrom:

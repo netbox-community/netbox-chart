@@ -1250,10 +1250,10 @@ housekeeping:
   schedule: "0 0 * * *"
   ## @param housekeeping.historyLimit Number of successful finished jobs to retain
   ##
-  historyLimit: 5
+  successfulJobsHistoryLimit: 5
   ## @param housekeeping.failedHistoryLimit Number of failed finished jobs to retain
   ##
-  failedHistoryLimit: 5
+  failedJobsHistoryLimit: 5
   ## @param housekeeping.command The command to execute in the housekeeping job
   ## To append another command, e.g. in order to shut down a DB sidecar container, use something like
   ##   - /bin/bash

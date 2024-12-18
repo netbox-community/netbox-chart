@@ -1027,11 +1027,14 @@ externalDatabase:
   existingSecretKey: postgresql-password
 
   # The following settings also apply when using the bundled PostgreSQL chart:
-  sslMode: prefer
-  sslRootCert: ""
   connMaxAge: 300
   disableServerSideCursors: false
-  targetSessionAttrs: read-write
+  ## @param externalDatabase.options Additional PostgreSQL client parameters
+  ## Ref: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
+  ##
+  options:
+    sslmode: "prefer"
+    target_session_attrs: "read-write"
 
 ## Redis chart configuration
 ## https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml

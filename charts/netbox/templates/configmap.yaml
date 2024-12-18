@@ -27,12 +27,7 @@ data:
       NAME: {{ .Values.externalDatabase.database | quote }}
       PORT: {{ .Values.externalDatabase.port | int }}
       {{- end }}
-      OPTIONS:
-        sslmode: {{ .Values.externalDatabase.sslMode | quote }}
-        {{- if .Values.externalDatabase.sslRootCert }}
-        sslrootcert: {{ .Values.externalDatabase.sslRootCert | quote }}
-        {{- end}}
-        target_session_attrs: {{ .Values.externalDatabase.targetSessionAttrs | default "read-write" | quote }}
+      OPTIONS: {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.options "context" $) | nindent 8 }}
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
       DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 

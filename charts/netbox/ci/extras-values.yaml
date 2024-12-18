@@ -1,14 +1,14 @@
 extraConfig:
   - values:
-    DUNGEON: synth
-    QUEEN: "will rock you"
+      DUNGEON: synth
+      QUEEN: "will rock you"
   - configMap:
-    name: extraconfig-cm
-    items: []
-    optional: true
+      name: extraconfig-cm
+      items: []
+      optional: true
   - secret:
-    name: extraconfig-secret
-    secretName: "not so secret"
+      name: extraconfig-secret
+      secretName: "not so secret"
   - volumes:
       - name: extraconfig-volume
         emptyDir:
@@ -27,4 +27,4 @@ extraVolumeMounts:
 podLabels:
   mylabel: "rules"
 podAnnotations:
-  myannotation: "sucks"
+  myannotation: "rocks"

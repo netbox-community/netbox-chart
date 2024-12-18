@@ -1,7 +1,7 @@
 owner: netbox-community
 repo: netbox-chart
 remote: origin
-target-branch: develop
+target-branch: main
 sign: true
 key: builds@netboxlabs.com
 keyring: ~/.cr-gpg/secring.gpg

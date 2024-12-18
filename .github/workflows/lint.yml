@@ -4,9 +4,9 @@ name: Lint Code Base
 
 on:
   push:
-    branches-ignore: [develop]
+    branches-ignore: [main]
   pull_request:
-    branches: [develop]
+    branches: [main]
 
 permissions:
   contents: read
@@ -27,7 +27,7 @@ jobs:
         uses: super-linter/super-linter/slim@v7.2.1
         env:
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: develop
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIX_MARKDOWN_PRETTIER: false
           VALIDATE_MARKDOWN_PRETTIER: false

@@ -394,11 +394,8 @@
         "port": {
           "type": "integer"
         },
-        "sslMode": {
-          "type": "string"
-        },
-        "targetSessionAttrs": {
-          "type": "string"
+        "options": {
+          "type": "object"
         },
         "username": {
           "type": "string"

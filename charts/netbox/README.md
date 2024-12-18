@@ -208,10 +208,9 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.password`                     | Password for external PostgreSQL (see also `existingSecret`)        | `""`                                         |
 | `externalDatabase.existingSecretName`           | Fetch password for external PostgreSQL from a different `Secret`    | `""`                                         |
 | `externalDatabase.existingSecretKey`            | Key to fetch the password in the above `Secret`                     | `postgresql-password`                        |
-| `externalDatabase.sslMode`                      | PostgreSQL client SSL Mode setting                                  | `prefer`                                     |
 | `externalDatabase.connMaxAge`                   | The lifetime of a database connection, as an integer of seconds     | `300`                                        |
 | `externalDatabase.disableServerSideCursors`     | Disable the use of server-side cursors transaction pooling          | `false`                                      |
-| `externalDatabase.targetSessionAttrs`           | Determines whether the session must have certain properties         | `read-write`                                 |
+| `externalDatabase.options`                      | Additional PostgreSQL client parameters             | `{}`                                            |
 | `redis.enabled`                                 | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
 | `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
 | `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |

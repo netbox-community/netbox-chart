@@ -1,24 +1,29 @@
-# Migrating from bootc/netbox-chart & NetBox version 3.2.8 to netbox-community/netbox-chart with the latest version
+# Migration Guide
 
-This doc explains how to migrate from the older bootc/netbox-chart with NetBox version 3.2.8 and bundled Postgres 11 to the official chart, netbox-community/netbox-chart with the latest version and using an external Postgres instance instead. 
+For major version updates (5.0.0, 6.0.0, etc.), see the release notes for detailed migration information.
 
-1. Backup database:
-	1. Attach to the PostgreSQL pod and dump the database
-	2. `pg_dump --format=custom -cU postgres -d "dbname=netbox" > /bitnami/postgresql/netbox.sql`
-2. Then I manually update the NetBox image tag to version 3.5.9 as this is the latest version that supports Postgres 11
-	1. For this migration to run succesfully I had to provide env variable "NETBOX_DELETE_LEGACY_DATA" and set the value to 1 
-3. Restore the database dump into the external Postgres 12 database (In my case I use the Postgres Operator to manage this)
-	1. `pg_restore -v -Fc -c -U netbox -d netbox < /bitnami/postgresql/netbox.sql`
-4. Once running on 3.5.9 I changed the database connection to the externally running Postgres 12 database and restarted NetBox and let all the migrations run as normal
-5. Once running I started upgrading NetBox further (Still by updating the image tag) going the recommended version increments of:
-	1. 3.5.9 > 3.6.9
-	2. 3.6.9 > 3.7.8
-	3. 3.7.8 > 4.0.2
-	4. 4.0.2 > To the latest version
-	5. Make sure to let the migration finish on each increment. Check https://netboxlabs.com/docs/netbox/en/stable/installation/upgrading/ for more details
-6. Once running on a 4.x.x version it was time to switch over to using the new and official chart: oci://ghcr.io/netbox-community/netbox-chart/netbox 
-	1. In my case, using ArgoCD this did not work so I had to use the https version, more details regarding this can be seen here: https://github.com/netbox-community/netbox-chart/issues/252
-7. Once NetBox is running by being deployed from this chart I had to fix a few things:
-	1. In the Redis chart values.yaml I had to update the 'clusterDomain' parameter (Only applicable if you are using the non default one, e.g **not** cluster.local)
-	2. The remoteAuth backend parameters changed slightly and is now in a list format instead (Only applicable if using remoteAuth)
-    3. Optional, but I also upgraded Postgres from v12 to v16 without any problems  
+## Back Up PostgreSQL
+
+The first thing you should do is back up your PostgreSQL database.
+This way you can always go back to your previous install version if anything goes wrong.
+
+You can find your PostgreSQL pod by running `kubectl get pods -A | grep postgres` and then use `kubectl exec` to run `psql` or `pg_dump` from it.
+
+## Upgrade PostgreSQL If Necessary
+
+As of NetBox 3.6.x, NetBox requires PostgreSQL 12 or higher.
+It is recommmended that you upgrade to the latest supported PostgreSQL version.
+
+If you are using the built-in PostgreSQL chart, you may need to update it separately, or update to the latest NetBox chart and dump your data back into it before NetBox will start.
+
+## Upgrade NetBox
+
+It is always recommended that you upgrade NetBox one major version at a time.
+For example, if you are currently running NetBox 3.5.2 inside your chart, you would upgrade to the last 3.6.x version, then 3.7.x, and so on.
+
+This ensures that migrations all run smoothly between versions.
+
+## Check for Breaking Changes
+
+Always look at the release notes for breaking changes.
+There may be necessary changes to your `values.yaml` to ensure your configuration still works.

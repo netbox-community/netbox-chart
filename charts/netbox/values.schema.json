@@ -394,13 +394,10 @@
         "port": {
           "type": "integer"
         },
-        "sslMode": {
-          "type": "string"
+        "options": {
+          "type": "object"
         },
         "sslRootCert": {
-          "type": "string"
-        },
-        "targetSessionAttrs": {
           "type": "string"
         },
         "username": {

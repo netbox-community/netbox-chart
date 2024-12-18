@@ -12,7 +12,7 @@ You can find your PostgreSQL pod by running `kubectl get pods -A | grep postgres
 ## Upgrade PostgreSQL If Necessary
 
 As of NetBox 3.6.x, NetBox requires PostgreSQL 12 or higher.
-It is recommmended that you upgrade to the latest supported PostgreSQL version.
+It is recommended that you upgrade to the latest supported PostgreSQL version.
 
 If you are using the built-in PostgreSQL chart, you may need to update it separately, or update to the latest NetBox chart and dump your data back into it before NetBox will start.
 

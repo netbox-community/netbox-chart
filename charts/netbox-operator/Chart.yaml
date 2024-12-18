@@ -21,7 +21,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: netbox
-    version: ^5.0.0-beta.133
+    version: ^5.0.0-beta9
     repository: oci://ghcr.io/netbox-community/netbox-chart
     condition: netbox.enabled
 annotations:

@@ -1,12 +1,13 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta.174
+version: 5.0.0
+# renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.1.8"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
 home: https://netbox.dev/
-icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo.svg
+icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
 sources:
   - https://github.com/netbox-community/netbox
   - https://github.com/netbox-community/netbox-chart
@@ -34,3 +35,9 @@ annotations:
   artifacthub.io/links: |
     - name: Upstream Project
       url: https://github.com/netbox-community/netbox
+  artifacthub.io/changes: |
+    - kind: changed
+      description: New release
+      links:
+        - name: Changelog on GitHub Releases
+          url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-

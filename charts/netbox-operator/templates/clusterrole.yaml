@@ -1,0 +1,120 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddressclaims
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddressclaims/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddressclaims/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddresses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddresses/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - ipaddresses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixclaims
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixclaims/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixclaims/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixes/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - netbox.dev
+    resources:
+      - prefixes/status
+    verbs:
+      - get
+      - patch
+      - update

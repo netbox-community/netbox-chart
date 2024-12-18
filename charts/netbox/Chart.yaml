@@ -1,7 +1,7 @@
 apiVersion: v2
 name: netbox
-version: 5.0.0-beta.164
-appVersion: "v4.1.7"
+version: 5.0.0-beta.172
+appVersion: "v4.1.8"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
@@ -22,11 +22,11 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^16.3.0
+    version: ^16.3.2
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: ^20.5.0
+    version: ^20.6.0
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
 annotations:

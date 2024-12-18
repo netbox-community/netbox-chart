@@ -387,7 +387,7 @@ remoteAuth:
     caCertData: ""
     bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
     bindPassword: ""
-    userDnTemplate: null
+    userDnTemplate: ""
     userSearchBaseDn: OU=Users,OU=MyCompany,DC=example,dc=com
     userSearchAttr: sAMAccountName
     groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com
@@ -402,7 +402,7 @@ remoteAuth:
       - CN=Domain Admins,CN=Users,DC=example,dc=com
     findGroupPerms: true
     mirrorGroups: true
-    mirrorGroupsExcept: null
+    mirrorGroupsExcept: ""
     cacheTimeout: 3600
     attrFirstName: givenName
     attrLastName: sn

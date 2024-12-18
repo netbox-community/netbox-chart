@@ -397,9 +397,6 @@
         "options": {
           "type": "object"
         },
-        "sslRootCert": {
-          "type": "string"
-        },
         "username": {
           "type": "string"
         }

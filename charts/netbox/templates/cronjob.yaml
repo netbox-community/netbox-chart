@@ -22,22 +22,18 @@ spec:
     spec:
       template:
         metadata:
-          {{- with .Values.housekeeping.podAnnotations }}
+          {{- if .Values.housekeeping.podAnnotations }}
           annotations:
-            {{- toYaml . | nindent 12 }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.housekeeping.podAnnotations "context" $ ) | nindent 12 }}
           {{- end }}
-          labels:
-            {{- include "common.labels.matchLabels" . | nindent 12 }}
+          labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.housekeeping.podLabels "context" $ ) | nindent 12 }}
             app.kubernetes.io/component: housekeeping
-            {{- with .Values.housekeeping.podLabels }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
         spec:
           {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 10 }}
           serviceAccountName: {{ include "netbox.serviceAccountName" . }}
           automountServiceAccountToken: {{ .Values.housekeeping.automountServiceAccountToken }}
           {{- if .Values.housekeeping.podSecurityContext.enabled }}
-          securityContext: {{- omit .Values.housekeeping.podSecurityContext "enabled" | toYaml | nindent 12 }}
+          securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.housekeeping.podSecurityContext "context" $) | nindent 12 }}
           {{- end }}
           {{- if .Values.housekeeping.initContainers }}
           initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.initContainers "context" $) | trim | nindent 12 }}
@@ -45,7 +41,7 @@ spec:
           containers:
           - name: {{ .Chart.Name }}-housekeeping
             {{- if .Values.housekeeping.securityContext.enabled }}
-            securityContext: {{- omit .Values.housekeeping.securityContext "enabled" | toYaml | nindent 14 }}
+            securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.housekeeping.securityContext "context" $) | nindent 14 }}
             {{- end }}
             image: {{ include "netbox.image" . | quote }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -55,9 +51,19 @@ spec:
             {{- if .Values.housekeeping.args }}
             args: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.args "context" $) | nindent 14 }}
             {{- end }}
-            {{- with .Values.housekeeping.extraEnvs }}
-            env:
-            {{- toYaml . | nindent 12 }}
+            {{- if .Values.housekeeping.extraEnvs }}
+            env: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.extraEnvs "context" $) | nindent 14 }}
+            {{- end }}
+            {{- if or .Values.housekeeping.extraEnvVarsCM .Values.housekeeping.extraEnvVarsSecret }}
+            envFrom:
+              {{- if .Values.housekeeping.extraEnvVarsCM }}
+              - configMapRef:
+                  name: {{ include "common.tplvalues.render" (dict "value" .Values.housekeeping.extraEnvVarsCM "context" $) }}
+              {{- end }}
+              {{- if .Values.housekeeping.extraEnvVarsSecret }}
+              - secretRef:
+                  name: {{ include "common.tplvalues.render" (dict "value" .Values.housekeeping.extraEnvVarsSecret "context" $) }}
+              {{- end }}
             {{- end }}
             volumeMounts:
             - name: config
@@ -88,18 +94,21 @@ spec:
             - name: media
               mountPath: /opt/netbox/netbox/media
               subPath: {{ .Values.persistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- if .Values.reportsPersistence.enabled }}
             - name: reports
               mountPath: /opt/netbox/netbox/reports
               subPath: {{ .Values.reportsPersistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- end }}
             {{- if .Values.scriptsPersistence.enabled }}
             - name: scripts
               mountPath: /opt/netbox/netbox/scripts
               subPath: {{ .Values.scriptsPersistence.subPath | default "" | quote }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- end }}
-            {{- with .Values.housekeeping.extraVolumeMounts }}
-            {{- toYaml . | nindent 12 }}
+            {{- if .Values.housekeeping.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
             {{- if .Values.housekeeping.resources }}
             resources: {{ toYaml .Values.housekeeping.resources | nindent 14 }}
@@ -119,14 +128,17 @@ spec:
               - secret:
                   name: {{ include "common.secrets.name" (dict "existingSecret" .Values.existingSecret "defaultNameSuffix" "config" "context" $) }}
                   items:
-                  - key: email_password
-                    path: email_password
                   - key: secret_key
                     path: secret_key
                   {{- if has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends }}
                   - key: ldap_bind_password
                     path: ldap_bind_password
                   {{- end }}
+              - secret:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" (default .Values.email.existingSecretName .Values.existingSecret) "defaultNameSuffix" "config" "context" $) }}
+                  items:
+                  - key: {{ include "netbox.email.secretKey" . | quote }}
+                    path: email_password
               - secret:
                   name: {{ include "netbox.postgresql.secret" . | quote }}
                   items:
@@ -150,6 +162,7 @@ spec:
             {{- if .Values.persistence.enabled }}
             persistentVolumeClaim:
               claimName: {{ .Values.persistence.existingClaim | default (printf "%s-media" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
             {{- else }}
             emptyDir: {}
             {{- end }}
@@ -157,26 +170,25 @@ spec:
           - name: reports
             persistentVolumeClaim:
               claimName: {{ .Values.reportsPersistence.existingClaim | default (printf "%s-reports" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
           {{- end }}
           {{- if .Values.scriptsPersistence.enabled }}
           - name: scripts
             persistentVolumeClaim:
               claimName: {{ .Values.scriptsPersistence.existingClaim | default (printf "%s-scripts" (include "common.names.fullname" .)) }}
+              readOnly: {{ .Values.housekeeping.readOnlyPersistence | default false }}
           {{- end }}
-          {{- with .Values.housekeeping.extraVolumes }}
-          {{- toYaml . | nindent 10 }}
+          {{- if .Values.housekeeping.extraVolumes }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.extraVolumes "context" $) | nindent 10 }}
           {{- end }}
-          {{- with .Values.housekeeping.nodeSelector }}
-          nodeSelector:
-            {{- toYaml . | nindent 12 }}
+          {{- if .Values.housekeeping.nodeSelector }}
+          nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.housekeeping.nodeSelector "context" $) | nindent 12 }}
           {{- end }}
-          {{- with .Values.housekeeping.affinity }}
-          affinity:
-            {{- toYaml . | nindent 12 }}
+          {{- if .Values.housekeeping.affinity }}
+          affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.housekeeping.affinity "context" $) | nindent 12 }}
           {{- end }}
-          {{- with .Values.housekeeping.tolerations }}
-          tolerations:
-            {{- toYaml . | nindent 12 }}
+          {{- if .Values.housekeeping.tolerations }}
+          tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.housekeeping.tolerations "context" .) | nindent 12 }}
           {{- end }}
           restartPolicy: {{ .Values.housekeeping.restartPolicy }}
 {{- end -}}

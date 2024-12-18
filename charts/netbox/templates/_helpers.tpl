@@ -26,6 +26,17 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Name of the key in Secret that contains the email password
+*/}}
+{{- define "netbox.email.secretKey" -}}
+  {{- if .Values.email.existingSecretName -}}
+    {{- .Values.email.existingSecretKey -}}
+  {{- else -}}
+    email_password
+  {{- end -}}
+{{- end }}
+
+{{/*
 Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}
@@ -102,19 +113,19 @@ Volumes that need to be mounted for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumes" -}}
 {{- range $index, $config := .Values.extraConfig }}
-- name: extra-config-{{ $index }}
+- name: {{ printf "extra-config-%d" $index | quote }}
   {{- if $config.values }}
   configMap:
     name: {{ include "common.names.fullname" $ }}
     items:
-    - key: extra-{{ $index }}.yaml
-      path: extra-{{ $index }}.yaml
+    - key: {{ printf "extra-%d.yaml" $index | quote }}
+      path: {{ printf "extra-%d.yaml" $index | quote }}
   {{- else if $config.configMap }}
   configMap:
-    {{- toYaml $config.configMap | nindent 4 }}
+    {{- include "common.tplvalues.render" (dict "value" $config.configMap "context" $) | nindent 4 }}
   {{- else if $config.secret }}
   secret:
-    {{- toYaml $config.secret | nindent 4 }}
+    {{- include "common.tplvalues.render" (dict "value" $config.secret "context" $) | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
@@ -124,7 +135,7 @@ Volume mounts for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumeMounts" -}}
 {{- range $index, $config := .Values.extraConfig }}
-- name: extra-config-{{ $index }}
+- name: {{ printf "extra-config-%d" $index | quote }}
   mountPath: /run/config/extra/{{ $index }}
   readOnly: true
 {{- end }}
@@ -136,6 +147,7 @@ Compile all warnings into a single message.
 {{- define "netbox.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages := append $messages (include "netbox.validateValues.postgresql" .) -}}
+{{- $messages := append $messages (include "netbox.validateValues.ldap" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 {{- if $message -}}
@@ -155,5 +167,16 @@ netbox: postgresql
         externalDatabase.host=DB_SERVER_HOST
         externalDatabase.database=DB_NAME
         externalDatabase.port=DB_SERVER_PORT
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate values of Netbox Chart - LDAP
+*/}}
+{{- define "netbox.validateValues.ldap" -}}
+{{- if and (has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends) (or (empty .Values.remoteAuth.ldap.serverUri) (empty .Values.remoteAuth.ldap.bindDn)) -}}
+netbox: remoteAuth.ldap
+    When LDAP backend is activated, you must provide all the necessary parameters.
+    Review the values under `remoteAuth.ldap`.
 {{- end -}}
 {{- end -}}

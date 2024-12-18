@@ -24,15 +24,16 @@ jobs:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: super-linter/super-linter/slim@v7.1.0
+        uses: super-linter/super-linter/slim@v7.2.1
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIX_MARKDOWN_PRETTIER: false
           VALIDATE_JSCPD: false
           VALIDATE_PYTHON_MYPY: false
           VALIDATE_PYTHON_PYINK: false
-          FILTER_REGEX_EXCLUDE: charts/\w+/templates/.*\.yaml
+          FILTER_REGEX_EXCLUDE: charts/[^/]+/[^/]+/.*\.yaml
           LINTER_RULES_PATH: /
           PYTHON_BLACK_CONFIG_FILE: pyproject.toml
           PYTHON_PYLINT_CONFIG_FILE: pyproject.toml

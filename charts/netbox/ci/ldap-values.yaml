@@ -10,7 +10,7 @@ remoteAuth:
     caCertData: ""
     bindDn: "cn=read-only-admin,dc=example,dc=com"
     bindPassword: password
-    userDnTemplate: null
+    userDnTemplate: ""
     userSearchBaseDn: "dc=example,dc=com"
     userSearchAttr: "sAMAccountName"
     groupSearchBaseDn: "dc=example,dc=com"
@@ -20,7 +20,7 @@ remoteAuth:
       - "cn=read-only-admin,dc=example,dc=com"
     findGroupPerms: true
     mirrorGroups: true
-    mirrorGroupsExcept: null
+    mirrorGroupsExcept: ""
     cacheTimeout: 3600
     isAdminDn:
       - "ou=mathematicians,cn=read-only-admin,dc=example,dc=com"

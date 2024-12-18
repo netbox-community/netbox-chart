@@ -27,9 +27,7 @@ data:
       NAME: {{ .Values.externalDatabase.database | quote }}
       PORT: {{ .Values.externalDatabase.port | int }}
       {{- end }}
-      OPTIONS:
-        sslmode: {{ .Values.externalDatabase.sslMode | quote }}
-        target_session_attrs: {{ .Values.externalDatabase.targetSessionAttrs | default "read-write" | quote }}
+      OPTIONS: {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.options "context" $) | nindent 8 }}
       CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
       DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 
@@ -82,7 +80,7 @@ data:
     MEDIA_ROOT: /opt/netbox/netbox/media
     {{- if .Values.storageBackend }}
     STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
-    STORAGE_CONFIG:  {{ toJson .Values.storageConfig }}
+    STORAGE_CONFIG: {{ toJson .Values.storageConfig }}
     {{- end }}
     METRICS_ENABLED: {{ toJson .Values.metrics.enabled }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
@@ -208,7 +206,7 @@ data:
 
   {{- range $index, $config := .Values.extraConfig }}
   {{- if $config.values }}
-  extra-{{ $index }}.yaml: |-
-    {{- toYaml $config.values | nindent 4 }}
+  {{ printf "extra-%d.yaml" $index }}: |-
+    {{- include "common.tplvalues.render" (dict "value" $config.values "context" $) | nindent 4 }}
   {{- end }}
   {{- end }}

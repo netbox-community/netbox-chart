@@ -13,9 +13,10 @@ Do you have any questions?
 Before opening an issue on GitHub, please join [our Slack](https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ)
 and ask for help in the [`#netbox-chart`](https://netdev-community.slack.com/archives/C01Q6B100R2) channel.
 
-|               Chart               |                                                                                                           Version                                                                                                            |
-| :-------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [`netbox/netbox`](charts/netbox/) | [![Chart Version](https://img.shields.io/badge/dynamic/json?label=netbox&query=version&url=https%3A%2F%2Fartifacthub.io%2Fapi%2Fv1%2Fpackages%2Fhelm%2Fnetbox%2Fnetbox)](https://artifacthub.io/packages/helm/netbox/netbox) |
+|                        Chart                        |                                                                                                                    Version                                                                                                                     |
+| :-------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|          [`netbox/netbox`](charts/netbox/)          |          [![Chart Version](https://img.shields.io/badge/dynamic/json?label=netbox&query=version&url=https%3A%2F%2Fartifacthub.io%2Fapi%2Fv1%2Fpackages%2Fhelm%2Fnetbox%2Fnetbox)](https://artifacthub.io/packages/helm/netbox/netbox)          |
+| [`netbox/netbox-operator`](charts/netbox-operator/) | [![Chart Version](https://img.shields.io/badge/dynamic/json?label=netbox&query=version&url=https%3A%2F%2Fartifacthub.io%2Fapi%2Fv1%2Fpackages%2Fhelm%2Fnetbox%2Fnetbox-operator)](https://artifacthub.io/packages/helm/netbox/netbox-operator) |
 
 ## Quickstart
 

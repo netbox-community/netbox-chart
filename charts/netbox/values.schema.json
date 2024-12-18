@@ -394,11 +394,8 @@
         "port": {
           "type": "integer"
         },
-        "sslMode": {
-          "type": "string"
-        },
-        "targetSessionAttrs": {
-          "type": "string"
+        "options": {
+          "type": "object"
         },
         "username": {
           "type": "string"
@@ -414,6 +411,16 @@
     },
     "extraEnvs": {
       "type": "array"
+    },
+    "extraEnvVarsCM": {
+      "type": "string",
+      "description": "Name of existing ConfigMap containing extra env vars",
+      "default": ""
+    },
+    "extraEnvVarsSecret": {
+      "type": "string",
+      "description": "Name of existing Secret containing extra env vars",
+      "default": ""
     },
     "extraVolumeMounts": {
       "type": "array"
@@ -478,6 +485,16 @@
         "extraEnvs": {
           "type": "array"
         },
+        "extraEnvVarsCM": {
+          "type": "string",
+          "description": "Name of existing ConfigMap containing extra env vars",
+          "default": ""
+        },
+        "extraEnvVarsSecret": {
+          "type": "string",
+          "description": "Name of existing Secret containing extra env vars",
+          "default": ""
+        },
         "extraVolumeMounts": {
           "type": "array"
         },
@@ -524,6 +541,9 @@
             }
           },
           "type": "object"
+        },
+        "readOnlyPersistence": {
+          "type": "boolean"
         },
         "resources": {
           "$ref": "#/$defs/resources"
@@ -632,7 +652,7 @@
               },
               "paths": {
                 "items": {
-                  "type": "string"
+                  "type": ["string", "object"]
                 },
                 "type": "array"
               }
@@ -869,18 +889,11 @@
     "postgresql": {
       "title": "PostgreSQL chart configuration",
       "description": "https://artifacthub.io/packages/helm/bitnami/postgresql",
-      "allOf": [
-        {
-          "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/postgresql/values.schema.json"
-        },
-        {
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            }
-          }
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
-      ],
+      },
       "type": "object"
     },
     "powerFeedDefaultAmperage": {
@@ -910,18 +923,11 @@
     "redis": {
       "title": "Redis chart configuration",
       "description": "https://artifacthub.io/packages/helm/bitnami/redis",
-      "allOf": [
-        {
-          "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/redis/values.schema.json"
-        },
-        {
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            }
-          }
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
-      ],
+      },
       "type": "object"
     },
     "releaseCheck": {
@@ -988,6 +994,87 @@
         },
         "userLastName": {
           "type": "string"
+        },
+        "ldap": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "serverUri": {
+              "type": "string"
+            },
+            "startTls": {
+              "type": "boolean"
+            },
+            "ignoreCertErrors": {
+              "type": "boolean"
+            },
+            "caCertData": {
+              "type": "string"
+            },
+            "bindDn": {
+              "type": "string"
+            },
+            "bindPassword": {
+              "type": "string"
+            },
+            "userDnTemplate": {
+              "type": "string"
+            },
+            "userSearchBaseDn": {
+              "type": "string"
+            },
+            "userSearchAttr": {
+              "type": "string"
+            },
+            "groupSearchBaseDn": {
+              "type": "string"
+            },
+            "groupSearchClass": {
+              "type": "string"
+            },
+            "groupType": {
+              "type": "string"
+            },
+            "requireGroupDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "isAdminDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "isSuperUserDn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "findGroupPerms": {
+              "type": "boolean"
+            },
+            "mirrorGroups": {
+              "type": "boolean"
+            },
+            "mirrorGroupsExcept": {
+              "type": "string"
+            },
+            "cacheTimeout": {
+              "type": "integer"
+            },
+            "attrFirstName": {
+              "type": "string"
+            },
+            "attrLastName": {
+              "type": "string"
+            },
+            "attrMail": {
+              "type": "string"
+            }
+          }
         }
       },
       "type": "object"
@@ -1274,7 +1361,7 @@
       "type": "object"
     },
     "terminationGracePeriodSeconds": {
-      "type": "null"
+      "type": ["null", "number"]
     },
     "test": {
       "properties": {
@@ -1394,6 +1481,16 @@
         "extraEnvs": {
           "type": "array"
         },
+        "extraEnvVarsCM": {
+          "type": "string",
+          "description": "Name of existing ConfigMap containing extra env vars",
+          "default": ""
+        },
+        "extraEnvVarsSecret": {
+          "type": "string",
+          "description": "Name of existing Secret containing extra env vars",
+          "default": ""
+        },
         "extraVolumeMounts": {
           "type": "array"
         },
@@ -1443,6 +1540,9 @@
         },
         "replicaCount": {
           "type": "integer"
+        },
+        "readOnlyPersistence": {
+          "type": "boolean"
         },
         "resources": {
           "properties": {},
@@ -1507,7 +1607,7 @@
           "type": "array"
         },
         "terminationGracePeriodSeconds": {
-          "type": "null"
+          "type": ["null", "number"]
         },
         "tolerations": {
           "type": "array"

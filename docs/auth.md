@@ -48,7 +48,7 @@ extraVolumeMounts:
     readOnly: true
 ```
 
-Additional resources are necessary (please note that the client ID is necessary in the custom pipeline script):
+Additional resources are necessary:
 
 ```yaml
 apiVersion: v1
@@ -65,6 +65,8 @@ data:
     SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL: "https://keycloak.example.com/auth/realms/master/protocol/openid-connect/auth"
     SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL:  "https://keycloak.example.com/auth/realms/master/protocol/openid-connect/token"
     SOCIAL_AUTH_JSONFIELD_ENABLED:          true
+    SOCIAL_AUTH_STAFF_ROLE:                 staff
+    SOCIAL_AUTH_SUPERUSER_ROLE:             superuser
 
 ---
 apiVersion: v1
@@ -74,17 +76,21 @@ metadata:
   namespace: netbox
 data:
   sso_pipeline_roles.py: |
+    from django.conf import settings
     from netbox.authentication import Group
 
     def set_role(response, user, backend, *args, **kwargs):
-      client_id = '<OAUTH_CLIENT_ID>'
+      client_id = getattr(settings, 'SOCIAL_AUTH_KEYCLOAK_KEY', None)
+      staff_role = getattr(settings, 'SOCIAL_AUTH_STAFF_ROLE', 'staff')
+      superuser_role = getattr(settings, 'SOCIAL_AUTH_SUPERUSER_ROLE', 'superuser')
+
       roles = []
       try:
         roles = response['resource_access'][client_id]['roles']
       except KeyError:
         pass
-      user.is_staff = ('admin' in roles)
-      user.is_superuser = ('superuser' in roles)
+      user.is_staff = (staff_role in roles)
+      user.is_superuser = (superuser_role in roles)
       user.save()
       groups = Group.objects.all()
       for group in groups:
@@ -161,6 +167,8 @@ stringData:
     SOCIAL_AUTH_GITLAB_KEY: <OAUTH_CLIENT_ID>
     SOCIAL_AUTH_GITLAB_SECRET: <OAUTH_CLIENT_SECRET>
     SOCIAL_AUTH_GITLAB_SCOPE: ['read_user', 'openid']
+    SOCIAL_AUTH_STAFF_ROLE:                 staff
+    SOCIAL_AUTH_SUPERUSER_ROLE:             superuser
 
 ---
 apiVersion: v1
@@ -170,26 +178,31 @@ metadata:
   namespace: netbox
 data:
   sso_pipeline_roles.py: |
+    from django.conf import settings
     from netbox.authentication import Group
 
     import jwt
     from jwt import PyJWKClient
     def set_role(response, user, backend, *args, **kwargs):
+      client_id = getattr(settings, 'SOCIAL_AUTH_GITLAB_KEY', None)
+      staff_role = getattr(settings, 'SOCIAL_AUTH_STAFF_ROLE', 'staff')
+      superuser_role = getattr(settings, 'SOCIAL_AUTH_SUPERUSER_ROLE', 'superuser')
+
       jwks_client = PyJWKClient("https://git.example.com/oauth/discovery/keys")
       signing_key = jwks_client.get_signing_key_from_jwt(response['id_token'])
       decoded = jwt.decode(
           response['id_token'],
           signing_key.key,
           algorithms=["RS256"],
-          audience="<OAUTH_CLIENT_ID>",
+          audience=client_id,
       )
       roles = []
       try:
         roles = decoded.get('groups_direct')
       except KeyError:
         pass
-      user.is_staff = ('network' in roles)
-      user.is_superuser = ('network' in roles)
+      user.is_staff = (staff_role in roles)
+      user.is_superuser = (superuser_role in roles)
       user.save()
       groups = Group.objects.all()
       for group in groups:

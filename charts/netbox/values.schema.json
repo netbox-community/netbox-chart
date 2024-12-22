@@ -1060,7 +1060,7 @@
               "type": "boolean"
             },
             "mirrorGroupsExcept": {
-              "type": "string"
+              "type": "array"
             },
             "cacheTimeout": {
               "type": "integer"

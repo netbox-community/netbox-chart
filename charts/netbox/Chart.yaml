@@ -2,7 +2,7 @@ apiVersion: v2
 name: netbox
 version: 5.0.4
 # renovate: image=ghcr.io/netbox-community/netbox
-appVersion: "v4.1.9"
+appVersion: "v4.1.10"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool

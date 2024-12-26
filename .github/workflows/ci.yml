@@ -44,9 +44,24 @@ jobs:
       action-matrix: '["lint-and-install", "install --upgrade"]'
     secrets: inherit
 
+  results:
+    name: Status
+    if: always()
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - test
+    steps:
+      - run: exit 1
+        if: >-
+          ${{
+            contains(needs.*.result, 'failure') ||
+            contains(needs.*.result, 'cancelled')
+          }}
+
   release:
     name: Release
-    if: contains(fromJSON('["refs/heads/main"]'), github.ref)
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/release.yml
     permissions:
       contents: write
@@ -54,4 +69,3 @@ jobs:
       id-token: write
     secrets:
       GPG_KEY_BASE64: ${{ secrets.GPG_KEY_BASE64 }}
-      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

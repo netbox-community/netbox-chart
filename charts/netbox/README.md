@@ -455,9 +455,14 @@ Type: `kubernetes.io/basic-auth`
 
 | Key                  | Description                                                   | Required?                                                                                         |
 | -------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `email_password`     | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
 | `ldap_bind_password` | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
 | `secret_key`         | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
+
+### Email secret (`email.existingSecretName`)
+
+| Key                  | Description                                                   | Required?                                                                                         |
+| -------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `email-password`     | SMTP user password                                            | Yes, but the value may be left blank if not required                                              |
 
 ### PostgreSQL secret (`externalDatabase.existingSecretName`)
 

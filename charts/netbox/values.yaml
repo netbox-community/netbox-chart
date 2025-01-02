@@ -463,8 +463,6 @@ secretKey: ""
 
 ## Provide passwords using existing secret
 # If set, this Secret must contain the following keys:
-# - email_password: SMTP user password
-# - ldap_bind_password: Password for LDAP bind DN
 # - secret_key: session encryption token (50+ random characters)
 existingSecret: ""
 

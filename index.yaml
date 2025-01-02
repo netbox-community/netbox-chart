@@ -6693,6 +6693,40 @@ entries:
           url: https://github.com/netbox-community/netbox-operator
     apiVersion: v2
     appVersion: v0.1.0-alpha.1
+    created: "2025-01-02T14:43:09.64204289Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.28.0
+    - condition: netbox.enabled
+      name: netbox
+      repository: oci://ghcr.io/netbox-community/netbox-chart
+      version: ^5.0.6
+    description: Operator to manage NetBox resources directly through Kubernetes
+    digest: 6e87dc4cff086d79ea70cfc0fd32eb97c3b7afbd7742f79bd8144e1107f6bb93
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    name: netbox-operator
+    sources:
+    - https://github.com/netbox-community/netbox-operator
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.7/netbox-operator-0.1.7.tgz
+    version: 0.1.7
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox-operator
+    apiVersion: v2
+    appVersion: v0.1.0-alpha.1
     created: "2024-12-25T01:55:11.419333483Z"
     dependencies:
     - name: common
@@ -6924,4 +6958,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-02T14:00:26.078779556Z"
+generated: "2025-01-02T14:43:09.642439182Z"

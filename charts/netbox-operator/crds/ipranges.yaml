@@ -3,27 +3,33 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: prefixclaims.netbox.dev
+  name: ipranges.netbox.dev
 spec:
   group: netbox.dev
   names:
-    kind: PrefixClaim
-    listKind: PrefixClaimList
-    plural: prefixclaims
+    kind: IpRange
+    listKind: IpRangeList
+    plural: ipranges
     shortNames:
-      - pxc
-    singular: prefixclaim
+      - ipr
+    singular: iprange
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .status.prefix
-          name: Prefix
+        - jsonPath: .spec.startAddress
+          name: StartAddress
           type: string
-        - jsonPath: .status.conditions[?(@.type=="PrefixAssigned")].status
-          name: PrefixAssigned
+        - jsonPath: .spec.endAddress
+          name: EndAddress
           type: string
         - jsonPath: .status.conditions[?(@.type=="Ready")].status
           name: Ready
+          type: string
+        - jsonPath: .status.id
+          name: ID
+          type: string
+        - jsonPath: .status.url
+          name: URL
           type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
@@ -31,7 +37,7 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: PrefixClaim is the Schema for the prefixclaims API
+          description: IpRange is the Schema for the ipranges API
           properties:
             apiVersion:
               description: |-
@@ -51,9 +57,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: |-
-                PrefixClaimSpec defines the desired state of PrefixClaim
-                TODO: The reason for using a workaround please see https://github.com/netbox-community/netbox-operator/pull/90#issuecomment-2402112475
+              description: IpRangeSpec defines the desired state of IpRange
               properties:
                 comments:
                   type: string
@@ -63,59 +67,37 @@ spec:
                   type: object
                 description:
                   type: string
-                parentPrefix:
+                endAddress:
+                  description:
+                    the endAddress is the last ip address included in the
+                    ip range
                   format: cidr
                   type: string
                   x-kubernetes-validations:
-                    - message: Field 'parentPrefix' is immutable
-                      rule: self == oldSelf
-                parentPrefixSelector:
-                  additionalProperties:
-                    type: string
-                  description: |-
-                    The `parentPrefixSelector` is a key-value map, where all the entries are of data type `<string-string>`
-                    The map contains a set of query conditions for selecting a set of prefixes that can be used as the parent prefix
-                    The query conditions will be chained by the AND operator, and exact match of the keys and values will be performed
-                    The built-in fields `tenant`, `site`, and `family`, along with custom fields, can be used
-                    For more information, please see ParentPrefixSelectorGuide.md
-                  type: object
-                  x-kubernetes-validations:
-                    - message: Field 'parentPrefixSelector' is immutable
-                      rule: self == oldSelf
-                    - rule:
-                        "!has(self.family) || (self.family == 'IPv4' || self.family
-                        == 'IPv6')"
-                prefixLength:
-                  pattern: ^\/[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]$
-                  type: string
-                  x-kubernetes-validations:
-                    - message: Field 'prefixLength' is immutable
+                    - message: Field 'endAddress' is immutable
                       rule: self == oldSelf
                 preserveInNetbox:
                   type: boolean
-                site:
-                  description: Use the `name` value instead of the `slug` value
+                startAddress:
+                  description:
+                    the startAddress is the first ip address included in
+                    the ip range
+                  format: cidr
                   type: string
                   x-kubernetes-validations:
-                    - message: Field 'site' is immutable
+                    - message: Field 'startAddress' is immutable
                       rule: self == oldSelf
                 tenant:
-                  description: Use the `name` value instead of the `slug` value
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'tenant' is immutable
                       rule: self == oldSelf
               required:
-                - prefixLength
+                - endAddress
+                - startAddress
               type: object
-              x-kubernetes-validations:
-                - message: Site is required once set
-                  rule: "!has(oldSelf.site) || has(self.site)"
-                - rule:
-                    (!has(self.parentPrefix) && has(self.parentPrefixSelector)) ||
-                    (has(self.parentPrefix) && !has(self.parentPrefixSelector))
             status:
-              description: PrefixClaimStatus defines the observed state of PrefixClaim
+              description: IpRangeStatus defines the observed state of IpRange
               properties:
                 conditions:
                   items:
@@ -187,15 +169,10 @@ spec:
                       - type
                     type: object
                   type: array
-                parentPrefix:
-                  description: |-
-                    Due to the fact that the parent prefix can be specified directly in `ParentPrefix` or selected from `ParentPrefixSelector`,
-                    we use this field to store exactly which parent prefix we are using for all subsequent reconcile loop calls,
-                    as Spec.ParentPrefix is an immutable field, we can't overwrite it
-                  type: string
-                prefix:
-                  type: string
-                prefixName:
+                id:
+                  format: int64
+                  type: integer
+                url:
                   type: string
               type: object
           type: object

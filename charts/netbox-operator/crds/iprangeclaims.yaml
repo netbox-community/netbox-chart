@@ -3,24 +3,24 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: prefixclaims.netbox.dev
+  name: iprangeclaims.netbox.dev
 spec:
   group: netbox.dev
   names:
-    kind: PrefixClaim
-    listKind: PrefixClaimList
-    plural: prefixclaims
+    kind: IpRangeClaim
+    listKind: IpRangeClaimList
+    plural: iprangeclaims
     shortNames:
-      - pxc
-    singular: prefixclaim
+      - iprc
+    singular: iprangeclaim
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .status.prefix
-          name: Prefix
+        - jsonPath: .status.ipRange
+          name: IpRange
           type: string
-        - jsonPath: .status.conditions[?(@.type=="PrefixAssigned")].status
-          name: PrefixAssigned
+        - jsonPath: .status.conditions[?(@.type=="IPRangeAssigned")].status
+          name: IpRangeAssigned
           type: string
         - jsonPath: .status.conditions[?(@.type=="Ready")].status
           name: Ready
@@ -31,7 +31,7 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: PrefixClaim is the Schema for the prefixclaims API
+          description: IpRangeClaim is the Schema for the iprangeclaims API
           properties:
             apiVersion:
               description: |-
@@ -51,9 +51,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: |-
-                PrefixClaimSpec defines the desired state of PrefixClaim
-                TODO: The reason for using a workaround please see https://github.com/netbox-community/netbox-operator/pull/90#issuecomment-2402112475
+              description: IpRangeClaimSpec defines the desired state of IpRangeClaim
               properties:
                 comments:
                   type: string
@@ -69,53 +67,30 @@ spec:
                   x-kubernetes-validations:
                     - message: Field 'parentPrefix' is immutable
                       rule: self == oldSelf
-                parentPrefixSelector:
-                  additionalProperties:
-                    type: string
-                  description: |-
-                    The `parentPrefixSelector` is a key-value map, where all the entries are of data type `<string-string>`
-                    The map contains a set of query conditions for selecting a set of prefixes that can be used as the parent prefix
-                    The query conditions will be chained by the AND operator, and exact match of the keys and values will be performed
-                    The built-in fields `tenant`, `site`, and `family`, along with custom fields, can be used
-                    For more information, please see ParentPrefixSelectorGuide.md
-                  type: object
-                  x-kubernetes-validations:
-                    - message: Field 'parentPrefixSelector' is immutable
-                      rule: self == oldSelf
-                    - rule:
-                        "!has(self.family) || (self.family == 'IPv4' || self.family
-                        == 'IPv6')"
-                prefixLength:
-                  pattern: ^\/[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]$
-                  type: string
-                  x-kubernetes-validations:
-                    - message: Field 'prefixLength' is immutable
-                      rule: self == oldSelf
                 preserveInNetbox:
                   type: boolean
-                site:
-                  description: Use the `name` value instead of the `slug` value
-                  type: string
+                size:
+                  description:
+                    Size is the amount of consecutive IP Addresses you wish
+                    to reserve. Currently only sizes up to 50 are supported due to pagination
+                    of the NetBox API. In practice, this might be even lower depending
+                    on the fragmentation of the parent prefix.
+                  maximum: 50
+                  minimum: 2
+                  type: integer
                   x-kubernetes-validations:
-                    - message: Field 'site' is immutable
+                    - message: Field 'size' is immutable
                       rule: self == oldSelf
                 tenant:
-                  description: Use the `name` value instead of the `slug` value
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'tenant' is immutable
                       rule: self == oldSelf
               required:
-                - prefixLength
+                - parentPrefix
               type: object
-              x-kubernetes-validations:
-                - message: Site is required once set
-                  rule: "!has(oldSelf.site) || has(self.site)"
-                - rule:
-                    (!has(self.parentPrefix) && has(self.parentPrefixSelector)) ||
-                    (has(self.parentPrefix) && !has(self.parentPrefixSelector))
             status:
-              description: PrefixClaimStatus defines the observed state of PrefixClaim
+              description: IpRangeClaimStatus defines the observed state of IpRangeClaim
               properties:
                 conditions:
                   items:
@@ -187,15 +162,27 @@ spec:
                       - type
                     type: object
                   type: array
-                parentPrefix:
-                  description: |-
-                    Due to the fact that the parent prefix can be specified directly in `ParentPrefix` or selected from `ParentPrefixSelector`,
-                    we use this field to store exactly which parent prefix we are using for all subsequent reconcile loop calls,
-                    as Spec.ParentPrefix is an immutable field, we can't overwrite it
+                endAddress:
                   type: string
-                prefix:
+                endAddressDotDecimal:
                   type: string
-                prefixName:
+                ipAddressName:
+                  type: string
+                ipAddresses:
+                  items:
+                    type: string
+                  type: array
+                ipAddressesDotDecimal:
+                  items:
+                    type: string
+                  type: array
+                ipRange:
+                  type: string
+                ipRangeDotDecimal:
+                  type: string
+                startAddress:
+                  type: string
+                startAddressDotDecimal:
                   type: string
               type: object
           type: object

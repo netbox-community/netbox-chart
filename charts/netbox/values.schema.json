@@ -1057,10 +1057,10 @@
               "type": "boolean"
             },
             "mirrorGroups": {
-              "type": "boolean"
+              "type": ["boolean", "string", "array"]
             },
             "mirrorGroupsExcept": {
-              "type": "string"
+              "type": ["null", "string", "array"]
             },
             "cacheTimeout": {
               "type": "integer"

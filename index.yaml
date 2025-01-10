@@ -13,6 +13,53 @@ entries:
         - name: Upstream Project
           url: https://github.com/netbox-community/netbox
     apiVersion: v2
+    appVersion: v4.2.1
+    created: "2025-01-10T10:50:28.970777039Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.29.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^16.3.5
+    - condition: redis.enabled
+      name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^20.6.2
+    description: IP address management (IPAM) and data center infrastructure management
+      (DCIM) tool
+    digest: b7705423024f27479edfb60c1a8769b266f2f242116fd758f5625f612a249f60
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    - name: bootc
+      url: https://github.com/bootc
+    name: netbox
+    sources:
+    - https://github.com/netbox-community/netbox
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-5.0.12/netbox-5.0.12.tgz
+    version: 5.0.12
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox
+    apiVersion: v2
     appVersion: v4.2.0
     created: "2025-01-07T13:29:29.620847464Z"
     dependencies:
@@ -7346,4 +7393,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-08T14:04:33.291636405Z"
+generated: "2025-01-10T10:50:28.971450361Z"

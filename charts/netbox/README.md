@@ -155,6 +155,7 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.ldap.serverUri`                     | see [django-auth-ldap](https://django-auth-ldap.readthedocs.io)     | `""`                                         |
 | `remoteAuth.ldap.startTls`                      | if StarTLS should be used                                           | *see values.yaml*                            |
 | `remoteAuth.ldap.ignoreCertErrors`              | if Certificate errors should be ignored                             | *see values.yaml*                            |
+| `remoteAuth.ldap.caCertDir`                     | CA certificate directory                                            | *see auth.md*                                |
 | `remoteAuth.ldap.caCertData`                    | CA certificate data                                                 | *see auth.md*                                |
 | `remoteAuth.ldap.bindDn`                        | Distinguished Name to bind with                                     | `""`                                         |
 | `remoteAuth.ldap.bindPassword`                  | Password for bind DN                                                | `""`                                         |

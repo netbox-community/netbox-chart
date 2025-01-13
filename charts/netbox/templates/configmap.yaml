@@ -170,6 +170,9 @@ data:
     AUTH_LDAP_BIND_DN: {{ .Values.remoteAuth.ldap.bindDn | quote }}
     AUTH_LDAP_START_TLS: {{ toJson .Values.remoteAuth.ldap.startTls }}
     LDAP_IGNORE_CERT_ERRORS: {{ toJson .Values.remoteAuth.ldap.ignoreCertErrors }}
+    {{- if .Values.remoteAuth.ldap.caCertDir }}
+    LDAP_CA_CERT_DIR: {{ .Values.remoteAuth.ldap.caCertDir | quote }}
+    {{- end }}
     {{- if .Values.remoteAuth.ldap.caCertData }}
     LDAP_CA_CERT_FILE: /etc/netbox/config/ldap/ldap_ca.crt
     {{- end }}

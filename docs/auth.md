@@ -238,12 +238,24 @@ remoteAuth:
     # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
 
+### LDAP Certificate Verification
+
 Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
 to an empty string as in the example above.
 
 If you need to specify your own CA certificate, follow the instructions below.
 
-In your `values.yaml` file define your CA certificate content in `caCertData`:
+Option 1. In your `values.yaml` file define the directory already containing your CA certificate:
+
+```yaml
+  ldap:
+    serverUri: 'ldap://domain.com'
+    startTls: true
+    ignoreCertErrors: false
+    caCertDir: /etc/ssl/certs
+```
+
+Option 2. In your `values.yaml` file define your CA certificate content in `caCertData`:
 
 ```yaml
   ldap:

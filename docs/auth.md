@@ -238,11 +238,11 @@ remoteAuth:
     # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
 
+> [!NOTE]
+> In order to use anonymous LDAP binding, set `bindDn` and `bindPassword`
+> to an empty string as in the example above.
+
 ### LDAP Certificate Verification
-
-Note: in order to use anonymous LDAP binding set `bindDn` and `bindPassword`
-to an empty string as in the example above.
-
 If you need to specify your own CA certificate, follow the instructions below.
 
 Option 1. In your `values.yaml` file define the directory already containing your CA certificate:

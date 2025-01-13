@@ -1008,6 +1008,9 @@
             "ignoreCertErrors": {
               "type": "boolean"
             },
+            "caCertDir": {
+              "type": "string"
+            },
             "caCertData": {
               "type": "string"
             },

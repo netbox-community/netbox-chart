@@ -384,6 +384,7 @@ remoteAuth:
     serverUri: ldap://example.com
     startTls: true
     ignoreCertErrors: false
+    caCertDir: ""
     caCertData: ""
     bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
     bindPassword: ""

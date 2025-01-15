@@ -1,8 +1,8 @@
 apiVersion: v2
 name: netbox
-version: 5.0.6
+version: 5.0.16
 # renovate: image=ghcr.io/netbox-community/netbox
-appVersion: "v4.1.10"
+appVersion: "v4.2.1"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
@@ -19,18 +19,23 @@ maintainers:
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: ^2.28.0
+    version: ^2.29.0
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^16.3.4
+    version: ^16.4.2
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: ^20.6.1
+    version: ^20.6.3
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
 annotations:
+  artifacthub.io/images: |
+    - name: netbox
+      image: ghcr.io/netbox-community/netbox:v4.2.1
+    - name: busybox
+      image: docker.io/busybox:1.37.0
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |
     - name: Upstream Project

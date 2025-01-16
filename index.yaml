@@ -7246,6 +7246,46 @@ entries:
           url: https://github.com/netbox-community/netbox-operator
     apiVersion: v2
     appVersion: v0.1.0-alpha.4
+    created: "2025-01-16T05:48:09.688611947Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.29.0
+    - condition: netbox.enabled
+      name: netbox
+      repository: oci://ghcr.io/netbox-community/netbox-chart
+      version: ^5.0.18
+    description: Operator to manage NetBox resources directly through Kubernetes
+    digest: a97ae9c296f5d9b9234b47000a9038d19d6f6890663b7f155361aa3e21608acc
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    name: netbox-operator
+    sources:
+    - https://github.com/netbox-community/netbox-operator
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.19/netbox-operator-0.1.19.tgz
+    version: 0.1.19
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-operator-
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox-operator
+    apiVersion: v2
+    appVersion: v0.1.0-alpha.4
     created: "2025-01-15T21:59:38.172847773Z"
     dependencies:
     - name: common
@@ -7945,4 +7985,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-16T00:26:19.090644635Z"
+generated: "2025-01-16T05:48:09.689090092Z"

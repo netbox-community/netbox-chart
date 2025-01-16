@@ -25,9 +25,9 @@ spec:
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include "common.utils.checksumTemplate" (dict "path" "/configmap.yaml" "context" $) }}
         {{- if (not .Values.existingSecret) }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/secret.yaml" "context" $) }}
         {{- end }}
       labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.podLabels "context" $ ) | nindent 8 }}
         app.kubernetes.io/component: netbox

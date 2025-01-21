@@ -174,7 +174,7 @@ netbox: postgresql
 Validate values of Netbox Chart - LDAP
 */}}
 {{- define "netbox.validateValues.ldap" -}}
-{{- if and (has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends) (or (empty .Values.remoteAuth.ldap.serverUri) (empty .Values.remoteAuth.ldap.bindDn)) -}}
+{{- if and (has "netbox.authentication.LDAPBackend" .Values.remoteAuth.backends) (empty .Values.remoteAuth.ldap.serverUri) -}}
 netbox: remoteAuth.ldap
     When LDAP backend is activated, you must provide all the necessary parameters.
     Review the values under `remoteAuth.ldap`.

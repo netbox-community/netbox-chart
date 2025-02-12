@@ -74,6 +74,9 @@ spec:
                   type: boolean
                 site:
                   type: string
+                  x-kubernetes-validations:
+                    - message: Field 'site' is required once set
+                      rule: self == oldSelf || self != ''
                 tenant:
                   type: string
                   x-kubernetes-validations:
@@ -82,6 +85,9 @@ spec:
               required:
                 - prefix
               type: object
+              x-kubernetes-validations:
+                - message: Site is required once set
+                  rule: "!has(oldSelf.site) || has(self.site)"
             status:
               description: PrefixStatus defines the observed state of Prefix
               properties:

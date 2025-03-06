@@ -315,6 +315,9 @@ maxPageSize: 1000
 # driver in storageBackend and any configuration options in storageConfig.
 # storageBackend: storages.backends.s3boto3.S3Boto3Storage
 storageBackend: ""
+# Configuration for the storage backend can be provided using storageConfig.
+# Note these values are not stored securely. If the configuration must be
+# setup in a more secure way, a propor Secret can be used with extraEnvVarsSecret.
 # storageConfig:
 #   AWS_ACCESS_KEY_ID: 'Key ID'
 #   AWS_SECRET_ACCESS_KEY: 'Secret'

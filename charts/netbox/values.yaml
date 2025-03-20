@@ -228,7 +228,7 @@ email:
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce
 # unique IP space within the global table (all prefixes and IP addresses not
 # assigned to a VRF), set enforceGlobalUnique to True.
-enforceGlobalUnique: false
+enforceGlobalUnique: true
 
 # Exempt certain models from the enforcement of view permissions. Models listed
 # here will be viewable by all users and by anonymous users. List models in the

@@ -108,7 +108,7 @@ The following table lists the configurable parameters for this chart and their d
 | `email.sslKeyFile`                              | SMTP SSL key file path (e.g. in a mounted volume)                   | `""`                                         |
 | `email.timeout`                                 | Timeout for SMTP connections, in seconds                            | `10`                                         |
 | `email.from`                                    | Sender address for emails sent by NetBox                            | `""`                                         |
-| `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `false`                                      |
+| `enforceGlobalUnique`                           | Enforce unique IP space in the global table (not in a VRF)          | `true`                                      |
 | `exemptViewPermissions`                         | A list of models to exempt from the enforcement of view permissions | `[]`                                         |
 | `fieldChoices`                                  | Configure custom choices for certain built-in fields                | `{}`                                         |
 | `fileUploadMaxMemorySize`                       | The maximum amount (in bytes) of uploaded data that will be held in memory before being written to the filesystem  | `2621440` |

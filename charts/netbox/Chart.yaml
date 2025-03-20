@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.49
+version: 5.0.50
 # renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.2.5"
 type: application
@@ -23,7 +23,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^16.5.3
+    version: ^16.5.4
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis

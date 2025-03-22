@@ -174,9 +174,6 @@ spec:
         - name: config
           mountPath: /run/config/netbox
           readOnly: true
-        - name: secrets
-          mountPath: /run/secrets/netbox
-          readOnly: true
         {{- include "netbox.extraConfig.volumeMounts" . | nindent 8 }}
         - name: netbox-tmp
           mountPath: /tmp
@@ -195,6 +192,10 @@ spec:
         {{- end }}
         - name: optunit
           mountPath: /opt/unit
+        {{- if not .Values.customSecretMount }}
+        - name: secrets
+          mountPath: /run/secrets/netbox
+          readOnly: true
         - name: secrets
           mountPath: /run/secrets/superuser_password
           subPath: superuser_password
@@ -203,6 +204,7 @@ spec:
           mountPath: /run/secrets/superuser_api_token
           subPath: superuser_api_token
           readOnly: true
+        {{- end }}
         {{- if .Values.extraVolumeMounts }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 8 }}
         {{- end }}
@@ -218,6 +220,7 @@ spec:
       - name: config
         configMap:
           name: {{ include "common.names.fullname" . }}
+      {{- if not .Values.customSecretMount }}
       - name: secrets
         projected:
           sources:
@@ -257,6 +260,7 @@ spec:
               items:
               - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
                 path: redis_cache_password
+      {{- end }}
       {{- include "netbox.extraConfig.volumes" . | nindent 6 }}
       - name: netbox-tmp
         emptyDir:

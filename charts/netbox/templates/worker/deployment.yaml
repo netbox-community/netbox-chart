@@ -89,9 +89,11 @@ spec:
         - name: config
           mountPath: /run/config/netbox
           readOnly: true
+        {{- if not .Values.customSecretMount }}
         - name: secrets
           mountPath: /run/secrets/netbox
           readOnly: true
+        {{- end }}
         {{- include "netbox.extraConfig.volumeMounts" . | nindent 8 }}
         - name: netbox-tmp
           mountPath: /tmp
@@ -126,6 +128,7 @@ spec:
       - name: config
         configMap:
           name: {{ include "common.names.fullname" . }}
+      {{- if not .Values.customSecretMount }}
       - name: secrets
         projected:
           sources:
@@ -165,6 +168,7 @@ spec:
               items:
               - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
                 path: redis_cache_password
+      {{- end }}
       {{- include "netbox.extraConfig.volumes" . | nindent 6 }}
       - name: netbox-tmp
         emptyDir:

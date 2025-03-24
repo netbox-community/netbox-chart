@@ -59,8 +59,8 @@ _load_yaml()
 
 DATABASE["PASSWORD"] = _read_secret("netbox", "db_password")
 EMAIL["PASSWORD"] = _read_secret("netbox", "email_password")
-REDIS["tasks"]["PASSWORD"] = _read_secret("netbox", "redis_tasks_password")
-REDIS["caching"]["PASSWORD"] = _read_secret("netbox", "redis_cache_password")
+REDIS["tasks"]["PASSWORD"] = _read_secret("netbox", "tasks_password")
+REDIS["caching"]["PASSWORD"] = _read_secret("netbox", "cache_password")
 SECRET_KEY = _read_secret("netbox", "secret_key")
 
 # Post-process certain values

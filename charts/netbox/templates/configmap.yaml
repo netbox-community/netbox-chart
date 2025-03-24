@@ -113,9 +113,9 @@ data:
 
     REDIS:
       tasks:
-        {{- if .Values.redis.enabled }}
-        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.redis) | quote }}
-        PORT: {{ .Values.redis.master.service.ports.redis | int }}
+        {{- if .Values.valkey.enabled }}
+        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.valkey) | quote }}
+        PORT: {{ .Values.valkey.master.service.ports.valkey | int }}
         {{- else if .Values.tasksRedis.sentinels }}
         SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
@@ -130,9 +130,9 @@ data:
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
         CA_CERT_PATH: {{ .Values.tasksRedis.caCertPath | quote }}
       caching:
-        {{- if .Values.redis.enabled }}
-        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.redis) | quote }}
-        PORT: {{ .Values.redis.master.service.ports.redis | int }}
+        {{- if .Values.valkey.enabled }}
+        HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.valkey) | quote }}
+        PORT: {{ .Values.valkey.master.service.ports.valkey | int }}
         {{- else if .Values.cachingRedis.sentinels }}
         SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
         SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}

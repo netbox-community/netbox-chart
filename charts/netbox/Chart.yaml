@@ -26,10 +26,10 @@ dependencies:
     version: ^16.5.6
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-  - name: redis
-    version: ^20.11.4
+  - name: valkey
+    version: ^2.4.7
     repository: oci://registry-1.docker.io/bitnamicharts
-    condition: redis.enabled
+    condition: valkey.enabled
 annotations:
   artifacthub.io/images: |
     - name: netbox

@@ -159,12 +159,12 @@ spec:
               name: {{ include "netbox.tasksRedis.secret" . | quote }}
               items:
               - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
-                path: redis_tasks_password
+                path: tasks_password
           - secret:
               name: {{ include "netbox.cachingRedis.secret" . | quote }}
               items:
               - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
-                path: redis_cache_password
+                path: cache_password
       {{- include "netbox.extraConfig.volumes" . | nindent 6 }}
       - name: netbox-tmp
         emptyDir:

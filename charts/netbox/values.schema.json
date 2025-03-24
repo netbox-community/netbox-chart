@@ -920,9 +920,9 @@
     "readinessProbe": {
       "$ref": "#/$defs/probe"
     },
-    "redis": {
-      "title": "Redis chart configuration",
-      "description": "https://artifacthub.io/packages/helm/bitnami/redis",
+    "valkey": {
+      "title": "Valkey chart configuration",
+      "description": "https://artifacthub.io/packages/helm/bitnami/valkey",
       "properties": {
         "enabled": {
           "type": "boolean"

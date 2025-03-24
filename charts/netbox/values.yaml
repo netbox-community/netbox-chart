@@ -411,6 +411,9 @@ remoteAuth:
     attrFirstName: givenName
     attrLastName: sn
     attrMail: mail
+  google:
+    key: YourClientId
+    secret: YourVerySecretKeyFromGoogle
 
 releaseCheck:
   # This repository is used to check whether there is a new release of NetBox

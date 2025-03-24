@@ -109,6 +109,10 @@ data:
     REMOTE_AUTH_STAFF_GROUPS: {{ toJson .Values.remoteAuth.staffGroups }}
     REMOTE_AUTH_STAFF_USERS: {{ toJson .Values.remoteAuth.staffUsers }}
     REMOTE_AUTH_GROUP_SEPARATOR: {{ .Values.remoteAuth.groupSeparator | quote }}
+    {{- if has "social_core.backends.google.GoogleOAuth2" .Values.remoteAuth.backends }}
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: {{ toJson .Values.remoteAuth.google.key }}
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: {{ toJson .Values.remoteAuth.google.secret }}
+    {{- end }}
     RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:

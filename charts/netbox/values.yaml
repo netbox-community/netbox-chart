@@ -639,17 +639,17 @@ hostAliases: []
 ## @param extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
 ## e.g:
 ## extraVolumes:
-##   - name: redis-ca
+##   - name: kv-ca
 ##     secret:
-##       secretName: redis-ca
+##       secretName: kv-ca
 ##
 extraVolumes: []
 ## @param extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
 ## e.g:
 ## extraVolumeMounts:
-##   - name: redis-ca
-##     mountPath: /tmp/redis-ca
-##     subPath: redis_ca
+##   - name: kv-ca
+##     mountPath: /tmp/kv-ca
+##     subPath: kv_ca
 ##     readOnly: true
 ##
 extraVolumeMounts: []
@@ -1045,11 +1045,11 @@ externalDatabase:
     sslmode: "prefer"
     target_session_attrs: "read-write"
 
-## Redis chart configuration
-## https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
-## @param redis.enabled Deploy Redis using bundled Bitnami Redis chart
+## Valkey chart configuration
+## https://github.com/bitnami/charts/blob/main/bitnami/valkey/values.yaml
+## @param valkey.enabled Whether to deploy a Valkey server to satisfy the applications database requirements
 ##
-redis:
+valkey:
   enabled: true
 
 tasksRedis:
@@ -1059,18 +1059,18 @@ tasksRedis:
   # When defining caCertPath, make sure you mount the secret containing the CA certificate on all the necessary containers
   caCertPath: ""
 
-  # Used only when redis.enabled is false. host and port are not used if
+  # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-redis
+  host: netbox-valkey
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-redis
+  sentinelService: netbox-valkey
   sentinelTimeout: 300
   username: ""
   password: ""
   existingSecretName: ""
-  existingSecretKey: redis-password
+  existingSecretKey: tasks-password
 
 cachingRedis:
   database: 1
@@ -1079,18 +1079,18 @@ cachingRedis:
   # When defining caCertPath, make sure you mount the secret containing the CA certificate on all the necessary containers
   caCertPath: ""
 
-  # Used only when redis.enabled is false. host and port are not used if
+  # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-redis
+  host: netbox-valkey
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-redis
+  sentinelService: netbox-valkey
   sentinelTimeout: 300
   username: ""
   password: ""
   existingSecretName: ""
-  existingSecretKey: redis-password
+  existingSecretKey: cache-password
 
 ## @section Autoscaling parameters
 
@@ -1362,17 +1362,17 @@ housekeeping:
   ## @param housekeeping.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
   ## e.g:
   ## extraVolumes:
-  ##   - name: redis-ca
+  ##   - name: kv-ca
   ##     secret:
-  ##       secretName: redis-ca
+  ##       secretName: kv-ca
   ##
   extraVolumes: []
   ## @param housekeeping.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
   ## e.g:
   ## extraVolumeMounts:
-  ##   - name: redis-ca
-  ##     mountPath: /tmp/redis-ca
-  ##     subPath: redis_ca
+  ##   - name: kv-ca
+  ##     mountPath: /tmp/kv-ca
+  ##     subPath: kv_ca
   ##     readOnly: true
   ##
   extraVolumeMounts: []
@@ -1599,17 +1599,17 @@ worker:
   ## @param worker.extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
   ## e.g:
   ## extraVolumes:
-  ##   - name: redis-ca
+  ##   - name: kv-ca
   ##     secret:
-  ##       secretName: redis-ca
+  ##       secretName: kv-ca
   ##
   extraVolumes: []
   ## @param worker.extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
   ## e.g:
   ## extraVolumeMounts:
-  ##   - name: redis-ca
-  ##     mountPath: /tmp/redis-ca
-  ##     subPath: redis_ca
+  ##   - name: kv-ca
+  ##     mountPath: /tmp/kv-ca
+  ##     subPath: kv_ca
   ##     readOnly: true
   ##
   extraVolumeMounts: []

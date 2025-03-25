@@ -967,6 +967,9 @@ metrics:
     ## @param metrics.serviceMonitor.enabled if `true`, creates a Prometheus Operator ServiceMonitor (also requires `metrics.enabled` to be `true`)
     ##
     enabled: false
+    ## @param metrics.serviceMonitor.apiVersion Custom API version for ServiceMonitor
+    ## e.g:
+    ## apiVersion: monitoring.coreos.com/v1
     ## @param metrics.serviceMonitor.honorLabels honorLabels chooses the metric's labels on collisions with target labels
     ##
     honorLabels: false

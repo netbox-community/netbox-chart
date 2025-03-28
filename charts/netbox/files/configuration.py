@@ -57,11 +57,13 @@ REDIS = {}
 
 _load_yaml()
 
-DATABASE["PASSWORD"] = _read_secret("netbox", "db_password")
-EMAIL["PASSWORD"] = _read_secret("netbox", "email_password")
-REDIS["tasks"]["PASSWORD"] = _read_secret("netbox", "redis_tasks_password")
-REDIS["caching"]["PASSWORD"] = _read_secret("netbox", "redis_cache_password")
-SECRET_KEY = _read_secret("netbox", "secret_key")
+provided_secret_name = os.getenv("SECRET_NAME", "netbox")
+
+DATABASE["PASSWORD"] = _read_secret(provided_secret_name, "db_password")
+EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
+REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "redis_tasks_password")
+REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "redis_cache_password")
+SECRET_KEY = _read_secret(provided_secret_name, "secret_key")
 
 # Post-process certain values
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]

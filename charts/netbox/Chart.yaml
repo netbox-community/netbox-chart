@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.55
+version: 5.0.56
 # renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.2.6"
 type: application

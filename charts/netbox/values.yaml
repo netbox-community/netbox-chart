@@ -1667,7 +1667,7 @@ worker:
     args:
       - |
         deployment=${DEPLOYMENT_NAME:?deployment name is missing}
-        local -i return_code=0
+        return_code=0
 
         echo "Waiting for deployment ${deployment} to be successfully rolled out..."
         kubectl rollout status deployment "$deployment" >/dev/null 2>&1 || return_code=$?

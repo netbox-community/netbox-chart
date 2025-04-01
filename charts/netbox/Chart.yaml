@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 5.0.57
+version: 5.1.0
 # renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.2.6"
 type: application
@@ -34,6 +34,8 @@ annotations:
   artifacthub.io/images: |
     - name: netbox
       image: ghcr.io/netbox-community/netbox:v4.2.6
+    - name: kubectl
+      image: docker.io/bitnami/kubectl:1.32.2-debian-12-r3
     - name: busybox
       image: docker.io/busybox:1.37.0
   artifacthub.io/license: Apache-2.0

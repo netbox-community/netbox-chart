@@ -834,7 +834,7 @@ startupProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 1
-  failureThreshold: 10
+  failureThreshold: 100
   successThreshold: 1
 ## @param customLivenessProbe Override default liveness probe for containers
 ##

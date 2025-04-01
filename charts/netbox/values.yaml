@@ -1669,10 +1669,10 @@ worker:
         deployment=${DEPLOYMENT_NAME:?deployment name is missing}
         return_code=0
 
-        echo "Waiting for deployment ${deployment} to be successfully rolled out..."
+        echo "Waiting for deployment \"${deployment}\" to be successfully rolled out..."
         kubectl rollout status deployment "$deployment" >/dev/null 2>&1 || return_code=$?
         echo "Rollout exit code: '${return_code}'"
-        return $return_code
+        exit $return_code
     ## waitForBackend containers' Security Context (init container).
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param waitForBackend.containerSecurityContext.enabled Enabled containers' Security Context

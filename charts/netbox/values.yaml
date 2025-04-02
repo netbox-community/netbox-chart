@@ -1504,7 +1504,7 @@ worker:
   readOnlyPersistence: false
   ## @param worker.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   ## @param worker.affinity Affinity for worker pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ## Note: podAffinityPreset, podAntiAffinityPreset, and nodeAffinityPreset will be ignored when it's set

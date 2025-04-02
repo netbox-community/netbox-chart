@@ -1670,7 +1670,7 @@ worker:
         return_code=0
 
         echo "Waiting for deployment \"${deployment}\" to be successfully rolled out..."
-        kubectl rollout status deployment "$deployment" >/dev/null 2>&1 || return_code=$?
+        kubectl rollout status deployment "$deployment" 2>&1 || return_code=$?
         echo "Rollout exit code: '${return_code}'"
         exit $return_code
     ## waitForBackend containers' Security Context (init container).

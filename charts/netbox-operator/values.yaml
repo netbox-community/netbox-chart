@@ -82,7 +82,8 @@ image:
 ## @section NetBox Operator Configuration parameters
 
 ## NetBox Operator settings based on environment variables
-caCert: ""
+# When defining caCertPath, make sure you mount the secret containing the CA certificate on all the necessary containers
+caCertPath: ""
 host: ""
 https: false
 restorationHashFieldName: ""
@@ -136,6 +137,23 @@ serviceAccount:
   annotations: {}
   name: ""
   automountServiceAccountToken: true
+## @param extraVolumes Array of extra volumes to be added to the deployment (evaluated as template). Requires setting `extraVolumeMounts`
+## e.g:
+## extraVolumes:
+##   - name: ca-cert
+##     secret:
+##       secretName: ca-cert
+##
+extraVolumes: []
+## @param extraVolumeMounts Array of extra volume mounts to be added to the container (evaluated as template). Normally used with `extraVolumes`.
+## e.g:
+## extraVolumeMounts:
+##   - name: ca-cert
+##     mountPath: /tmp/ca.cert
+##     subPath: ca-cert
+##     readOnly: true
+##
+extraVolumeMounts: []
 ## @param sidecars Add additional sidecar containers to the pod
 ## e.g:
 ## sidecars:

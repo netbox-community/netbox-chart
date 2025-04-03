@@ -69,7 +69,7 @@ spec:
             - name: DEBUG_ENABLE
               value: {{ .Values.debug | quote }}
             - name: CA_CERT
-              value: {{ .Values.caCert | quote }}
+              value: {{ .Values.caCertPath | quote }}
             {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -106,11 +106,17 @@ spec:
               path: /readyz
               port: http-probe
           {{- end }}
+          {{- if .Values.extraVolumeMounts }}
+          volumeMounts: {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
           {{- else if ne .Values.resourcesPreset "none" }}
           resources: {{- include "common.resources.preset" (dict "type" .Values.resourcesPreset) | nindent 12 }}
           {{- end }}
+      {{- if .Values.extraVolumes }}
+      volumes: {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

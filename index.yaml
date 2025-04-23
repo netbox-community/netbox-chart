@@ -10,6 +10,58 @@ entries:
               url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-
       artifacthub.io/images: |
         - name: netbox
+          image: ghcr.io/netbox-community/netbox:v4.2.8
+        - name: busybox
+          image: docker.io/busybox:1.37.0
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox
+    apiVersion: v2
+    appVersion: v4.2.8
+    created: "2025-04-23T08:47:14.066215915Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.30.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^16.6.3
+    - condition: redis.enabled
+      name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^20.13.0
+    description: IP address management (IPAM) and data center infrastructure management
+      (DCIM) tool
+    digest: bb70393f6d4dff4b0665d8896e96bb183d100522871b636b6a427f75c0ce0d23
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    - name: bootc
+      url: https://github.com/bootc
+    name: netbox
+    sources:
+    - https://github.com/netbox-community/netbox
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-5.0.66/netbox-5.0.66.tgz
+    version: 5.0.66
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-
+      artifacthub.io/images: |
+        - name: netbox
           image: ghcr.io/netbox-community/netbox:v4.2.7
         - name: busybox
           image: docker.io/busybox:1.37.0
@@ -12349,4 +12401,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-22T23:04:45.506976955Z"
+generated: "2025-04-23T08:47:14.06700464Z"

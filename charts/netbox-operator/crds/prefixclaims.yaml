@@ -31,7 +31,13 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: PrefixClaim is the Schema for the prefixclaims API
+          description: |-
+            PrefixClaim allows to claim a NetBox Prefix from an existing Prefix
+            (parentPrefix) or a dynamically selected Prefix (parentPrefixSelector).
+            The PrefixClaim Controller will try to assign an available Prefix from
+            the Prefix that is defined in the spec and if successful it will create
+            the Prefix CR. More info about NetBox IP Addresses:
+            https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/ipaddress.md
           properties:
             apiVersion:
               description: |-
@@ -54,14 +60,33 @@ spec:
               description: PrefixClaimSpec defines the desired state of PrefixClaim
               properties:
                 comments:
+                  description: |-
+                    Comment that should be added to the resource in NetBox
+                    Field is mutable, not required
                   type: string
                 customFields:
                   additionalProperties:
                     type: string
+                  description: |-
+                    The NetBox Custom Fields that should be added to the resource in NetBox.
+                    Note that currently only Text Type is supported (GitHub #129)
+                    More info on NetBox Custom Fields:
+                    https://github.com/netbox-community/netbox/blob/main/docs/customization/custom-fields.md
+                    Field is mutable, not required
+                    Example:
+                      customfield1: "Production"
+                      customfield2: "This is a string"
                   type: object
                 description:
+                  description: |-
+                    Description that should be added to the resource in NetBox
+                    Field is mutable, not required
                   type: string
                 parentPrefix:
+                  description: |-
+                    The NetBox Prefix from which this Prefix should be claimed from
+                    Field is immutable, required (`parentPrefix` and `parentPrefixSelector` are mutually exclusive)
+                    Example: "192.168.0.0/20"
                   format: cidr
                   type: string
                   x-kubernetes-validations:
@@ -71,11 +96,11 @@ spec:
                   additionalProperties:
                     type: string
                   description: |-
-                    The `parentPrefixSelector` is a key-value map, where all the entries are of data type `<string-string>`
-                    The map contains a set of query conditions for selecting a set of prefixes that can be used as the parent prefix
-                    The query conditions will be chained by the AND operator, and exact match of the keys and values will be performed
-                    The built-in fields `tenant`, `site`, and `family`, along with custom fields, can be used
-                    For more information, please see ParentPrefixSelectorGuide.md
+                    The `parentPrefixSelector` is a key-value map, where all the entries are of data type `<string-string>` The map contains a set of query conditions for selecting a set of prefixes that can be used as the parent prefix The query conditions will be chained by the AND operator, and exact match of the keys and values will be performed The built-in fields `tenant`, `site`, and `family`, along with custom fields, can be used. Note that since the key value pairs in this map are used to generate the URL for the query in NetBox, this also supports non-Text Custom Field types. For more information, please see ParentPrefixSelectorGuide.md
+                    Field is immutable, required (`parentPrefix` and `parentPrefixSelector` are mutually exclusive)
+                    Example:
+                      customfield1: "Production"
+                      family: "IPv4"
                   type: object
                   x-kubernetes-validations:
                     - message: Field 'parentPrefixSelector' is immutable
@@ -84,21 +109,42 @@ spec:
                         "!has(self.family) || (self.family == 'IPv4' || self.family
                         == 'IPv6')"
                 prefixLength:
+                  description: |-
+                    The desired prefix length of your Prefix using slash notation. Example: `/24` for an IPv4 Prefix or `/64` for an IPv6 Prefix
+                    Field is immutable, required
+                    Example: "/24"
                   pattern: ^\/[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]$
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'prefixLength' is immutable
                       rule: self == oldSelf
                 preserveInNetbox:
+                  description: |-
+                    Defines whether the Resource should be preserved in NetBox when the
+                    Kubernetes Resource is deleted.
+                    - When set to true, the resource will not be deleted but preserved in
+                      NetBox upon CR deletion
+                    - When set to false, the resource will be cleaned up in NetBox
+                      upon CR deletion
+                    Setting preserveInNetbox to true is mandatory if the user wants to restore
+                    resources from NetBox (e.g. Sticky CIDRs even if resources are deleted and
+                    recreated in Kubernetes)
+                    Field is mutable, not required
                   type: boolean
                 site:
-                  description: Use the `name` value instead of the `slug` value
+                  description: |-
+                    The NetBox Site to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
+                    Field is immutable, not required
+                    Example: "DM-Buffalo"
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'site' is immutable
                       rule: self == oldSelf
                 tenant:
-                  description: Use the `name` value instead of the `slug` value
+                  description: |-
+                    The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
+                    Field is immutable, not required
+                    Example: "Initech" or "Cyberdyne Systems"
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'tenant' is immutable
@@ -116,6 +162,9 @@ spec:
               description: PrefixClaimStatus defines the observed state of PrefixClaim
               properties:
                 conditions:
+                  description:
+                    Conditions represent the latest available observations
+                    of an object's state
                   items:
                     description:
                       Condition contains details for one aspect of the current
@@ -174,13 +223,18 @@ spec:
                   type: array
                 parentPrefix:
                   description: |-
-                    Due to the fact that the parent prefix can be specified directly in `ParentPrefix` or selected from `ParentPrefixSelector`,
-                    we use this field to store exactly which parent prefix we are using for all subsequent reconcile loop calls,
-                    as Spec.ParentPrefix is an immutable field, we can't overwrite it
+                    Due to the fact that the parentPrefix can be specified directly in
+                    `.spec.parentPrefix` or selected from `.spec.parentPrefixSelector`,
+                    we use this field to store exactly which parent prefix we are using
+                    for all subsequent reconcile loop calls.
                   type: string
                 prefix:
+                  description: The assigned Prefix in CIDR notation
                   type: string
                 prefixName:
+                  description:
+                    The name of the Prefix CR created by the PrefixClaim
+                    Controller
                   type: string
               type: object
           type: object

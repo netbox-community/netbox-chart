@@ -31,7 +31,12 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: IpRangeClaim is the Schema for the iprangeclaims API
+          description: |-
+            IpRangeClaim allows to claim a NetBox IP Range from an existing Prefix.
+            The IpRangeClaim Controller will try to assign an available IP Range
+            from the Prefix that is defined in the spec and if successful it will create
+            the IpRange CR. More info about NetBox IP Ranges:
+            https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/iprange.md
           properties:
             apiVersion:
               description: |-
@@ -54,27 +59,58 @@ spec:
               description: IpRangeClaimSpec defines the desired state of IpRangeClaim
               properties:
                 comments:
+                  description: |-
+                    Comment that should be added to the resource in NetBox
+                    Field is mutable, not required
                   type: string
                 customFields:
                   additionalProperties:
                     type: string
+                  description: |-
+                    The NetBox Custom Fields that should be added to the resource in NetBox.
+                    Note that currently only Text Type is supported (GitHub #129)
+                    More info on NetBox Custom Fields:
+                    https://github.com/netbox-community/netbox/blob/main/docs/customization/custom-fields.md
+                    Field is mutable, not required
+                    Example:
+                      customfield1: "Production"
+                      customfield2: "This is a string"
                   type: object
                 description:
+                  description: |-
+                    Description that should be added to the resource in NetBox
+                    Field is mutable, not required
                   type: string
                 parentPrefix:
+                  description: |-
+                    The NetBox Prefix from which this IP Range should be claimed from
+                    Field is immutable, required
+                    Example: "192.168.0.0/20"
                   format: cidr
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'parentPrefix' is immutable
                       rule: self == oldSelf
                 preserveInNetbox:
+                  description: |-
+                    Defines whether the Resource should be preserved in NetBox when the
+                    Kubernetes Resource is deleted.
+                    - When set to true, the resource will not be deleted but preserved in
+                      NetBox upon CR deletion
+                    - When set to false, the resource will be cleaned up in NetBox
+                      upon CR deletion
+                    Setting preserveInNetbox to true is mandatory if the user wants to restore
+                    resources from NetBox (e.g. Sticky CIDRs even if resources are deleted and
+                    recreated in Kubernetes)
+                    Field is mutable, not required
                   type: boolean
                 size:
-                  description:
-                    Size is the amount of consecutive IP Addresses you wish
-                    to reserve. Currently only sizes up to 50 are supported due to pagination
-                    of the NetBox API. In practice, this might be even lower depending
-                    on the fragmentation of the parent prefix.
+                  description: |-
+                    The amount of consecutive IP Addresses you wish to reserve.
+                    Currently only sizes up to 50 are supported due to pagination of the
+                    NetBox API. In practice, this might be even lower depending on the
+                    fragmentation of the parent prefix.
+                    Field is immutable, required, range from 2-50
                   maximum: 50
                   minimum: 2
                   type: integer
@@ -82,6 +118,10 @@ spec:
                     - message: Field 'size' is immutable
                       rule: self == oldSelf
                 tenant:
+                  description: |-
+                    The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
+                    Field is immutable, not required
+                    Example: "Initech" or "Cyberdyne Systems"
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'tenant' is immutable
@@ -94,6 +134,9 @@ spec:
               description: IpRangeClaimStatus defines the observed state of IpRangeClaim
               properties:
                 conditions:
+                  description:
+                    Conditions represent the latest available observations
+                    of an object's state
                   items:
                     description:
                       Condition contains details for one aspect of the current
@@ -151,26 +194,37 @@ spec:
                     type: object
                   type: array
                 endAddress:
+                  description: The last IP Addresses in CIDR notation
                   type: string
                 endAddressDotDecimal:
+                  description: The last IP Addresses in Dot Decimal notation
                   type: string
                 ipAddressName:
+                  description:
+                    The name of the IpRange CR created by the IpRangeClaim
+                    Controller
                   type: string
                 ipAddresses:
+                  description: The full list of IP Addresses in CIDR notation
                   items:
                     type: string
                   type: array
                 ipAddressesDotDecimal:
+                  description: The full list of IP Addresses in Dot Decimal notation
                   items:
                     type: string
                   type: array
                 ipRange:
+                  description: The assigned IP Range in CIDR notation (e.g. 192.168.0.1/32-192.168.0.123/32)
                   type: string
                 ipRangeDotDecimal:
+                  description: The assigned IP Range in Dot Decimal notation (e.g. 192.168.0.1-192.168.0.123)
                   type: string
                 startAddress:
+                  description: The first IP Addresses in CIDR notation
                   type: string
                 startAddressDotDecimal:
+                  description: The first IP Addresses in Dot Decimal notation
                   type: string
               type: object
           type: object

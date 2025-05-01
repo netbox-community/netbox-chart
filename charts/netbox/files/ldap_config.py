@@ -57,12 +57,12 @@ AUTH_LDAP_BIND_PASSWORD = _read_secret("netbox", "ldap_bind_password")
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
     AUTH_LDAP_USER_SEARCH_BASEDN,
     ldap.SCOPE_SUBTREE,
-    f"({AUTH_LDAP_USER_SEARCH_ATTR}=%(user)s)",
+    AUTH_LDAP_USER_SEARCH_FILTER or f"({AUTH_LDAP_USER_SEARCH_ATTR}=%(user)s)",
 )
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
     AUTH_LDAP_GROUP_SEARCH_BASEDN,
     ldap.SCOPE_SUBTREE,
-    f"(objectClass={AUTH_LDAP_GROUP_SEARCH_CLASS})",
+    AUTH_LDAP_GROUP_SEARCH_FILTER or f"(objectClass={AUTH_LDAP_GROUP_SEARCH_CLASS})",
 )
 AUTH_LDAP_GROUP_TYPE = _import_group_type(AUTH_LDAP_GROUP_TYPE)
 
@@ -75,16 +75,19 @@ if AUTH_LDAP_REQUIRE_GROUP_LIST:
     )
 
 # Define special user types using groups. Exercise great caution when assigning superuser status.
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_active": AUTH_LDAP_REQUIRE_GROUP,
-    "is_staff": reduce(
-        lambda query, group: query | LDAPGroupQuery(group),
-        AUTH_LDAP_IS_ADMIN_LIST,
-        LDAPGroupQuery(""),
-    ),
-    "is_superuser": reduce(
-        lambda query, group: query | LDAPGroupQuery(group),
-        AUTH_LDAP_IS_SUPERUSER_LIST,
-        LDAPGroupQuery(""),
-    ),
-}
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
+
+if AUTH_LDAP_REQUIRE_GROUP is not None:
+    AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+        "is_active": AUTH_LDAP_REQUIRE_GROUP,
+        "is_staff": reduce(
+            lambda query, group: query | LDAPGroupQuery(group),
+            AUTH_LDAP_IS_ADMIN_LIST,
+            LDAPGroupQuery(""),
+        ),
+        "is_superuser": reduce(
+            lambda query, group: query | LDAPGroupQuery(group),
+            AUTH_LDAP_IS_SUPERUSER_LIST,
+            LDAPGroupQuery(""),
+        ),
+    }

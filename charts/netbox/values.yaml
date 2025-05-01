@@ -384,26 +384,33 @@ remoteAuth:
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io
   ldap:
-    serverUri: ldap://example.com
+    # serverUri: ldap://example.com
+    serverUri: ""
     startTls: true
     ignoreCertErrors: false
     caCertDir: ""
     caCertData: ""
-    bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
+    # bindDn: CN=Netbox,OU=EmbeddedDevices,OU=MyCompany,DC=example,dc=com
+    bindDn: ""
     bindPassword: ""
     userDnTemplate: ""
-    userSearchBaseDn: OU=Users,OU=MyCompany,DC=example,dc=com
+    # userSearchBaseDn: OU=Users,OU=MyCompany,DC=example,dc=com
+    userSearchBaseDn: ""
     userSearchAttr: sAMAccountName
-    groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com
+    # groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com
+    groupSearchBaseDn: ""
     groupSearchClass: group
     groupType: GroupOfNamesType
-    requireGroupDn:
-      - CN=Network Configuration Operators,CN=Builtin,DC=example,dc=com
-      - CN=Domain Admins,CN=Users,DC=example,dc=com
-    isAdminDn:
-      - CN=Domain Admins,CN=Users,DC=example,dc=com
-    isSuperUserDn:
-      - CN=Domain Admins,CN=Users,DC=example,dc=com
+    # requireGroupDn:
+    #   - CN=Network Configuration Operators,CN=Builtin,DC=example,dc=com
+    #   - CN=Domain Admins,CN=Users,DC=example,dc=com
+    requireGroupDn: []
+    # isAdminDn:
+    #   - CN=Domain Admins,CN=Users,DC=example,dc=com
+    isAdminDn: []
+    # isSuperUserDn:
+    #   - CN=Domain Admins,CN=Users,DC=example,dc=com
+    isSuperUserDn: []
     findGroupPerms: true
     mirrorGroups: true
     mirrorGroupsExcept: []

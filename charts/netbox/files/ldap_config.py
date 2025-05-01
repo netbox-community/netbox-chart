@@ -43,6 +43,11 @@ def _import_group_type(group_type_name: str) -> Any | None:
         return None
 
 
+AUTH_LDAP_USER_SEARCH_FILTER = None
+AUTH_LDAP_GROUP_SEARCH_FILTER = None
+AUTH_LDAP_REQUIRE_GROUP = None
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
+
 _load_yaml()
 
 # The following may be needed if you are binding to Active Directory.
@@ -75,8 +80,6 @@ if AUTH_LDAP_REQUIRE_GROUP_LIST:
     )
 
 # Define special user types using groups. Exercise great caution when assigning superuser status.
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
-
 if AUTH_LDAP_REQUIRE_GROUP is not None:
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
         "is_active": AUTH_LDAP_REQUIRE_GROUP,

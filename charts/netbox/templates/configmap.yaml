@@ -15,21 +15,34 @@ data:
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}
     ALLOWED_HOSTS_INCLUDES_POD_ID: {{ .Values.allowedHostsIncludesPodIP }}
 
-    DATABASE:
-      {{- if .Values.postgresql.enabled }}
-      HOST: {{ include "postgresql.v1.primary.fullname" .Subcharts.postgresql | quote }}
-      USER: {{ include "postgresql.v1.username" .Subcharts.postgresql | quote }}
-      NAME: {{ include "postgresql.v1.database" .Subcharts.postgresql | quote }}
-      PORT: {{ include "postgresql.v1.service.port" .Subcharts.postgresql | int }}
-      {{- else }}
-      HOST: {{ .Values.externalDatabase.host | quote }}
-      USER: {{ .Values.externalDatabase.username | quote }}
-      NAME: {{ .Values.externalDatabase.database | quote }}
-      PORT: {{ .Values.externalDatabase.port | int }}
+    DATABASES:
+      default:
+        {{- if .Values.postgresql.enabled }}
+        HOST: {{ include "postgresql.v1.primary.fullname" .Subcharts.postgresql | quote }}
+        USER: {{ include "postgresql.v1.username" .Subcharts.postgresql | quote }}
+        NAME: {{ include "postgresql.v1.database" .Subcharts.postgresql | quote }}
+        PORT: {{ include "postgresql.v1.service.port" .Subcharts.postgresql | int }}
+        {{- else }}
+        HOST: {{ .Values.externalDatabase.host | quote }}
+        USER: {{ .Values.externalDatabase.username | quote }}
+        NAME: {{ .Values.externalDatabase.database | quote }}
+        PORT: {{ .Values.externalDatabase.port | int }}
+        {{- end }}
+        ENGINE: {{ .Values.externalDatabase.engine | quote }}
+        OPTIONS: {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.options "context" $) | nindent 10 }}
+        CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
+        DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
+      {{- range $key, $db := .Values.additionalDatabases }}
+      {{ $key }}:
+        ENGINE: {{ $db.engine | quote }}
+        NAME: {{ $db.database | quote }}
+        USER: {{ $db.username | quote }}
+        HOST: {{ $db.host | quote }}
+        PORT: {{ $db.port | int }}
+        CONN_MAX_AGE: {{ $db.connMaxAge | int }}
+        OPTIONS: {{- include "common.tplvalues.render" (dict "value" $db.options "context" $) | nindent 10 }}
+        DISABLE_SERVER_SIDE_CURSORS: {{ toJson $db.disableServerSideCursors }}
       {{- end }}
-      OPTIONS: {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.options "context" $) | nindent 8 }}
-      CONN_MAX_AGE: {{ .Values.externalDatabase.connMaxAge | int }}
-      DISABLE_SERVER_SIDE_CURSORS: {{ toJson .Values.externalDatabase.disableServerSideCursors }}
 
     ADMINS: {{ toJson .Values.admins }}
     ALLOW_TOKEN_RETRIEVAL: {{ toJson .Values.allowTokenRetrieval }}

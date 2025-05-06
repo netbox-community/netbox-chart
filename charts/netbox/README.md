@@ -10,7 +10,7 @@ helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
 > [!tip]
-> Please see [Production Usage](#production-usage) below before using this chart for real.
+> Please see [Production Considerations](docs/prod.md) guide before using this chart for real.
 
 ## Prerequisites
 

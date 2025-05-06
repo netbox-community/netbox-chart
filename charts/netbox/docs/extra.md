@@ -28,8 +28,8 @@ For additional NetBox configuration setting, the recommended way is
 to use the extra configuration value (`extraConfig`).
 
 > [!note]
-> In order to keep the chart's values reasonnable, only the 
-> [required](https://netboxlabs.com/docs/netbox/en/stable/configuration/required-parameters/) 
+> In order to keep the chart's values reasonnable, only the
+> [required](https://netboxlabs.com/docs/netbox/en/stable/configuration/required-parameters/)
 > and critical configuration settings can be directly configured with a dedicated value field.
 
 For example, the following snippet is configuring the value for

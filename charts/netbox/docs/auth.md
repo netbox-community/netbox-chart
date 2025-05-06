@@ -253,7 +253,7 @@ remoteAuth:
 
 If you need to specify your own CA certificate, follow the instructions below.
 
-#### Option 1. In your `values.yaml` file define the directory already containing your CA certificate.
+#### Option 1. In your `values.yaml` file define the directory already containing your CA certificate
 
 ```yaml
   ldap:
@@ -263,7 +263,7 @@ If you need to specify your own CA certificate, follow the instructions below.
     caCertDir: /etc/ssl/certs
 ```
 
-#### Option 2. In your `values.yaml` file define your CA certificate content in `caCertData`.
+#### Option 2. In your `values.yaml` file define your CA certificate content in `caCertData`
 
 ```yaml
   ldap:

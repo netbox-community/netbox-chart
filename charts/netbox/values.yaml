@@ -1058,6 +1058,7 @@ externalDatabase:
   existingSecretKey: postgresql-password
 
   # The following settings also apply when using the bundled PostgreSQL chart:
+  engine: django.db.backends.postgresql
   connMaxAge: 300
   disableServerSideCursors: false
   ## @param externalDatabase.options Additional PostgreSQL client parameters
@@ -1066,6 +1067,29 @@ externalDatabase:
   options:
     sslmode: "prefer"
     target_session_attrs: "read-write"
+
+## Additional databases configuration
+## @param additionalDatabases.*.host Host of the existing database
+## @param additionalDatabases.*.port Port of the existing database
+## @param additionalDatabases.*.username Existing username in the external db
+## @param additionalDatabases.*.password Password for the above username
+## @param additionalDatabases.*.database Name of the existing database
+## e.g:
+## additionalDatabases:
+##   external2:
+##     host: localhost
+##     port: 5432
+##     database: netbox
+##     username: netbox
+##     password: ""
+##     engine: django.db.backends.postgresql
+##     connMaxAge: 300
+##     disableServerSideCursors: false
+##     options:
+##       sslmode: "prefer"
+##       target_session_attrs: "read-write"
+##
+additionalDatabases: {}
 
 ## Valkey chart configuration
 ## https://github.com/bitnami/charts/blob/main/bitnami/valkey/values.yaml

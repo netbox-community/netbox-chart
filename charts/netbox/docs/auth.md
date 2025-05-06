@@ -1,11 +1,16 @@
 # Authentication Options
 
-## Configuring SSO
+## Using SSO
 
 You can configure different SSO backends with `remoteAuth`.
 The implementation is based on [Python Social Auth](https://python-social-auth.readthedocs.io/en/latest/backends/index.html#supported-backends).
-Depending on the chosen backend you need to configure different parameters.
+
+Depending on the chosen backend you may need to configure different parameters.
 You can leverage the `extraConfig` value in conjunction with `remoteAuth`.
+
+> [!tip]
+> Read more about `extraConfig` usage within [Extra Configuration](./extra.md) guide.
+
 By default the users do not have any permission after logging in.
 Using custom auth pipelines you can assign groups based on the roles supplied by the oauth provider.
 
@@ -115,12 +120,14 @@ data:
 > - [Keycloak Documentation](https://www.keycloak.org/docs/latest/server_admin/#_audience_hardcoded)
 
 ### Example config for GitLab backend
+
 ```yaml
 remoteAuth:
   enabled: true
   backends:
     - social_core.backends.gitlab.GitLabOAuth2
   autoCreateUser: true
+
 extraConfig:
   - secret:
       secretName: gitlab-client
@@ -230,11 +237,11 @@ remoteAuth:
   backends:
     - netbox.authentication.LDAPBackend
   ldap:
-    serverUri: 'ldap://domain.com'
+    serverUri: ldap://domain.com
     startTls: true
     ignoreCertErrors: true
-    bindDn: ''
-    bindPassword: ''
+    bindDn: ""
+    bindPassword: ""
     # and ALL the other remoteAuth.ldap.* settings from values.yaml
 ```
 
@@ -243,23 +250,24 @@ remoteAuth:
 > to an empty string as in the example above.
 
 ### LDAP Certificate Verification
+
 If you need to specify your own CA certificate, follow the instructions below.
 
-Option 1. In your `values.yaml` file define the directory already containing your CA certificate:
+#### Option 1. In your `values.yaml` file define the directory already containing your CA certificate.
 
 ```yaml
   ldap:
-    serverUri: 'ldap://domain.com'
+    serverUri: ldap://domain.com
     startTls: true
     ignoreCertErrors: false
     caCertDir: /etc/ssl/certs
 ```
 
-Option 2. In your `values.yaml` file define your CA certificate content in `caCertData`:
+#### Option 2. In your `values.yaml` file define your CA certificate content in `caCertData`.
 
 ```yaml
   ldap:
-    serverUri: 'ldap://domain.com'
+    serverUri: ldap://domain.com
     startTls: true
     ignoreCertErrors: false
     caCertData: |

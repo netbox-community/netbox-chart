@@ -310,21 +310,24 @@ mapsUrl: "https://maps.google.com/?q="
 # all objects by specifying "?limit=0".
 maxPageSize: 1000
 
-# By default uploaded media is stored in an attached volume. Using
-# Django-storages is also supported. Provide the class path of the storage
-# driver in storageBackend and any configuration options in storageConfig.
-# storageBackend: storages.backends.s3boto3.S3Boto3Storage
-storageBackend: ""
-# Configuration for the storage backend can be provided using storageConfig.
-# Note these values are not stored securely. If the configuration must be
-# setup in a more secure way, a propor Secret can be used with extraEnvVarsSecret.
-# storageConfig:
-#   AWS_ACCESS_KEY_ID: 'Key ID'
-#   AWS_SECRET_ACCESS_KEY: 'Secret'
-#   AWS_STORAGE_BUCKET_NAME: 'netbox'
-#   AWS_S3_ENDPOINT_URL: 'endpoint URL of S3 provider'
-#   AWS_S3_REGION_NAME: 'eu-west-1'
-storageConfig: {}
+## The backend storage engine for handling uploaded files such as image
+## attachments and custom scripts. NetBox integrates with the
+## django-storages and django-storage-swift libraries, which provide backends
+## for several popular file storage services. If not configured, local
+## filesystem storage will be used.
+## Note these values are not stored securely. If the configuration must be
+## setup in a more secure way, a propor Secret can be used with extraEnvVarsSecret.
+## ref: https://netboxlabs.com/docs/netbox/en/stable/configuration/system/#storages
+## e.g:
+## storages:
+##   default:
+##     BACKEND: "django.core.files.storage.FileSystemStorage"
+##   scripts:
+##     BACKEND: "storages.backends.s3.S3Storage"
+##     OPTIONS:
+##       access_key: "access key"
+##       secret_key: "secret key"
+storages: {}
 
 # Determine how many objects to display per page within a list. (Default: 50)
 paginateCount: 50

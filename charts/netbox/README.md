@@ -34,7 +34,7 @@ complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando'
 with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
-Set `persistence.enabled` to `false` and use the S3 `storageBackend` and `storageConfig`
+Set `persistence.enabled` to `false` and use the S3 `storages`
 for object storage. This works well with Minio or Ceph RGW as well as Amazon S3.
 See [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
@@ -124,8 +124,7 @@ The following table lists the configurable parameters for this chart and their d
 | `maintenanceMode`                               | Display a "maintenance mode" banner on every page                   | `false`                                      |
 | `mapsUrl`                                       | The URL to use when mapping physical addresses or GPS coordinates   | `https://maps.google.com/?q=`                |
 | `maxPageSize`                                   | Maximum number of objects that can be returned by a single API call | `1000`                                       |
-| `storageBackend`                                | Django-storages backend class name                                  | `null`                                       |
-| `storageConfig`                                 | Django-storages backend configuration                               | `{}`                                         |
+| `storages`                                      | `django-storages` backends configuration                            | `{}`                                         |
 | `paginateCount`                                 | The default number of objects to display per page in the web UI     | `50`                                         |
 | `plugins`                                       | Additional plugins to load into NetBox                              | `[]`                                         |
 | `pluginsConfig`                                 | Configuration for the additional plugins                            | `{}`                                         |
@@ -390,7 +389,7 @@ this problem:
 
 <!-- prettier-ignore-start -->
 
-1. Use the recommended S3 `storageBackend` and **disable** persistent storage
+1. Use the recommended S3 `storages` and **disable** persistent storage
     by setting `persistence.enabled` to `false`. This can
     be used with any S3-compatible storage provider including Amazon S3, Minio,
     Ceph RGW, and many others. See further down for an example of this.

@@ -78,10 +78,7 @@ data:
     MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media
-    {{- if .Values.storageBackend }}
-    STORAGE_BACKEND: {{ .Values.storageBackend | quote }}
-    STORAGE_CONFIG: {{ toJson .Values.storageConfig }}
-    {{- end }}
+    STORAGES: {{ toJson .Values.storages }}
     METRICS_ENABLED: {{ toJson .Values.metrics.enabled }}
     PAGINATE_COUNT: {{ int .Values.paginateCount }}
     PLUGINS: {{ toJson .Values.plugins }}

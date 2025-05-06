@@ -1097,6 +1097,8 @@ additionalDatabases: {}
 ##
 valkey:
   enabled: true
+  ## Disable AOF to use pure cache on an `emptyDir` persistence.
+  commonConfiguration: ""
 
 tasksDatabase:
   database: 0

@@ -248,15 +248,15 @@ spec:
               - key: {{ include "netbox.postgresql.secretKey" . | quote }}
                 path: db_password
           - secret:
-              name: {{ include "netbox.tasksRedis.secret" . | quote }}
+              name: {{ include "netbox.tasksDatabase.secret" . | quote }}
               items:
-              - key: {{ include "netbox.tasksRedis.secretKey" . | quote }}
-                path: redis_tasks_password
+              - key: {{ include "netbox.tasksDatabase.secretKey" . | quote }}
+                path: tasks_password
           - secret:
-              name: {{ include "netbox.cachingRedis.secret" . | quote }}
+              name: {{ include "netbox.cachingDatabase.secret" . | quote }}
               items:
-              - key: {{ include "netbox.cachingRedis.secretKey" . | quote }}
-                path: redis_cache_password
+              - key: {{ include "netbox.cachingDatabase.secretKey" . | quote }}
+                path: cache_password
       {{- include "netbox.extraConfig.volumes" . | nindent 6 }}
       - name: netbox-tmp
         emptyDir:

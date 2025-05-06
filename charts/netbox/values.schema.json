@@ -917,6 +917,17 @@
     "rackElevationDefaultUnitWidth": {
       "type": "integer"
     },
+    "rbac": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean"
+        },
+        "rules": {
+          "type": "array"
+        }
+      }
+    },
     "readinessProbe": {
       "$ref": "#/$defs/probe"
     },
@@ -1622,6 +1633,99 @@
           "properties": {
             "type": {
               "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "waitForBackend": {
+          "properties": {
+            "args": {
+              "type": "array"
+            },
+            "command": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "podSecurityContext": {
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "fsGroup": {
+                  "type": "integer"
+                },
+                "fsGroupChangePolicy": {
+                  "type": "string"
+                },
+                "supplementalGroups": {
+                  "type": "array"
+                },
+                "sysctls": {
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "resources": {
+              "properties": {},
+              "type": "object"
+            },
+            "resourcesPreset": {
+              "type": "string"
+            },
+            "securityContext": {
+              "properties": {
+                "allowPrivilegeEscalation": {
+                  "type": "boolean"
+                },
+                "capabilities": {
+                  "properties": {
+                    "drop": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "privileged": {
+                  "type": "boolean"
+                },
+                "readOnlyRootFilesystem": {
+                  "type": "boolean"
+                },
+                "runAsGroup": {
+                  "type": "integer"
+                },
+                "runAsNonRoot": {
+                  "type": "boolean"
+                },
+                "runAsUser": {
+                  "type": "integer"
+                },
+                "seLinuxOptions": {
+                  "properties": {},
+                  "type": "object"
+                },
+                "seccompProfile": {
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
             }
           },
           "type": "object"

@@ -17,11 +17,11 @@ maintainers:
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: ^2.30.0
+    version: ^2.31.0
     tags:
       - bitnami-common
   - name: netbox
-    version: ^5.0.57
+    version: ^5.0.76
     repository: oci://ghcr.io/netbox-community/netbox-chart
     condition: netbox.enabled
 annotations:

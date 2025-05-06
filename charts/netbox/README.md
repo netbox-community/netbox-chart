@@ -27,7 +27,7 @@ helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 
 ### Production Usage
 
-We recommend using separate external PostgreSQL and Redis instances. This
+We recommend using separate external PostgreSQL and Key-Value instances. This
 de-couples those services from the chart's bundled versions which may have
 complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando's
 [Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
@@ -210,35 +210,35 @@ The following table lists the configurable parameters for this chart and their d
 | `externalDatabase.existingSecretKey`            | Key to fetch the password in the above `Secret`                     | `postgresql-password`                        |
 | `externalDatabase.connMaxAge`                   | The lifetime of a database connection, as an integer of seconds     | `300`                                        |
 | `externalDatabase.disableServerSideCursors`     | Disable the use of server-side cursors transaction pooling          | `false`                                      |
-| `externalDatabase.options`                      | Additional PostgreSQL client parameters             | `{}`                                            |
-| `redis.enabled`                                 | Deploy Redis using bundled Bitnami Redis chart                      | `true`                                       |
-| `redis.*`                                       | Values under this key are passed to the bundled Redis chart         | n/a                                          |
-| `tasksRedis.database`                           | Redis database number used for NetBox task queue                    | `0`                                          |
-| `tasksRedis.ssl`                                | Enable SSL when connecting to Redis                                 | `false`                                      |
-| `tasksRedis.insecureSkipTlsVerify`              | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
-| `tasksRedis.caCertPath`                         | Path to CA certificates bundle for Redis (needs mounting manually)  | `""`                                         |
-| `tasksRedis.host`                               | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
-| `tasksRedis.port`                               | Port number for external Redis                                      | `6379`                                       |
-| `tasksRedis.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
-| `tasksRedis.sentinelService`                    | Sentinel master service name                                        | `"netbox-redis"`                             |
-| `tasksRedis.sentinelTimeout`                    | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
-| `tasksRedis.username`                           | Username for external Redis                                         | `""`                                         |
-| `tasksRedis.password`                           | Password for external Redis (see also `existingSecret`)             | `""`                                         |
-| `tasksRedis.existingSecretName`                 | Fetch password for external Redis from a different `Secret`         | `""`                                         |
-| `tasksRedis.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
-| `cachingRedis.database`                         | Redis database number used for caching views                        | `1`                                          |
-| `cachingRedis.ssl`                              | Enable SSL when connecting to Redis                                 | `false`                                      |
-| `cachingRedis.insecureSkipTlsVerify`            | Skip TLS certificate verification when connecting to Redis          | `false`                                      |
-| `cachingRedis.caCertPath`                       | Path to CA certificates bundle for Redis (needs mounting manually)  | `""`                                         |
-| `cachingRedis.host`                             | Redis host to use when `redis.enabled` is `false`                   | `"netbox-redis"`                             |
-| `cachingRedis.port`                             | Port number for external Redis                                      | `6379`                                       |
-| `cachingRedis.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
-| `cachingRedis.sentinelService`                  | Sentinel master service name                                        | `"netbox-redis"`                             |
-| `cachingRedis.sentinelTimeout`                  | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
-| `cachingRedis.username`                         | Username for external Redis                                         | `""`                                         |
-| `cachingRedis.password`                         | Password for external Redis (see also `existingSecret`)             | `""`                                         |
-| `cachingRedis.existingSecretName`               | Fetch password for external Redis from a different `Secret`         | `""`                                         |
-| `cachingRedis.existingSecretKey`                | Key to fetch the password in the above `Secret`                     | `redis-password`                             |
+| `externalDatabase.options`                      | Additional PostgreSQL client parameters                             | `{}`                                            |
+| `valkey.enabled`                                | Deploy Valkey using bundled Bitnami Valkey chart                    | `true`                                       |
+| `valkey.*`                                      | Values under this key are passed to the bundled Valkey chart        | n/a                                          |
+| `tasksDatabase.database`                           | KV database number used for NetBox task queue                       | `0`                                          |
+| `tasksDatabase.ssl`                                | Enable SSL when connecting to KV                                    | `false`                                      |
+| `tasksDatabase.insecureSkipTlsVerify`              | Skip TLS certificate verification when connecting to KV             | `false`                                      |
+| `tasksDatabase.caCertPath`                         | Path to CA certificates bundle for KV (needs mounting manually)     | `""`                                         |
+| `tasksDatabase.host`                               | KV host to use when `valkey.enabled` is `false`                     | `"netbox-kv"`                             |
+| `tasksDatabase.port`                               | Port number for external KV                                         | `6379`                                       |
+| `tasksDatabase.sentinels`                          | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
+| `tasksDatabase.sentinelService`                    | Sentinel master service name                                        | `"netbox-kv"`                             |
+| `tasksDatabase.sentinelTimeout`                    | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
+| `tasksDatabase.username`                           | Username for external KV                                            | `""`                                         |
+| `tasksDatabase.password`                           | Password for external KV (see also `existingSecret`)                | `""`                                         |
+| `tasksDatabase.existingSecretName`                 | Fetch password for external KV from a different `Secret`            | `""`                                         |
+| `tasksDatabase.existingSecretKey`                  | Key to fetch the password in the above `Secret`                     | `tasks-password`                             |
+| `cachingDatabase.database`                         | KV database number used for caching views                           | `1`                                          |
+| `cachingDatabase.ssl`                              | Enable SSL when connecting to KV                                    | `false`                                      |
+| `cachingDatabase.insecureSkipTlsVerify`            | Skip TLS certificate verification when connecting to KV             | `false`                                      |
+| `cachingDatabase.caCertPath`                       | Path to CA certificates bundle for KV (needs mounting manually)     | `""`                                         |
+| `cachingDatabase.host`                             | KV host to use when `valkey.enabled` is `false`                     | `"netbox-kv"`                             |
+| `cachingDatabase.port`                             | Port number for external KV                                         | `6379`                                       |
+| `cachingDatabase.sentinels`                        | List of sentinels in `host:port` form (`host` and `port` not used)  | `[]`                                         |
+| `cachingDatabase.sentinelService`                  | Sentinel master service name                                        | `"netbox-kv"`                             |
+| `cachingDatabase.sentinelTimeout`                  | Sentinel connection timeout, in seconds                             | `300` (5 minutes)                            |
+| `cachingDatabase.username`                         | Username for external KV                                            | `""`                                         |
+| `cachingDatabase.password`                         | Password for external KV (see also `existingSecret`)                | `""`                                         |
+| `cachingDatabase.existingSecretName`               | Fetch password for external KV from a different `Secret`            | `""`                                         |
+| `cachingDatabase.existingSecretKey`                | Key to fetch the password in the above `Secret`                     | `cache-password`                             |
 | `imagePullSecrets`                              | List of `Secret` names containing private registry credentials      | `[]`                                         |
 | `nameOverride`                                  | Override the application name (`netbox`) used throughout the chart  | `""`                                         |
 | `fullnameOverride`                              | Override the full name of resources created as part of the release  | `""`                                         |
@@ -470,11 +470,17 @@ Type: `kubernetes.io/basic-auth`
 | --------------------- | ------------------------------------------------- | ---------------------------------- |
 | `postgresql-password` | The password for the external PostgreSQL database | If `postgresql.enabled` is `false` |
 
-### Redis secrets (`tasksRedis.existingSecretName` & `cachingRedis.existingSecretName`)
+### Tasks secrets (`tasksDatabase.existingSecretName`)
 
 | Key              | Description                                                   | Required?                     |
 | ---------------- | ------------------------------------------------------------- | ----------------------------- |
-| `redis-password` | Password for the external Redis database (tasks and/or cache) | If `redis.enabled` is `false` |
+| `tasks-password` | Password for the external KV database (tasks and/or cache)    | If `valkey.enabled` is `false` |
+
+### Cache secrets (`cachingDatabase.existingSecretName`)
+
+| Key              | Description                                                   | Required?                     |
+| ---------------- | ------------------------------------------------------------- | ----------------------------- |
+| `cache-password` | Password for the external KV database (tasks and/or cache)    | If `valkey.enabled` is `false` |
 
 ## Authentication
 

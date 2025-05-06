@@ -1052,7 +1052,7 @@ externalDatabase:
 valkey:
   enabled: true
 
-tasksRedis:
+tasksDatabase:
   database: 0
   ssl: false
   insecureSkipTlsVerify: false
@@ -1061,18 +1061,18 @@ tasksRedis:
 
   # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-valkey
+  host: netbox-kv
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-valkey
+  sentinelService: netbox-kv
   sentinelTimeout: 300
   username: ""
   password: ""
   existingSecretName: ""
   existingSecretKey: tasks-password
 
-cachingRedis:
+cachingDatabase:
   database: 1
   ssl: false
   insecureSkipTlsVerify: false
@@ -1081,11 +1081,11 @@ cachingRedis:
 
   # Used only when valkey.enabled is false. host and port are not used if
   # sentinels are given.
-  host: netbox-valkey
+  host: netbox-kv
   port: 6379
   sentinels: []
   #  - mysentinel:26379
-  sentinelService: netbox-valkey
+  sentinelService: netbox-kv
   sentinelTimeout: 300
   username: ""
   password: ""

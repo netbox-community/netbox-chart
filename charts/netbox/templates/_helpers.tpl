@@ -63,22 +63,22 @@ Name of the key in Secret that contains the PostgreSQL password
 {{/*
 Name of the Secret that contains the Valkey tasks password
 */}}
-{{- define "netbox.tasksRedis.secret" -}}
+{{- define "netbox.tasksDatabase.secret" -}}
   {{- if .Values.valkey.enabled }}
     {{- include "valkey.secretName" .Subcharts.valkey -}}
   {{- else }}
-    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksRedis.existingSecretName "defaultNameSuffix" "kv" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.tasksDatabase.existingSecretName "defaultNameSuffix" "kv" "context" $) }}
   {{- end }}
 {{- end }}
 
 {{/*
 Name of the key in Secret that contains the Valkey tasks password
 */}}
-{{- define "netbox.tasksRedis.secretKey" -}}
+{{- define "netbox.tasksDatabase.secretKey" -}}
   {{- if .Values.valkey.enabled -}}
     {{- include "valkey.secretPasswordKey" .Subcharts.valkey -}}
-  {{- else if .Values.tasksRedis.existingSecretName -}}
-    {{ .Values.tasksRedis.existingSecretKey }}
+  {{- else if .Values.tasksDatabase.existingSecretName -}}
+    {{ .Values.tasksDatabase.existingSecretKey }}
   {{- else -}}
     tasks_password
   {{- end -}}
@@ -87,7 +87,7 @@ Name of the key in Secret that contains the Valkey tasks password
 {{/*
 Name of the Secret that contains the Valkey cache password
 */}}
-{{- define "netbox.cachingRedis.secret" -}}
+{{- define "netbox.cachingDatabase.secret" -}}
   {{- if .Values.valkey.enabled }}
     {{- include "valkey.secretName" .Subcharts.valkey -}}
   {{- else }}
@@ -98,11 +98,11 @@ Name of the Secret that contains the Valkey cache password
 {{/*
 Name of the key in Secret that contains the Valkey cache password
 */}}
-{{- define "netbox.cachingRedis.secretKey" -}}
+{{- define "netbox.cachingDatabase.secretKey" -}}
   {{- if .Values.valkey.enabled -}}
     {{- include "valkey.secretPasswordKey" .Subcharts.valkey -}}
-  {{- else if .Values.cachingRedis.existingSecretName -}}
-    {{ .Values.cachingRedis.existingSecretKey }}
+  {{- else if .Values.cachingDatabase.existingSecretName -}}
+    {{ .Values.cachingDatabase.existingSecretKey }}
   {{- else -}}
     cache_password
   {{- end -}}

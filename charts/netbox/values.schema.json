@@ -197,7 +197,7 @@
     "basePath": {
       "type": "string"
     },
-    "cachingRedis": {
+    "cachingDatabase": {
       "properties": {
         "caCertPath": {
           "type": "string"
@@ -1319,7 +1319,7 @@
       },
       "type": "object"
     },
-    "tasksRedis": {
+    "tasksDatabase": {
       "properties": {
         "caCertPath": {
           "type": "string"

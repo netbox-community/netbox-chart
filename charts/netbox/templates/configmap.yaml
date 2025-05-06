@@ -116,36 +116,36 @@ data:
         {{- if .Values.valkey.enabled }}
         HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.master.service.ports.valkey | int }}
-        {{- else if .Values.tasksRedis.sentinels }}
-        SENTINELS: {{ toJson .Values.tasksRedis.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.tasksRedis.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.tasksRedis.sentinelTimeout | int }}
+        {{- else if .Values.tasksDatabase.sentinels }}
+        SENTINELS: {{ toJson .Values.tasksDatabase.sentinels }}
+        SENTINEL_SERVICE: {{ .Values.tasksDatabase.sentinelService | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
         {{- else }}
-        HOST: {{ .Values.tasksRedis.host | quote }}
-        PORT: {{ .Values.tasksRedis.port | int }}
+        HOST: {{ .Values.tasksDatabase.host | quote }}
+        PORT: {{ .Values.tasksDatabase.port | int }}
         {{- end }}
-        USERNAME: {{ .Values.tasksRedis.username | quote }}
-        DATABASE: {{ int .Values.tasksRedis.database }}
-        SSL: {{ toJson .Values.tasksRedis.ssl }}
-        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksRedis.insecureSkipTlsVerify }}
-        CA_CERT_PATH: {{ .Values.tasksRedis.caCertPath | quote }}
+        USERNAME: {{ .Values.tasksDatabase.username | quote }}
+        DATABASE: {{ int .Values.tasksDatabase.database }}
+        SSL: {{ toJson .Values.tasksDatabase.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksDatabase.insecureSkipTlsVerify }}
+        CA_CERT_PATH: {{ .Values.tasksDatabase.caCertPath | quote }}
       caching:
         {{- if .Values.valkey.enabled }}
         HOST: {{ printf "%s-master" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.master.service.ports.valkey | int }}
-        {{- else if .Values.cachingRedis.sentinels }}
-        SENTINELS: {{ toJson .Values.cachingRedis.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.cachingRedis.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.cachingRedis.sentinelTimeout | int }}
+        {{- else if .Values.cachingDatabase.sentinels }}
+        SENTINELS: {{ toJson .Values.cachingDatabase.sentinels }}
+        SENTINEL_SERVICE: {{ .Values.cachingDatabase.sentinelService | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
         {{- else }}
-        HOST: {{ .Values.cachingRedis.host | quote }}
-        PORT: {{ .Values.cachingRedis.port | int}}
+        HOST: {{ .Values.cachingDatabase.host | quote }}
+        PORT: {{ .Values.cachingDatabase.port | int}}
         {{- end }}
-        USERNAME: {{ .Values.cachingRedis.username | quote }}
-        DATABASE: {{ int .Values.cachingRedis.database }}
-        SSL: {{ toJson .Values.cachingRedis.ssl }}
-        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.cachingRedis.insecureSkipTlsVerify }}
-        CA_CERT_PATH: {{ .Values.cachingRedis.caCertPath | quote }}
+        USERNAME: {{ .Values.cachingDatabase.username | quote }}
+        DATABASE: {{ int .Values.cachingDatabase.database }}
+        SSL: {{ toJson .Values.cachingDatabase.ssl }}
+        INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.cachingDatabase.insecureSkipTlsVerify }}
+        CA_CERT_PATH: {{ .Values.cachingDatabase.caCertPath | quote }}
 
     REPORTS_ROOT: /opt/netbox/netbox/reports
     RQ_DEFAULT_TIMEOUT: {{ .Values.rqDefaultTimeout | int }}

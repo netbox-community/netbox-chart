@@ -51,7 +51,7 @@ def _read_secret(secret_name: str, secret_key: str, default: str | None = None) 
 
 
 CORS_ORIGIN_REGEX_WHITELIST = []
-DATABASE = {}
+DATABASES = {}
 EMAIL = {}
 REDIS = {}
 
@@ -59,7 +59,7 @@ _load_yaml()
 
 provided_secret_name = os.getenv("SECRET_NAME", "netbox")
 
-DATABASE["PASSWORD"] = _read_secret(provided_secret_name, "db_password")
+DATABASES["default"]["PASSWORD"] = _read_secret(provided_secret_name, "db_password")
 EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
 REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "tasks_password")
 REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "cache_password")

@@ -379,6 +379,9 @@
         "disableServerSideCursors": {
           "type": "boolean"
         },
+        "engine": {
+          "type": "string"
+        },
         "existingSecretKey": {
           "type": "string"
         },
@@ -401,6 +404,9 @@
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "additionalDatabases": {
       "type": "object"
     },
     "extraConfig": {

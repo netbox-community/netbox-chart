@@ -1292,10 +1292,7 @@
     "startupProbe": {
       "$ref": "#/$defs/probe"
     },
-    "storageBackend": {
-      "type": "string"
-    },
-    "storageConfig": {
+    "storages": {
       "properties": {},
       "type": "object"
     },

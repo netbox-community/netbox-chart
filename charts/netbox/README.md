@@ -25,7 +25,7 @@ To install the chart with the release name `my-release` and default configuratio
 helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 ```
 
-### Production Usage
+## Documentation
 
 We recommend using separate external PostgreSQL and Key-Value instances. This
 de-couples those services from the chart's bundled versions which may have
@@ -55,6 +55,10 @@ affinity:
             app.kubernetes.io/component: netbox
         topologyKey: kubernetes.io/hostname
 ```
+- [Production Considerations](docs/prod.md)
+- [Authentication Options](docs/auth.md)
+- [Extra Configuration](docs/extra.md)
+- [Migration Guide](docs/migrate.md)
 
 ## Configuration
 
@@ -481,11 +485,6 @@ Type: `kubernetes.io/basic-auth`
 | Key              | Description                                                   | Required?                     |
 | ---------------- | ------------------------------------------------------------- | ----------------------------- |
 | `cache-password` | Password for the external KV database (tasks and/or cache)    | If `valkey.enabled` is `false` |
-
-## Authentication
-
-- [Single Sign On](/docs/auth.md#configuring-sso)
-- [LDAP Authentication](/docs/auth.md#using-ldap-authentication)
 
 ## License
 

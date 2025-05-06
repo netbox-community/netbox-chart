@@ -27,3 +27,5 @@ OWNERS
 values-production.yaml
 # ci files
 ci/
+# docs files
+docs/

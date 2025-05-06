@@ -26,6 +26,14 @@
     {
       "matchUpdateTypes": ["!major"],
       "automerge": true
+    },
+    {
+      "matchFileNames": ["charts/**"],
+      "bumpVersions": {
+        "filePatterns": "{{packageFileDir}}/Chart.{yaml,yml}",
+        "matchStrings": ["version:\\s(?<version>[^\\s]+)"],
+        "bumpType": "{{#if isMajor}}minor{{else}}patch{{/if}}"
+      }
     }
   ],
   "kubernetes": {

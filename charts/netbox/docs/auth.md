@@ -1,4 +1,4 @@
-# Authentication options
+# Authentication Options
 
 ## Configuring SSO
 

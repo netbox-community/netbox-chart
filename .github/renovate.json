@@ -6,49 +6,30 @@
     ":disableDependencyDashboard",
     "customManagers:helmChartYamlAppVersions"
   ],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
   "rangeStrategy": "bump",
   "packageRules": [
     {
-      "matchManagers": [
-        "helmv3"
-      ],
+      "matchManagers": ["helmv3"],
       "versioning": "helm"
     },
     {
-      "matchManagers": [
-        "helmv3",
-        "helm-values"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchManagers": ["helmv3", "helm-values"],
+      "matchUpdateTypes": ["minor", "patch"],
       "bumpVersion": "patch"
     },
     {
-      "matchManagers": [
-        "helmv3",
-        "helm-values"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchManagers": ["helmv3", "helm-values"],
+      "matchUpdateTypes": ["major"],
       "bumpVersion": "minor"
     },
     {
-      "matchUpdateTypes": [
-        "!major"
-      ],
+      "matchUpdateTypes": ["!major"],
       "automerge": true
     }
   ],
   "kubernetes": {
-    "managerFilePatterns": [
-      "/^charts/.+\\.ya?ml$/"
-    ]
+    "managerFilePatterns": ["/^charts/.+\\.ya?ml$/"]
   },
   "github-actions": {
     "enabled": false

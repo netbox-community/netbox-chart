@@ -29,7 +29,7 @@
     }
   ],
   "kubernetes": {
-    "fileMatch": ["^charts/.+\\.ya?ml$"]
+    "managerFilePatterns": ["/^charts/.+\\.ya?ml$/"]
   },
   "github-actions": {
     "enabled": false

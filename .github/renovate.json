@@ -14,14 +14,14 @@
       "versioning": "helm"
     },
     {
-      "matchManagers": ["helmv3", "helm-values"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "bumpVersion": "patch"
-    },
-    {
-      "matchManagers": ["helmv3", "helm-values"],
-      "matchUpdateTypes": ["major"],
-      "bumpVersion": "minor"
+      "matchFileNames": ["charts/**"],
+      "bumpVersions": [
+        {
+          "filePatterns": ["{{packageFileDir}}/Chart.{yaml,yml}"],
+          "matchStrings": ["version:\\s(?<version>[^\\s]+)"],
+          "bumpType": "{{#if isMajor}}minor{{else}}patch{{/if}}"
+        }
+      ]
     },
     {
       "matchUpdateTypes": ["!major"],

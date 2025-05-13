@@ -27,34 +27,6 @@ helm install my-release oci://ghcr.io/netbox-community/netbox-chart/netbox
 
 ## Documentation
 
-We recommend using separate external PostgreSQL and Key-Value instances. This
-de-couples those services from the chart's bundled versions which may have
-complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando's
-[Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
-with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
-[redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
-
-Set `persistence.enabled` to `false` and use the S3 `storages`
-for object storage. This works well with Minio or Ceph RGW as well as Amazon S3.
-See [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
-
-Run multiple replicas of the NetBox web frontend to avoid interruptions during
-upgrades or at other times when the pods need to be restarted. There's no need
-to have multiple workers (`worker.replicaCount`) for better availability. Set
-up `affinity.podAntiAffinity` to avoid multiple NetBox pods being colocated on
-the same node, for example:
-
-```yaml
-affinity:
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchLabels:
-            app.kubernetes.io/instance: netbox
-            app.kubernetes.io/name: netbox
-            app.kubernetes.io/component: netbox
-        topologyKey: kubernetes.io/hostname
-```
 - [Production Considerations](docs/prod.md)
 - [Authentication Options](docs/auth.md)
 - [Extra Configuration](docs/extra.md)

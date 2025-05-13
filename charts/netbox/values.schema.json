@@ -416,7 +416,7 @@
       "type": "array"
     },
     "extraEnvs": {
-      "type": "array"
+      "type": [ "array", "string" ]
     },
     "extraEnvVarsCM": {
       "type": "string",
@@ -429,10 +429,10 @@
       "default": ""
     },
     "extraVolumeMounts": {
-      "type": "array"
+      "type": [ "array", "string" ]
     },
     "extraVolumes": {
-      "type": "array"
+      "type": [ "array", "string" ]
     },
     "fieldChoices": {
       "properties": {},

@@ -1,8 +1,8 @@
 apiVersion: v2
 name: netbox
-version: 6.0.8
+version: 6.0.11
 # renovate: image=ghcr.io/netbox-community/netbox
-appVersion: "v4.3.0"
+appVersion: "v4.3.1"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
@@ -23,7 +23,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^16.7.3
+    version: ^16.7.4
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: valkey
@@ -33,7 +33,7 @@ dependencies:
 annotations:
   artifacthub.io/images: |
     - name: netbox
-      image: ghcr.io/netbox-community/netbox:v4.3.0
+      image: ghcr.io/netbox-community/netbox:v4.3.1
     - name: busybox
       image: docker.io/busybox:1.37.0
     - name: kubectl

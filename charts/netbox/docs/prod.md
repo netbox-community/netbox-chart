@@ -2,19 +2,18 @@
 
 ## Database Recommendation
 
-We recommend using separate external PostgreSQL and Redis instances. This
+We recommend using separate external PostgreSQL and Key-Value instances. This
 de-couples those services from the chart's bundled versions which may have
 complex upgrade requirements. A clustered PostgreSQL server (e.g. using Zalando's
 [Postgres Operator](https://github.com/zalando/postgres-operator)) and Redis
 with Sentinel (e.g. using [Aaron Layfield](https://github.com/DandyDeveloper)'s
 [redis-ha chart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha)).
 
-
 ## Storage Recommendation
 
-Set `persistence.enabled` to `false` and use the S3 `storageBackend` and `storageConfig`
+Set `persistence.enabled` to `false` and use the S3 `storages`
 for object storage. This works well with Minio or Ceph RGW as well as Amazon S3.
-See [Persistent Storage Pitfalls](#persistent-storage-pitfalls), below.
+See [Persistent storage pitfalls](#persistent-storage-pitfalls), below.
 
 Run multiple replicas of the NetBox web frontend to avoid interruptions during
 upgrades or at other times when the pods need to be restarted. There's no need

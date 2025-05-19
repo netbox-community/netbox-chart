@@ -618,6 +618,9 @@
         "suspend": {
           "type": "boolean"
         },
+        "timezone": {
+          "type": "string"
+        },
         "tolerations": {
           "type": "array"
         }

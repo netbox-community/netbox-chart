@@ -15,7 +15,7 @@ spec:
   schedule: {{ .Values.housekeeping.schedule | quote }}
   successfulJobsHistoryLimit: {{ .Values.housekeeping.successfulJobsHistoryLimit }}
   suspend: {{ .Values.housekeeping.suspend }}
-  {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}
+  {{- if .Values.housekeeping.timezone }}
   timeZone: {{ .Values.housekeeping.timezone }}
   {{- end }}
   jobTemplate:

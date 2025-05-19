@@ -1311,7 +1311,7 @@ housekeeping:
   ## Will work since kubernetes 1.27
   ## See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
   ##
-  timezone: "Etc/UTC"
+  timezone: ""
   ## @param housekeeping.historyLimit Number of successful finished jobs to retain
   ##
   successfulJobsHistoryLimit: 5

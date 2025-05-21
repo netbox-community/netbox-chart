@@ -1307,6 +1307,10 @@ housekeeping:
   ## See https://en.wikipedia.org/wiki/Cron
   ##
   schedule: "0 0 * * *"
+  ## @param housekeeping.timezone Set time zone for cron job
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
+  ##
+  timezone: ""
   ## @param housekeeping.historyLimit Number of successful finished jobs to retain
   ##
   successfulJobsHistoryLimit: 5

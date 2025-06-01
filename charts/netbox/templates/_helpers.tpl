@@ -91,7 +91,7 @@ Name of the Secret that contains the Valkey cache password
   {{- if .Values.valkey.enabled }}
     {{- include "valkey.secretName" .Subcharts.valkey -}}
   {{- else }}
-    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingDatabase.existingSecretName "defaultNameSuffix" "valkey" "context" $) }}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.cachingDatabase.existingSecretName "defaultNameSuffix" "kv" "context" $) }}
   {{- end }}
 {{- end }}
 

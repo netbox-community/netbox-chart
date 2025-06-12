@@ -1,9 +1,9 @@
 dependencies:
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 2.31.1
+  version: 2.31.3
 - name: netbox
   repository: oci://ghcr.io/netbox-community/netbox-chart
   version: 6.0.33
-digest: sha256:2eeb8eaff96beeefb3022c1ee8b05fc673241a060a0a90080c859af8e70e2107
-generated: "2025-06-12T03:43:37.228368148Z"
+digest: sha256:8c2e60dc62c6e77bedd64434f03b4901885a3919647c5d42572340f59f742c62
+generated: "2025-06-12T18:59:30.039429789Z"

@@ -246,7 +246,7 @@ spec:
               name: {{ include "netbox.postgresql.secret" . | quote }}
               items:
               - key: {{ include "netbox.postgresql.secretKey" . | quote }}
-                path: db_password
+                path: password
           - secret:
               name: {{ include "netbox.tasksDatabase.secret" . | quote }}
               items:

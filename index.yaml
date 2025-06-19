@@ -14,6 +14,60 @@ entries:
         - name: busybox
           image: docker.io/busybox:1.37.0
         - name: kubectl
+          image: docker.io/bitnami/kubectl:1.33.2-debian-12-r0
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox
+    apiVersion: v2
+    appVersion: v4.3.2
+    created: "2025-06-19T08:26:33.848689176Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.31.3
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^16.7.12
+    - condition: valkey.enabled
+      name: valkey
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^3.0.15
+    description: IP address management (IPAM) and data center infrastructure management
+      (DCIM) tool
+    digest: 5bee85ca83c278dea6da3b00d5d7cc47fe603a1260f6f6a4a540c7b9e675397e
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    - name: bootc
+      url: https://github.com/bootc
+    name: netbox
+    sources:
+    - https://github.com/netbox-community/netbox
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-6.0.40/netbox-6.0.40.tgz
+    version: 6.0.40
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-
+      artifacthub.io/images: |
+        - name: netbox
+          image: ghcr.io/netbox-community/netbox:v4.3.2
+        - name: busybox
+          image: docker.io/busybox:1.37.0
+        - name: kubectl
           image: docker.io/bitnami/kubectl:1.33.1-debian-12-r6
       artifacthub.io/license: Apache-2.0
       artifacthub.io/links: |
@@ -17503,4 +17557,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-19T03:03:10.813302301Z"
+generated: "2025-06-19T08:26:33.849617385Z"

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 6.0.42
+version: 6.0.43
 # renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.3.2"
 type: application
@@ -23,7 +23,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^16.7.13
+    version: ^16.7.14
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: valkey

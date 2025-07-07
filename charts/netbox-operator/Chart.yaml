@@ -1,8 +1,8 @@
 apiVersion: v2
 name: netbox-operator
-version: 1.0.43
+version: 1.0.44
 # renovate: image=ghcr.io/netbox-community/netbox-operator
-appVersion: "0.2.3"
+appVersion: "0.2.4"
 type: application
 kubeVersion: ^1.25.0-0
 description: Operator to manage NetBox resources directly through Kubernetes

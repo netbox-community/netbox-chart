@@ -1097,6 +1097,11 @@ additionalDatabases: {}
 ##
 valkey:
   enabled: true
+  sentinel:
+    enabled: false
+    primarySet: netbox-kv
+  auth:
+    sentinel: false
 
 tasksDatabase:
   database: 0

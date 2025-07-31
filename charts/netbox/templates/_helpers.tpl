@@ -109,6 +109,66 @@ Name of the key in Secret that contains the Valkey cache password
 {{- end }}
 
 {{/*
+Valkey Sentinels that would result from setting .Values.valkey.enabled=true and .Values.valkey.sentinel.enabled=true
+*/}}
+{{- define "netbox.valkey.managedSentinels" -}}
+  {{- $sentinels := list }}
+  {{- $fullname := include "common.names.fullname" .Subcharts.valkey }}
+  {{- $headlessService := printf "%s-headless" (include "common.names.fullname" .Subcharts.valkey) }}
+  {{- $sentinelPort := toString .Values.valkey.sentinel.service.ports.sentinel }}
+  {{- range $i := until (int .Values.valkey.replica.replicaCount) }}
+    {{- $sentinels = append $sentinels (printf "%s-node-%s.%s:%s" $fullname (toString $i) $headlessService $sentinelPort) }}
+  {{- end }}
+  {{- toJson $sentinels }}
+{{- end -}}
+
+{{/*
+Tasks Sentinel: use .Values.tasksDatabase.sentinels if defined. When using embedded Valkey Sentinel feature, fallback to generated sentinels
+*/}}
+{{- define "netbox.tasksDatabase.sentinels" -}}
+  {{- if .Values.tasksDatabase.sentinels }}
+    {{- .Values.tasksDatabase.sentinels }}
+  {{- else if and .Values.valkey.enabled .Values.valkey.sentinel.enabled }}
+    {{- include "netbox.valkey.managedSentinels" . }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+If .Values.tasksDatabase.sentinels is used, then we must use all Sentinel configuration
+under .Values.tasksDatabase, even if .Values.valkey.sentinel.enabled is true.
+*/}}
+{{- define "netbox.tasksDatabase.sentinelService" -}}
+  {{- if .Values.tasksDatabase.sentinels }}
+    {{- .Values.tasksDatabase.sentinelService }}
+  {{- else }}
+    {{- .Values.valkey.sentinel.primarySet }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+Caching Sentinel: use .Values.cachingDatabase.sentinels if defined. When using embedded Valkey Sentinel feature, fallback to generated sentinels
+*/}}
+{{- define "netbox.cachingDatabase.sentinels" -}}
+  {{- if .Values.cachingDatabase.sentinels }}
+    {{- .Values.cachingDatabase.sentinels }}
+  {{- else if and .Values.valkey.enabled .Values.valkey.sentinel.enabled }}
+    {{- include "netbox.valkey.managedSentinels" . }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+If .Values.cachingDatabase.sentinels is used, then we must use all Sentinel configuration
+under .Values.cachingDatabase, even if .Values.valkey.sentinel.enabled is true.
+*/}}
+{{- define "netbox.cachingDatabase.sentinelService" -}}
+  {{- if .Values.cachingDatabase.sentinels }}
+    {{- .Values.cachingDatabase.sentinelService }}
+  {{- else }}
+    {{- .Values.valkey.sentinel.primarySet }}
+  {{- end }}
+{{- end -}}
+
+{{/*
 Volumes that need to be mounted for .Values.extraConfig entries
 */}}
 {{- define "netbox.extraConfig.volumes" -}}

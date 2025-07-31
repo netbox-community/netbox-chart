@@ -1,3 +1,5 @@
+{{- $tasksDatabaseSentinels := include "netbox.tasksDatabase.sentinels" . -}}
+{{- $cachingDatabaseSentinels := include "netbox.cachingDatabase.sentinels" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -123,13 +125,13 @@ data:
 
     REDIS:
       tasks:
-        {{- if .Values.valkey.enabled }}
+        {{- if $tasksDatabaseSentinels }}
+        SENTINELS: {{ $tasksDatabaseSentinels }}
+        SENTINEL_SERVICE: {{ include "netbox.tasksDatabase.sentinelService" . | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
+        {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.primary.service.ports.valkey | int }}
-        {{- else if .Values.tasksDatabase.sentinels }}
-        SENTINELS: {{ toJson .Values.tasksDatabase.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.tasksDatabase.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
         {{- else }}
         HOST: {{ .Values.tasksDatabase.host | quote }}
         PORT: {{ .Values.tasksDatabase.port | int }}
@@ -140,13 +142,13 @@ data:
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksDatabase.insecureSkipTlsVerify }}
         CA_CERT_PATH: {{ .Values.tasksDatabase.caCertPath | quote }}
       caching:
-        {{- if .Values.valkey.enabled }}
+        {{- if $cachingDatabaseSentinels }}
+        SENTINELS: {{ $cachingDatabaseSentinels }}
+        SENTINEL_SERVICE: {{ include "netbox.cachingDatabase.sentinelService" . | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
+        {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.primary.service.ports.valkey | int }}
-        {{- else if .Values.cachingDatabase.sentinels }}
-        SENTINELS: {{ toJson .Values.cachingDatabase.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.cachingDatabase.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
         {{- else }}
         HOST: {{ .Values.cachingDatabase.host | quote }}
         PORT: {{ .Values.cachingDatabase.port | int}}

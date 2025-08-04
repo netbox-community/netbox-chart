@@ -1,5 +1,3 @@
-{{- $tasksDatabaseSentinels := include "netbox.tasksDatabase.sentinels" . -}}
-{{- $cachingDatabaseSentinels := include "netbox.cachingDatabase.sentinels" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -125,8 +123,8 @@ data:
 
     REDIS:
       tasks:
-        {{- if $tasksDatabaseSentinels }}
-        SENTINELS: {{ $tasksDatabaseSentinels }}
+        {{- if (include "netbox.tasksDatabase.sentinels" .) }}
+        SENTINELS: {{ include "netbox.tasksDatabase.sentinels" . }}
         SENTINEL_SERVICE: {{ include "netbox.tasksDatabase.sentinelService" . | quote }}
         SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
         {{- else if .Values.valkey.enabled }}
@@ -142,8 +140,8 @@ data:
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksDatabase.insecureSkipTlsVerify }}
         CA_CERT_PATH: {{ .Values.tasksDatabase.caCertPath | quote }}
       caching:
-        {{- if $cachingDatabaseSentinels }}
-        SENTINELS: {{ $cachingDatabaseSentinels }}
+        {{- if (include "netbox.cachingDatabase.sentinels" .) }}
+        SENTINELS: {{ include "netbox.cachingDatabase.sentinels" . }}
         SENTINEL_SERVICE: {{ include "netbox.cachingDatabase.sentinelService" . | quote }}
         SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
         {{- else if .Values.valkey.enabled }}

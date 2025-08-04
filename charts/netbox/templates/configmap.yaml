@@ -123,13 +123,13 @@ data:
 
     REDIS:
       tasks:
-        {{- if .Values.valkey.enabled }}
+        {{- if (include "netbox.tasksDatabase.sentinels" .) }}
+        SENTINELS: {{ include "netbox.tasksDatabase.sentinels" . }}
+        SENTINEL_SERVICE: {{ ternary .Values.valkey.sentinel.primarySet .Values.tasksDatabase.sentinelService (empty .Values.tasksDatabase.sentinels) | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
+        {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.primary.service.ports.valkey | int }}
-        {{- else if .Values.tasksDatabase.sentinels }}
-        SENTINELS: {{ toJson .Values.tasksDatabase.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.tasksDatabase.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
         {{- else }}
         HOST: {{ .Values.tasksDatabase.host | quote }}
         PORT: {{ .Values.tasksDatabase.port | int }}
@@ -140,13 +140,13 @@ data:
         INSECURE_SKIP_TLS_VERIFY: {{ toJson .Values.tasksDatabase.insecureSkipTlsVerify }}
         CA_CERT_PATH: {{ .Values.tasksDatabase.caCertPath | quote }}
       caching:
-        {{- if .Values.valkey.enabled }}
+        {{- if (include "netbox.cachingDatabase.sentinels" .) }}
+        SENTINELS: {{ include "netbox.cachingDatabase.sentinels" . }}
+        SENTINEL_SERVICE: {{ ternary .Values.valkey.sentinel.primarySet .Values.cachingDatabase.sentinelService (empty .Values.cachingDatabase.sentinels) | quote }}
+        SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
+        {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}
         PORT: {{ .Values.valkey.primary.service.ports.valkey | int }}
-        {{- else if .Values.cachingDatabase.sentinels }}
-        SENTINELS: {{ toJson .Values.cachingDatabase.sentinels }}
-        SENTINEL_SERVICE: {{ .Values.cachingDatabase.sentinelService | quote }}
-        SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
         {{- else }}
         HOST: {{ .Values.cachingDatabase.host | quote }}
         PORT: {{ .Values.cachingDatabase.port | int}}

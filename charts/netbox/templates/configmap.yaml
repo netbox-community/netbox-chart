@@ -125,7 +125,7 @@ data:
       tasks:
         {{- if (include "netbox.tasksDatabase.sentinels" .) }}
         SENTINELS: {{ include "netbox.tasksDatabase.sentinels" . }}
-        SENTINEL_SERVICE: {{ include "netbox.tasksDatabase.sentinelService" . | quote }}
+        SENTINEL_SERVICE: {{ ternary .Values.valkey.sentinel.primarySet .Values.tasksDatabase.sentinelService (empty .Values.tasksDatabase.sentinels) | quote }}
         SENTINEL_TIMEOUT: {{ .Values.tasksDatabase.sentinelTimeout | int }}
         {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}
@@ -142,7 +142,7 @@ data:
       caching:
         {{- if (include "netbox.cachingDatabase.sentinels" .) }}
         SENTINELS: {{ include "netbox.cachingDatabase.sentinels" . }}
-        SENTINEL_SERVICE: {{ include "netbox.cachingDatabase.sentinelService" . | quote }}
+        SENTINEL_SERVICE: {{ ternary .Values.valkey.sentinel.primarySet .Values.cachingDatabase.sentinelService (empty .Values.cachingDatabase.sentinels) | quote }}
         SENTINEL_TIMEOUT: {{ .Values.cachingDatabase.sentinelTimeout | int }}
         {{- else if .Values.valkey.enabled }}
         HOST: {{ printf "%s-primary" (include "common.names.fullname" .Subcharts.valkey) | quote }}

@@ -1101,6 +1101,7 @@ valkey:
     enabled: false
     primarySet: netbox-kv
   auth:
+    # Sentinel auth is disabled by default, as Netbox does not support configuring SENTINEL_KWARGS.
     sentinel: false
 
 tasksDatabase:

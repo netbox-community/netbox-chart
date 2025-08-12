@@ -10,7 +10,7 @@
 This Git repository houses the official Helm charts for Netbox.
 
 Do you have any questions?
-Before opening an issue on GitHub, please join [our Slack](https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ)
+Before opening an issue on GitHub, please join [our Slack](https://netdev.chat/)
 and ask for help in the [`#netbox-chart`](https://netdev-community.slack.com/archives/C01Q6B100R2) channel.
 
 |                        Chart                        |                                                                                                                    Version                                                                                                                     |

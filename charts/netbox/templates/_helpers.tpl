@@ -127,7 +127,7 @@ Tasks Sentinel: use .Values.tasksDatabase.sentinels if defined. When using embed
 */}}
 {{- define "netbox.tasksDatabase.sentinels" -}}
   {{- if .Values.tasksDatabase.sentinels }}
-    {{- .Values.tasksDatabase.sentinels }}
+    {{- toJson .Values.tasksDatabase.sentinels }}
   {{- else if and .Values.valkey.enabled .Values.valkey.sentinel.enabled }}
     {{- include "netbox.valkey.managedSentinels" . }}
   {{- end }}
@@ -138,7 +138,7 @@ Caching Sentinel: use .Values.cachingDatabase.sentinels if defined. When using e
 */}}
 {{- define "netbox.cachingDatabase.sentinels" -}}
   {{- if .Values.cachingDatabase.sentinels }}
-    {{- .Values.cachingDatabase.sentinels }}
+    {{- toJson .Values.cachingDatabase.sentinels }}
   {{- else if and .Values.valkey.enabled .Values.valkey.sentinel.enabled }}
     {{- include "netbox.valkey.managedSentinels" . }}
   {{- end }}

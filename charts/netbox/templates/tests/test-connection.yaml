@@ -3,9 +3,12 @@ kind: Pod
 metadata:
   name: {{ printf "%s-test-connection" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   annotations:
     "helm.sh/hook": test
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
 spec:
   containers:
   - name: wget

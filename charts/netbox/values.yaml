@@ -19,6 +19,10 @@ global:
   ##
   imagePullSecrets: []
   storageClass: ""
+  security:
+    # this is actually just turning off a warning about repository names not matching,
+    # because we're redirecting to `bitnamilegacy`
+    allowInsecureImages: true
 
 ## @section Common parameters
 
@@ -1038,6 +1042,14 @@ postgresql:
   auth:
     username: netbox
     database: netbox
+  image:
+    repository: bitnamilegacy/postgresql
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
 
 ## External database configuration
 ## @param externalDatabase.host Host of the existing database
@@ -1097,9 +1109,22 @@ additionalDatabases: {}
 ##
 valkey:
   enabled: true
+  image:
+    repository: bitnamilegacy/valkey
+  kubectl:
+    image:
+      repository: bitnamilegacy/kubectl
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
   sentinel:
     enabled: false
     primarySet: netbox-kv
+    image:
+      repository: bitnamilegacy/valkey-sentinel
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   auth:
     # Sentinel auth is disabled by default, as Netbox does not support configuring SENTINEL_KWARGS.
     sentinel: false

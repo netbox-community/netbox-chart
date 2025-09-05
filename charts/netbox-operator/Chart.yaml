@@ -7,7 +7,7 @@ type: application
 kubeVersion: ^1.25.0-0
 description: Operator to manage NetBox resources directly through Kubernetes
 home: https://netbox.dev/
-icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+icon: https://raw.githubusercontent.com/netbox-community/netbox/main/docs/netbox_logo_light.svg
 sources:
   - https://github.com/netbox-community/netbox-operator
   - https://github.com/netbox-community/netbox-chart

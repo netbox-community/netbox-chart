@@ -23,10 +23,10 @@ data:
         NAME: {{ include "postgresql.v1.database" .Subcharts.postgresql | quote }}
         PORT: {{ include "postgresql.v1.service.port" .Subcharts.postgresql | int }}
         {{- else }}
-        HOST: {{ .Values.externalDatabase.host | quote }}
-        USER: {{ .Values.externalDatabase.username | quote }}
-        NAME: {{ .Values.externalDatabase.database | quote }}
-        PORT: {{ .Values.externalDatabase.port | int }}
+        HOST: {{ include "common.tplvalues.render" (dict "value" .Values.externalDatabase.host "context" $) | quote }}
+        USER: {{ include "common.tplvalues.render" (dict "value" .Values.externalDatabase.username "context" $) | quote }}
+        NAME: {{ include "common.tplvalues.render" (dict "value" .Values.externalDatabase.database "context" $) | quote }}
+        PORT: {{ include "common.tplvalues.render" (dict "value" .Values.externalDatabase.port "context" $) | int }}
         {{- end }}
         ENGINE: {{ .Values.externalDatabase.engine | quote }}
         OPTIONS: {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.options "context" $) | nindent 10 }}

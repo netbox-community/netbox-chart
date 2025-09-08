@@ -86,3 +86,25 @@ worker:
               app.kubernetes.io/name: netbox
           topologyKey: kubernetes.io/hostname
 ```
+
+## Disruption Budgets
+
+To minimize downtime during voluntary disruptions (node drains, upgrades, autoscaling evictions), the chart can create PodDisruptionBudgets (PDBs) for both the web and worker Deployments.
+
+- Configure web PDB via `pdb.*` values.
+- Configure worker PDB via `worker.pdb.*` values.
+
+Examples:
+
+```yaml
+# Ensure at least one web pod stays available at all times
+pdb:
+  enabled: true
+  minAvailable: 1
+
+# Allow one worker to be evicted at a time
+worker:
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+```

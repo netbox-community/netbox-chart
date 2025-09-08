@@ -1,0 +1,9 @@
+pdb:
+  enabled: true
+  minAvailable: 1
+
+worker:
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+

@@ -742,6 +742,19 @@ terminationGracePeriodSeconds:
 ##         "app.kubernetes.io/name": netbox
 ##
 topologySpreadConstraints: []
+## @section Pod disruption budget
+## Configure PodDisruptionBudget for NetBox web pods
+## @param pdb.enabled Enable PodDisruptionBudget for NetBox web pods
+## @param pdb.minAvailable Minimum number/percentage of pods that must be available
+## @param pdb.maxUnavailable Maximum number/percentage of pods that can be unavailable
+## If neither minAvailable nor maxUnavailable is set, a sensible default is applied:
+## - Single replica: minAvailable: 1
+## - Multiple replicas or HPA enabled: minAvailable: 50%
+##
+pdb:
+  enabled: false
+  # minAvailable: 1
+  # maxUnavailable: 1
 ## Container's resource requests and limits
 ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## We usually recommend not to specify default resources and to leave this as a conscious
@@ -1499,6 +1512,17 @@ worker:
   ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
   ##
   replicaCount: 1
+  ## Configure PodDisruptionBudget for worker pods
+  ## @param worker.pdb.enabled Enable PodDisruptionBudget for worker pods
+  ## @param worker.pdb.minAvailable Minimum number/percentage of pods that must be available
+  ## @param worker.pdb.maxUnavailable Maximum number/percentage of pods that can be unavailable
+  ## If neither minAvailable nor maxUnavailable is set, a sensible default is applied:
+  ## - Single replica: minAvailable: 1
+  ## - Multiple replicas or HPA enabled: minAvailable: 50%
+  pdb:
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 1
   ## @param worker.podLabels Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##

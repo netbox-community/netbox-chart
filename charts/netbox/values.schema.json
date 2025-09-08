@@ -176,6 +176,52 @@
         },
         "targetCPUUtilizationPercentage": {
           "type": "integer"
+        },
+        "targetMemoryUtilizationPercentage": {
+          "type": "integer"
+        },
+        "behavior": {
+          "type": "object",
+          "properties": {
+            "scaleUp": {
+              "type": "object",
+              "properties": {
+                "stabilizationWindowSeconds": { "type": "integer" },
+                "selectPolicy": { "type": "string" },
+                "policies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "value": { "type": "integer" },
+                      "periodSeconds": { "type": "integer" }
+                    },
+                    "required": ["type", "value", "periodSeconds"]
+                  }
+                }
+              }
+            },
+            "scaleDown": {
+              "type": "object",
+              "properties": {
+                "stabilizationWindowSeconds": { "type": "integer" },
+                "selectPolicy": { "type": "string" },
+                "policies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "value": { "type": "integer" },
+                      "periodSeconds": { "type": "integer" }
+                    },
+                    "required": ["type", "value", "periodSeconds"]
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "type": "object"
@@ -1494,6 +1540,52 @@
             },
             "targetCPUUtilizationPercentage": {
               "type": "integer"
+            },
+            "targetMemoryUtilizationPercentage": {
+              "type": "integer"
+            },
+            "behavior": {
+              "type": "object",
+              "properties": {
+                "scaleUp": {
+                  "type": "object",
+                  "properties": {
+                    "stabilizationWindowSeconds": { "type": "integer" },
+                    "selectPolicy": { "type": "string" },
+                    "policies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "value": { "type": "integer" },
+                          "periodSeconds": { "type": "integer" }
+                        },
+                        "required": ["type", "value", "periodSeconds"]
+                      }
+                    }
+                  }
+                },
+                "scaleDown": {
+                  "type": "object",
+                  "properties": {
+                    "stabilizationWindowSeconds": { "type": "integer" },
+                    "selectPolicy": { "type": "string" },
+                    "policies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "value": { "type": "integer" },
+                          "periodSeconds": { "type": "integer" }
+                        },
+                        "required": ["type", "value", "periodSeconds"]
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           "type": "object"

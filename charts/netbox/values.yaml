@@ -753,8 +753,8 @@ topologySpreadConstraints: []
 ##
 pdb:
   enabled: false
-  # minAvailable: 1
-  # maxUnavailable: 1
+  minAvailable: ""
+  maxUnavailable: ""
 ## Container's resource requests and limits
 ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## We usually recommend not to specify default resources and to leave this as a conscious
@@ -1521,8 +1521,8 @@ worker:
   ## - Multiple replicas or HPA enabled: minAvailable: 50%
   pdb:
     enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 1
+    minAvailable: ""
+    maxUnavailable: ""
   ## @param worker.podLabels Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##

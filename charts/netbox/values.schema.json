@@ -865,8 +865,8 @@
       "type": "object",
       "properties": {
         "enabled": { "type": "boolean" },
-        "minAvailable": { "type": ["integer", "string"] },
-        "maxUnavailable": { "type": ["integer", "string"] }
+        "minAvailable": { "type": ["integer", "string"], "default": "" },
+        "maxUnavailable": { "type": ["integer", "string"], "default": "" }
       }
     },
     "plugins": {
@@ -1657,8 +1657,8 @@
           "type": "object",
           "properties": {
             "enabled": { "type": "boolean" },
-            "minAvailable": { "type": ["integer", "string"] },
-            "maxUnavailable": { "type": ["integer", "string"] }
+            "minAvailable": { "type": ["integer", "string"], "default": 0 },
+            "maxUnavailable": { "type": ["integer", "string"], "default": 0 }
           }
         },
         "waitForBackend": {

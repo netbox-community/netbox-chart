@@ -16,9 +16,9 @@ spec:
     name: {{ include "common.names.fullname" . }}-worker
   minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
-  {{- with .Values.worker.autoscaling.behavior }}
+  {{- if .Values.worker.autoscaling.behavior }}
   behavior:
-    {{- with .scaleUp }}
+    {{- with .Values.worker.autoscaling.behavior.scaleUp }}
     scaleUp:
       {{- if .stabilizationWindowSeconds }}
       stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}
@@ -35,7 +35,7 @@ spec:
         {{- end }}
       {{- end }}
     {{- end }}
-    {{- with .scaleDown }}
+    {{- with .Values.worker.autoscaling.behavior.scaleDown }}
     scaleDown:
       {{- if .stabilizationWindowSeconds }}
       stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}

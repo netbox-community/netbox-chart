@@ -1178,8 +1178,8 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-  # behavior:
+  targetMemoryUtilizationPercentage: null
+  behavior: {}
   #   scaleUp:
   #     stabilizationWindowSeconds: 0
   #     selectPolicy: Max
@@ -1687,8 +1687,8 @@ worker:
     minReplicas: 1
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-    # behavior:
+    targetMemoryUtilizationPercentage: null
+    behavior: {}
     #   scaleUp:
     #     stabilizationWindowSeconds: 0
     #     selectPolicy: Max

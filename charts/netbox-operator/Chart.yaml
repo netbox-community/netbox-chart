@@ -1,13 +1,13 @@
 apiVersion: v2
 name: netbox-operator
-version: 1.0.84
+version: 1.0.85
 # renovate: image=ghcr.io/netbox-community/netbox-operator
-appVersion: "0.2.14"
+appVersion: "0.2.15"
 type: application
 kubeVersion: ^1.25.0-0
 description: Operator to manage NetBox resources directly through Kubernetes
 home: https://netbox.dev/
-icon: https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo_light.svg
+icon: https://raw.githubusercontent.com/netbox-community/netbox/main/docs/netbox_logo_light.svg
 sources:
   - https://github.com/netbox-community/netbox-operator
   - https://github.com/netbox-community/netbox-chart

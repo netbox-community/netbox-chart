@@ -860,6 +860,15 @@
       },
       "type": "object"
     },
+    "pdb": {
+      "title": "PodDisruptionBudget for NetBox web",
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minAvailable": { "type": ["integer", "string"], "default": "" },
+        "maxUnavailable": { "type": ["integer", "string"], "default": "" }
+      }
+    },
     "plugins": {
       "type": "array"
     },
@@ -1642,6 +1651,15 @@
             }
           },
           "type": "object"
+        },
+        "pdb": {
+          "title": "PodDisruptionBudget for NetBox worker",
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "minAvailable": { "type": ["integer", "string"], "default": 0 },
+            "maxUnavailable": { "type": ["integer", "string"], "default": 0 }
+          }
         },
         "waitForBackend": {
           "properties": {

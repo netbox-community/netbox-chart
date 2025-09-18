@@ -1730,8 +1730,8 @@ worker:
     ##
     image:
       registry: docker.io
-      repository: bitnami/kubectl
-      tag: 1.33.4-debian-12-r0
+      repository: rancher/kubectl
+      tag: v1.33.4
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1747,19 +1747,14 @@ worker:
     ## @param waitForBackend.command The command to execute in the wait-for-backend container
     ##
     command:
-      - /bin/bash
-      - -ec
+      - /bin/kubectl
     ## @param waitForBackend.args Override wait-for-backend container args
     ##
     args:
-      - |
-        deployment=${DEPLOYMENT_NAME:?deployment name is missing}
-        return_code=0
-
-        echo "Waiting for deployment \"${deployment}\" to be successfully rolled out..."
-        kubectl rollout status deployment "$deployment" 2>&1 || return_code=$?
-        echo "Rollout exit code: '${return_code}'"
-        exit $return_code
+      - rollout
+      - status
+      - deployment
+      - "$(DEPLOYMENT_NAME)"
     ## waitForBackend containers' Security Context (init container).
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param waitForBackend.containerSecurityContext.enabled Enabled containers' Security Context

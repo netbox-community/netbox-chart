@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox
-version: 7.0.0
+version: 7.0.1
 # renovate: image=ghcr.io/netbox-community/netbox
 appVersion: "v4.4.0"
 type: application
@@ -37,7 +37,7 @@ annotations:
     - name: busybox
       image: docker.io/busybox:1.37.0
     - name: kubectl
-      image: docker.io/rancher/kubectl:v1.33.4
+      image: docker.io/rancher/kubectl:v1.34.1
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |
     - name: Upstream Project

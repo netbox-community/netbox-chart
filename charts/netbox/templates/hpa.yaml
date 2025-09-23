@@ -16,36 +16,39 @@ spec:
     name: {{ include "common.names.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-  {{- if .Values.autoscaling.behavior }}
+  {{- $behavior := .Values.autoscaling.behavior }}
+  {{- if $behavior }}
   behavior:
-    {{- with .Values.autoscaling.behavior.scaleUp }}
+    {{- $scaleUp := $behavior.scaleUp }}
+    {{- if $scaleUp }}
     scaleUp:
-      {{- if .stabilizationWindowSeconds }}
-      stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}
+      {{- if $scaleUp.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ $scaleUp.stabilizationWindowSeconds }}
       {{- end }}
-      {{- if .selectPolicy }}
-      selectPolicy: {{ .selectPolicy | quote }}
+      {{- if $scaleUp.selectPolicy }}
+      selectPolicy: {{ $scaleUp.selectPolicy | quote }}
       {{- end }}
-      {{- with .policies }}
+      {{- if $scaleUp.policies }}
       policies:
-        {{- range . }}
+        {{- range $scaleUp.policies }}
         - type: {{ .type | quote }}
           value: {{ .value }}
           periodSeconds: {{ .periodSeconds }}
         {{- end }}
       {{- end }}
     {{- end }}
-    {{- with .Values.autoscaling.behavior.scaleDown }}
+    {{- $scaleDown := $behavior.scaleDown }}
+    {{- if $scaleDown }}
     scaleDown:
-      {{- if .stabilizationWindowSeconds }}
-      stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}
+      {{- if $scaleDown.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ $scaleDown.stabilizationWindowSeconds }}
       {{- end }}
-      {{- if .selectPolicy }}
-      selectPolicy: {{ .selectPolicy | quote }}
+      {{- if $scaleDown.selectPolicy }}
+      selectPolicy: {{ $scaleDown.selectPolicy | quote }}
       {{- end }}
-      {{- with .policies }}
+      {{- if $scaleDown.policies }}
       policies:
-        {{- range . }}
+        {{- range $scaleDown.policies }}
         - type: {{ .type | quote }}
           value: {{ .value }}
           periodSeconds: {{ .periodSeconds }}

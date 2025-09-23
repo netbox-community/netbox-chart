@@ -178,10 +178,12 @@
           "type": ["integer", "null"]
         },
         "targetMemoryUtilizationPercentage": {
-          "type": ["integer", "null"]
+          "type": ["integer", "null"],
+          "default": null
         },
         "behavior": {
           "type": "object",
+          "default": {},
           "properties": {
             "scaleUp": {
               "type": "object",
@@ -1542,10 +1544,12 @@
               "type": ["integer", "null"]
             },
             "targetMemoryUtilizationPercentage": {
-              "type": ["integer", "null"]
+              "type": ["integer", "null"],
+              "default": null
             },
             "behavior": {
               "type": "object",
+              "default": {},
               "properties": {
                 "scaleUp": {
                   "type": "object",

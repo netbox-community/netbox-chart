@@ -16,6 +16,46 @@ spec:
     name: {{ include "common.names.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- $behavior := .Values.autoscaling.behavior }}
+  {{- if $behavior }}
+  behavior:
+    {{- $scaleUp := $behavior.scaleUp }}
+    {{- if $scaleUp }}
+    scaleUp:
+      {{- if $scaleUp.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ $scaleUp.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if $scaleUp.selectPolicy }}
+      selectPolicy: {{ $scaleUp.selectPolicy | quote }}
+      {{- end }}
+      {{- if $scaleUp.policies }}
+      policies:
+        {{- range $scaleUp.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- $scaleDown := $behavior.scaleDown }}
+    {{- if $scaleDown }}
+    scaleDown:
+      {{- if $scaleDown.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ $scaleDown.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if $scaleDown.selectPolicy }}
+      selectPolicy: {{ $scaleDown.selectPolicy | quote }}
+      {{- end }}
+      {{- if $scaleDown.policies }}
+      policies:
+        {{- range $scaleDown.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   metrics:
   {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource

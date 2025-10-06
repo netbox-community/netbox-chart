@@ -27,7 +27,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: valkey
-    version: ^3.0.31
+    version: ^4.0.7
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: valkey.enabled
 annotations:

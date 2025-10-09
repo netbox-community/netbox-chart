@@ -1110,6 +1110,11 @@ additionalDatabases: {}
 ##
 valkey:
   enabled: true
+  global:
+    security:
+      allowInsecureImages: true
+  image:
+    repository: bitnamilegacy/valkey
   sentinel:
     enabled: false
     primarySet: netbox-kv

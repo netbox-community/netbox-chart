@@ -4,9 +4,9 @@ dependencies:
   version: 2.31.4
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 18.1.2
+  version: 18.1.3
 - name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 4.1.3
-digest: sha256:99da8c2aa44e5c35311a9839c6e9eeb23382a321ac700eb0166a08d9709c5f74
-generated: "2025-10-27T22:46:08.99010516Z"
+digest: sha256:457ff5354c43d99f0f6cbac1ed8bce0d84e9e868b650e12243c77b2ed4314f6c
+generated: "2025-10-28T08:13:53.900487722Z"

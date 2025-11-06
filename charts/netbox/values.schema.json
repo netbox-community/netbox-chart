@@ -134,7 +134,7 @@
     },
     "affinity": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "allowTokenRetrieval": {
       "type": "boolean"
@@ -155,7 +155,10 @@
       "type": "array"
     },
     "args": {
-      "type": "array"
+      "items": {
+        "type": "string"
+      },
+      "type": ["array", "string"]
     },
     "authPasswordValidators": {
       "type": "array"
@@ -248,15 +251,18 @@
       "type": "string"
     },
     "command": {
-      "type": "array"
+      "items": {
+        "type": "string"
+      },
+      "type": ["array", "string"]
     },
     "commonAnnotations": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "commonLabels": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "cors": {
       "properties": {
@@ -285,15 +291,15 @@
     },
     "customLivenessProbe": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "customReadinessProbe": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "customStartupProbe": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "customValidators": {
       "properties": {},
@@ -395,10 +401,10 @@
           "type": "string"
         },
         "port": {
-          "type": "integer"
+          "type": ["integer", "string"]
         },
         "options": {
-          "type": "object"
+          "type": ["object", "string"]
         },
         "username": {
           "type": "string"
@@ -413,7 +419,7 @@
       "type": "array"
     },
     "extraDeploy": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "extraEnvs": {
       "type": ["array", "string"]
@@ -462,16 +468,19 @@
       "type": "boolean"
     },
     "hostAliases": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "housekeeping": {
       "properties": {
         "affinity": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "args": {
-          "type": "array"
+          "items": {
+            "type": "string"
+          },
+          "type": ["array", "string"]
         },
         "automountServiceAccountToken": {
           "type": "boolean"
@@ -480,7 +489,7 @@
           "items": {
             "type": "string"
           },
-          "type": "array"
+          "type": ["array", "string"]
         },
         "concurrencyPolicy": {
           "type": "string"
@@ -489,7 +498,7 @@
           "type": "boolean"
         },
         "extraEnvs": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "extraEnvVarsCM": {
           "type": "string",
@@ -502,10 +511,10 @@
           "default": ""
         },
         "extraVolumeMounts": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "extraVolumes": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "failedHistoryLimit": {
           "type": "integer"
@@ -514,19 +523,19 @@
           "type": "integer"
         },
         "initContainers": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "nodeSelector": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podAnnotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podLabels": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podSecurityContext": {
           "properties": {
@@ -613,7 +622,7 @@
           "type": "object"
         },
         "sidecars": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "suspend": {
           "type": "boolean"
@@ -622,7 +631,7 @@
           "type": "string"
         },
         "tolerations": {
-          "type": "array"
+          "type": ["array", "string"]
         }
       },
       "type": "object"
@@ -645,7 +654,7 @@
       "properties": {
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "className": {
           "type": "string"
@@ -737,7 +746,7 @@
       "type": "object"
     },
     "initContainers": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "internalIPs": {
       "items": {
@@ -750,7 +759,7 @@
     },
     "lifecycleHooks": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "livenessProbe": {
       "$ref": "#/$defs/probe"
@@ -801,17 +810,17 @@
               "type": "string"
             },
             "metricRelabelings": {
-              "type": "array"
+              "type": ["array", "string"]
             },
             "relabelings": {
-              "type": "array"
+              "type": ["array", "string"]
             },
             "scrapeTimeout": {
               "type": "string"
             },
             "selector": {
               "properties": {},
-              "type": "object"
+              "type": ["object", "string"]
             }
           },
           "type": "object"
@@ -824,7 +833,7 @@
     },
     "nodeSelector": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "overrideUnitConfig": {
       "properties": {},
@@ -840,13 +849,17 @@
         },
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "enabled": {
           "type": "boolean"
         },
         "existingClaim": {
           "type": "string"
+        },
+        "selector": {
+          "properties": {},
+          "type": ["object", "string"]
         },
         "size": {
           "type": "string"
@@ -878,11 +891,11 @@
     },
     "podAnnotations": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "podLabels": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "podSecurityContext": {
       "properties": {
@@ -942,7 +955,7 @@
           "type": "boolean"
         },
         "rules": {
-          "type": "array"
+          "type": ["array", "string"]
         }
       }
     },
@@ -1121,13 +1134,17 @@
         },
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "enabled": {
           "type": "boolean"
         },
         "existingClaim": {
           "type": "string"
+        },
+        "selector": {
+          "properties": {},
+          "type": ["object", "string"]
         },
         "size": {
           "type": "string"
@@ -1143,7 +1160,7 @@
     },
     "resources": {
       "properties": {},
-      "type": "object"
+      "type": ["object", "string"]
     },
     "resourcesPreset": {
       "type": "string"
@@ -1164,13 +1181,17 @@
         },
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "enabled": {
           "type": "boolean"
         },
         "existingClaim": {
           "type": "string"
+        },
+        "selector": {
+          "properties": {},
+          "type": ["object", "string"]
         },
         "size": {
           "type": "string"
@@ -1240,16 +1261,16 @@
       "properties": {
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "clusterIP": {
           "type": "string"
         },
         "clusterIPs": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "externalIPs": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "externalTrafficPolicy": {
           "type": "string"
@@ -1277,7 +1298,7 @@
         },
         "sessionAffinityConfig": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "type": {
           "type": "string"
@@ -1289,7 +1310,7 @@
       "properties": {
         "annotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "automountServiceAccountToken": {
           "type": "boolean"
@@ -1316,7 +1337,7 @@
       "type": "string"
     },
     "sidecars": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "startupProbe": {
       "$ref": "#/$defs/probe"
@@ -1456,10 +1477,10 @@
       "type": "string"
     },
     "tolerations": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "topologySpreadConstraints": {
-      "type": "array"
+      "type": ["array", "string"]
     },
     "updateStrategy": {
       "properties": {
@@ -1467,16 +1488,19 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": ["object", "string"]
     },
     "worker": {
       "properties": {
         "affinity": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "args": {
-          "type": "array"
+          "items": {
+            "type": "string"
+          },
+          "type": ["array", "string"]
         },
         "automountServiceAccountToken": {
           "type": "boolean"
@@ -1502,13 +1526,13 @@
           "items": {
             "type": "string"
           },
-          "type": "array"
+          "type": ["array", "string"]
         },
         "enabled": {
           "type": "boolean"
         },
         "extraEnvs": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "extraEnvVarsCM": {
           "type": "string",
@@ -1521,28 +1545,28 @@
           "default": ""
         },
         "extraVolumeMounts": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "extraVolumes": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "hostAliases": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "initContainers": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "nodeSelector": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podAnnotations": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podLabels": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "podSecurityContext": {
           "properties": {
@@ -1575,7 +1599,7 @@
         },
         "resources": {
           "properties": {},
-          "type": "object"
+          "type": ["object", "string"]
         },
         "resourcesPreset": {
           "type": "string"
@@ -1633,16 +1657,16 @@
           "type": "object"
         },
         "sidecars": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "terminationGracePeriodSeconds": {
           "type": ["null", "number"]
         },
         "tolerations": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "topologySpreadConstraints": {
-          "type": "array"
+          "type": ["array", "string"]
         },
         "updateStrategy": {
           "properties": {
@@ -1650,7 +1674,7 @@
               "type": "string"
             }
           },
-          "type": "object"
+          "type": ["object", "string"]
         },
         "pdb": {
           "title": "PodDisruptionBudget for NetBox worker",
@@ -1664,13 +1688,16 @@
         "waitForBackend": {
           "properties": {
             "args": {
-              "type": "array"
+              "items": {
+                "type": "string"
+              },
+              "type": ["array", "string"]
             },
             "command": {
               "items": {
                 "type": "string"
               },
-              "type": "array"
+              "type": ["array", "string"]
             },
             "enabled": {
               "type": "boolean"
@@ -1697,7 +1724,7 @@
             },
             "resources": {
               "properties": {},
-              "type": "object"
+              "type": ["object", "string"]
             },
             "resourcesPreset": {
               "type": "string"

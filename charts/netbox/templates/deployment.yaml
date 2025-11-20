@@ -231,7 +231,7 @@ spec:
                 path: ldap_bind_password
               {{- end }}
           - secret:
-              name: {{ include "common.secrets.name" (dict "existingSecret" (default .Values.email.existingSecretName .Values.existingSecret) "defaultNameSuffix" "config" "context" $) }}
+              name: {{ include "common.secrets.name" (dict "existingSecret" .Values.email.existingSecretName "defaultNameSuffix" "config" "context" $) }}
               items:
               - key: {{ include "netbox.email.secretKey" . | quote }}
                 path: email_password

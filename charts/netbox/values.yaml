@@ -995,6 +995,41 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## Configure the HTTPRoute resource that allows you to access the app using Gateway API
+## ref: https://gateway-api.sigs.k8s.io/api-types/httproute/
+##
+httpRoute:
+  ## @param httpRoute.enabled Enable HTTPRoute resource generation
+  ##
+  enabled: false
+  ## @param httpRoute.annotations Additional annotations for the HTTPRoute resource
+  ##
+  annotations: {}
+  ## @param httpRoute.parentRefs References to the parent Gateway(s)
+  ## e.g:
+  ## parentRefs:
+  ##   - name: my-gateway
+  ##     namespace: gateway-namespace
+  ##     sectionName: https
+  ##
+  parentRefs: []
+  ## @param httpRoute.hostnames Hostnames that the HTTPRoute should match
+  ## e.g:
+  ## hostnames:
+  ##   - netbox.example.com
+  ##
+  hostnames: []
+  ## @param httpRoute.filters Optional filters to apply to the route
+  ## e.g:
+  ## filters:
+  ##   - type: RequestHeaderModifier
+  ##     requestHeaderModifier:
+  ##       add:
+  ##         - name: X-Custom-Header
+  ##           value: custom-value
+  ##
+  filters: []
+
 ## @section Metrics parameters
 
 ## Prometheus Exporter / Metrics

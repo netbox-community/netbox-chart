@@ -266,6 +266,11 @@ The following table lists the configurable parameters for this chart and their d
 | `ingress.annotations`                           | Extra annotations to apply to the `Ingress` resource                | `{}`                                         |
 | `ingress.hosts`                                 | List of hosts and paths to map to the service (see `values.yaml`)   | `[{host:"chart-example.local",paths:["/"]}]` |
 | `ingress.tls`                                   | TLS settings for the `Ingress` resource                             | `[]`                                         |
+| `httpRoute.enabled`                             | Create an `HTTPRoute` resource for Gateway API                      | `false`                                      |
+| `httpRoute.annotations`                         | Extra annotations to apply to the `HTTPRoute` resource              | `{}`                                         |
+| `httpRoute.parentRefs`                          | References to the parent Gateway(s) for the `HTTPRoute`             | `[]`                                         |
+| `httpRoute.hostnames`                           | Hostnames that the `HTTPRoute` should match                         | `[]`                                         |
+| `httpRoute.filters`                             | Optional filters to apply to the route                              | `[]`                                         |
 | `resources`                                     | Configure resource requests or limits for NetBox                    | `{}`                                         |
 | `automountServiceAccountToken`                  | Whether to automatically mount the serviceAccount token in the main container or not | `false`                     |
 | `priorityClassName`                             | Pods' priorityClassName                                             | `""`                                         |

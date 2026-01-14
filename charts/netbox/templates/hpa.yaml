@@ -16,6 +16,43 @@ spec:
     name: {{ include "common.names.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- if .Values.autoscaling.behavior }}
+  behavior:
+    {{- if .Values.autoscaling.behavior.scaleUp }}
+    scaleUp:
+      {{- if .Values.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .Values.autoscaling.behavior.scaleUp.selectPolicy }}
+      selectPolicy: {{ .Values.autoscaling.behavior.scaleUp.selectPolicy | quote }}
+      {{- end }}
+      {{- if .Values.autoscaling.behavior.scaleUp.policies }}
+      policies:
+        {{- range .Values.autoscaling.behavior.scaleUp.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.autoscaling.behavior.scaleDown }}
+    scaleDown:
+      {{- if .Values.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .Values.autoscaling.behavior.scaleDown.selectPolicy }}
+      selectPolicy: {{ .Values.autoscaling.behavior.scaleDown.selectPolicy | quote }}
+      {{- end }}
+      {{- if .Values.autoscaling.behavior.scaleDown.policies }}
+      policies:
+        {{- range .Values.autoscaling.behavior.scaleDown.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   metrics:
   {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource

@@ -16,6 +16,43 @@ spec:
     name: {{ include "common.names.fullname" . }}-worker
   minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
+  {{- if .Values.worker.autoscaling.behavior }}
+  behavior:
+    {{- if .Values.worker.autoscaling.behavior.scaleUp }}
+    scaleUp:
+      {{- if .Values.worker.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.worker.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .Values.worker.autoscaling.behavior.scaleUp.selectPolicy }}
+      selectPolicy: {{ .Values.worker.autoscaling.behavior.scaleUp.selectPolicy | quote }}
+      {{- end }}
+      {{- if .Values.worker.autoscaling.behavior.scaleUp.policies }}
+      policies:
+        {{- range .Values.worker.autoscaling.behavior.scaleUp.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.worker.autoscaling.behavior.scaleDown }}
+    scaleDown:
+      {{- if .Values.worker.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.worker.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .Values.worker.autoscaling.behavior.scaleDown.selectPolicy }}
+      selectPolicy: {{ .Values.worker.autoscaling.behavior.scaleDown.selectPolicy | quote }}
+      {{- end }}
+      {{- if .Values.worker.autoscaling.behavior.scaleDown.policies }}
+      policies:
+        {{- range .Values.worker.autoscaling.behavior.scaleDown.policies }}
+        - type: {{ .type | quote }}
+          value: {{ .value }}
+          periodSeconds: {{ .periodSeconds }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   metrics:
   {{- if .Values.worker.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource

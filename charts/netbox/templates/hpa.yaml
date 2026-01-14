@@ -16,39 +16,36 @@ spec:
     name: {{ include "common.names.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-  {{- $behavior := .Values.autoscaling.behavior }}
-  {{- if $behavior }}
+  {{- if .Values.autoscaling.behavior }}
   behavior:
-    {{- $scaleUp := $behavior.scaleUp }}
-    {{- if $scaleUp }}
+    {{- if .Values.autoscaling.behavior.scaleUp }}
     scaleUp:
-      {{- if $scaleUp.stabilizationWindowSeconds }}
-      stabilizationWindowSeconds: {{ $scaleUp.stabilizationWindowSeconds }}
+      {{- if .Values.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleUp.stabilizationWindowSeconds }}
       {{- end }}
-      {{- if $scaleUp.selectPolicy }}
-      selectPolicy: {{ $scaleUp.selectPolicy | quote }}
+      {{- if .Values.autoscaling.behavior.scaleUp.selectPolicy }}
+      selectPolicy: {{ .Values.autoscaling.behavior.scaleUp.selectPolicy | quote }}
       {{- end }}
-      {{- if $scaleUp.policies }}
+      {{- if .Values.autoscaling.behavior.scaleUp.policies }}
       policies:
-        {{- range $scaleUp.policies }}
+        {{- range .Values.autoscaling.behavior.scaleUp.policies }}
         - type: {{ .type | quote }}
           value: {{ .value }}
           periodSeconds: {{ .periodSeconds }}
         {{- end }}
       {{- end }}
     {{- end }}
-    {{- $scaleDown := $behavior.scaleDown }}
-    {{- if $scaleDown }}
+    {{- if .Values.autoscaling.behavior.scaleDown }}
     scaleDown:
-      {{- if $scaleDown.stabilizationWindowSeconds }}
-      stabilizationWindowSeconds: {{ $scaleDown.stabilizationWindowSeconds }}
+      {{- if .Values.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleDown.stabilizationWindowSeconds }}
       {{- end }}
-      {{- if $scaleDown.selectPolicy }}
-      selectPolicy: {{ $scaleDown.selectPolicy | quote }}
+      {{- if .Values.autoscaling.behavior.scaleDown.selectPolicy }}
+      selectPolicy: {{ .Values.autoscaling.behavior.scaleDown.selectPolicy | quote }}
       {{- end }}
-      {{- if $scaleDown.policies }}
+      {{- if .Values.autoscaling.behavior.scaleDown.policies }}
       policies:
-        {{- range $scaleDown.policies }}
+        {{- range .Values.autoscaling.behavior.scaleDown.policies }}
         - type: {{ .type | quote }}
           value: {{ .value }}
           periodSeconds: {{ .periodSeconds }}

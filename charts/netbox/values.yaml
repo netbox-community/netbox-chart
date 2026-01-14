@@ -1201,6 +1201,12 @@ cachingDatabase:
 ## @param autoscaling.maxReplicas Maximum number of replicas
 ## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
 ## @param autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+## @param autoscaling.behavior.scaleUp.stabilizationWindowSeconds Scale-up stabilization window in seconds
+## @param autoscaling.behavior.scaleUp.selectPolicy Policy selection for scale-up (Max|Min|Disabled)
+## @param autoscaling.behavior.scaleUp.policies List of scale-up policies [{type,value,periodSeconds}]
+## @param autoscaling.behavior.scaleDown.stabilizationWindowSeconds Scale-down stabilization window in seconds
+## @param autoscaling.behavior.scaleDown.selectPolicy Policy selection for scale-down (Max|Min|Disabled)
+## @param autoscaling.behavior.scaleDown.policies List of scale-down policies [{type,value,periodSeconds}]
 ##
 autoscaling:
   enabled: false
@@ -1208,6 +1214,21 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+  # behavior:
+  #   scaleUp:
+  #     stabilizationWindowSeconds: 0
+  #     selectPolicy: Max
+  #     policies:
+  #       - type: Percent
+  #         value: 100
+  #         periodSeconds: 60
+  #   scaleDown:
+  #     stabilizationWindowSeconds: 300
+  #     selectPolicy: Max
+  #     policies:
+  #       - type: Percent
+  #         value: 100
+  #         periodSeconds: 60
 
 ## @section Volume permissions parameters
 
@@ -1689,6 +1710,12 @@ worker:
   ## @param worker.autoscaling.maxReplicas Maximum number of replicas
   ## @param worker.autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
   ## @param worker.autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+  ## @param worker.autoscaling.behavior.scaleUp.stabilizationWindowSeconds Scale-up stabilization window in seconds
+  ## @param worker.autoscaling.behavior.scaleUp.selectPolicy Policy selection for scale-up (Max|Min|Disabled)
+  ## @param worker.autoscaling.behavior.scaleUp.policies List of scale-up policies [{type,value,periodSeconds}]
+  ## @param worker.autoscaling.behavior.scaleDown.stabilizationWindowSeconds Scale-down stabilization window in seconds
+  ## @param worker.autoscaling.behavior.scaleDown.selectPolicy Policy selection for scale-down (Max|Min|Disabled)
+  ## @param worker.autoscaling.behavior.scaleDown.policies List of scale-down policies [{type,value,periodSeconds}]
   ##
   autoscaling:
     enabled: false
@@ -1696,6 +1723,21 @@ worker:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+    # behavior:
+    #   scaleUp:
+    #     stabilizationWindowSeconds: 0
+    #     selectPolicy: Max
+    #     policies:
+    #       - type: Percent
+    #         value: 100
+    #         periodSeconds: 60
+    #   scaleDown:
+    #     stabilizationWindowSeconds: 300
+    #     selectPolicy: Max
+    #     policies:
+    #       - type: Percent
+    #         value: 100
+    #         periodSeconds: 60
   ## @param worker.extraEnvs Extra environment variables to be set on containers
   ## E.g:
   ## extraEnvs:

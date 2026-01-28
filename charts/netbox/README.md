@@ -312,6 +312,7 @@ The following table lists the configurable parameters for this chart and their d
 | `autoscaling.maxReplicas`                       | Maximum number of replicas when autoscaling is enabled              | `100`                                        |
 | `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilisation percentage for autoscaling                   | `80`                                         |
 | `autoscaling.targetMemoryUtilizationPercentage` | Target memory utilisation percentage for autoscaling                | `null`                                       |
+| `autoscaling.behavior`                          | HPA behavior (scaleUp/scaleDown policies and settings)              | `{}`                                         |
 | `nodeSelector`                                  | Node labels for pod assignment                                      | `{}`                                         |
 | `tolerations`                                   | Toleration labels for pod assignment                                | `[]`                                         |
 | `updateStrategy`                                | Configure deployment update strategy                                | `{}` (defaults to `RollingUpdate`)           |

@@ -178,7 +178,55 @@
           "type": "integer"
         },
         "targetCPUUtilizationPercentage": {
-          "type": "integer"
+          "type": ["integer", "null"]
+        },
+        "targetMemoryUtilizationPercentage": {
+          "type": ["integer", "null"],
+          "default": null
+        },
+        "behavior": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "scaleUp": {
+              "type": "object",
+              "properties": {
+                "stabilizationWindowSeconds": { "type": "integer" },
+                "selectPolicy": { "type": "string" },
+                "policies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "value": { "type": "integer" },
+                      "periodSeconds": { "type": "integer" }
+                    },
+                    "required": ["type", "value", "periodSeconds"]
+                  }
+                }
+              }
+            },
+            "scaleDown": {
+              "type": "object",
+              "properties": {
+                "stabilizationWindowSeconds": { "type": "integer" },
+                "selectPolicy": { "type": "string" },
+                "policies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "value": { "type": "integer" },
+                      "periodSeconds": { "type": "integer" }
+                    },
+                    "required": ["type", "value", "periodSeconds"]
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "type": "object"
@@ -1517,7 +1565,55 @@
               "type": "integer"
             },
             "targetCPUUtilizationPercentage": {
-              "type": "integer"
+              "type": ["integer", "null"]
+            },
+            "targetMemoryUtilizationPercentage": {
+              "type": ["integer", "null"],
+              "default": null
+            },
+            "behavior": {
+              "type": "object",
+              "default": {},
+              "properties": {
+                "scaleUp": {
+                  "type": "object",
+                  "properties": {
+                    "stabilizationWindowSeconds": { "type": "integer" },
+                    "selectPolicy": { "type": "string" },
+                    "policies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "value": { "type": "integer" },
+                          "periodSeconds": { "type": "integer" }
+                        },
+                        "required": ["type", "value", "periodSeconds"]
+                      }
+                    }
+                  }
+                },
+                "scaleDown": {
+                  "type": "object",
+                  "properties": {
+                    "stabilizationWindowSeconds": { "type": "integer" },
+                    "selectPolicy": { "type": "string" },
+                    "policies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "value": { "type": "integer" },
+                          "periodSeconds": { "type": "integer" }
+                        },
+                        "required": ["type", "value", "periodSeconds"]
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           "type": "object"

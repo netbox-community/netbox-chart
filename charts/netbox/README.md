@@ -157,6 +157,15 @@ The following table lists the configurable parameters for this chart and their d
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
 | `timeFormat`                                    | Django date format for long-form time strings                       | `"g:i a"`                                    |
+| `metrics.granian`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
+| `metrics.granianServiceMonitor.enabled`         | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
+| `metrics.granianServiceMonitor.additionalLabels`| Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.granianServiceMonitor.honorLabels`     | honorLabels chooses the metric's labels on collisions               | `false`                                      |
+| `metrics.granianServiceMonitor.interval`        | Interval at which metrics should be scraped                         | `""`                                         |
+| `metrics.granianServiceMonitor.scrapeTimeout`   | Timeout duration for scraping metrics                               | `""`                                         |
+| `metrics.granianServiceMonitor.metricRelabelings`| Specify additional relabeling of metrics                            | `[]`                                         |
+| `metrics.granianServiceMonitor.relabelings`     | Specify general relabeling                                          | `[]`                                         |
+| `metrics.granianServiceMonitor.selector`        | Prometheus instance selector labels                                 | `{}`                                         |
 | `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `metrics.serviceMonitor.enabled`                | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
 | `metrics.serviceMonitor.additionalLabels`       | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
@@ -172,7 +181,6 @@ The following table lists the configurable parameters for this chart and their d
 | `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
 | `secretKey`                                     | Django secret key used for sessions and password reset tokens       | `""` (generated)                             |
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
-| `overrideUnitConfig`                            | Override the NGINX Unit application server configuration            | `{}` (*see values.yaml*)                     |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
 | `postgresql.auth.username`                      | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
 | `postgresql.auth.database`                      | Database to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |

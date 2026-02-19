@@ -212,11 +212,6 @@ data:
   {{- end }}
   {{- end }}
 
-  {{- if .Values.overrideUnitConfig }}
-  nginx-unit.json: |-
-    {{- toPrettyJson .Values.overrideUnitConfig | nindent 4 }}
-  {{- end }}
-
   {{- range $index, $config := .Values.extraConfig }}
   {{- if $config.values }}
   {{ printf "extra-%d.yaml" $index }}: |-

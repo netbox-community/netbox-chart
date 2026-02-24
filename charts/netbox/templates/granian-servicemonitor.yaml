@@ -1,10 +1,10 @@
-{{- if and .Values.metrics.granian.enabled .Values.metrics.granianServiceMonitor.enabled }}
+{{- if and .Values.metrics.granian.enabled .Values.metrics.granian.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
-  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metrics.granianServiceMonitor.additionalLabels .Values.commonLabels ) "context" . ) }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metrics.granian.serviceMonitor.additionalLabels .Values.commonLabels ) "context" . ) }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
@@ -17,25 +17,25 @@ spec:
   selector:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
-      {{- if .Values.metrics.granianServiceMonitor.selector }}
-      {{- include "common.tplvalues.render" (dict "value" .Values.metrics.granianServiceMonitor.selector "context" $) | nindent 6 }}
+      {{- if .Values.metrics.granian.serviceMonitor.selector }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.metrics.granian.serviceMonitor.selector "context" $) | nindent 6 }}
       {{- end }}
   endpoints:
   - port: granian-metrics
     path: "/"
-    {{- if .Values.metrics.granianServiceMonitor.interval }}
-    interval: {{ .Values.metrics.granianServiceMonitor.interval }}
+    {{- if .Values.metrics.granian.serviceMonitor.interval }}
+    interval: {{ .Values.metrics.granian.serviceMonitor.interval }}
     {{- end }}
-    {{- if .Values.metrics.granianServiceMonitor.scrapeTimeout }}
-    scrapeTimeout: {{ .Values.metrics.granianServiceMonitor.scrapeTimeout }}
+    {{- if .Values.metrics.granian.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ .Values.metrics.granian.serviceMonitor.scrapeTimeout }}
     {{- end }}
-    {{- if .Values.metrics.granianServiceMonitor.honorLabels }}
-    honorLabels: {{ .Values.metrics.granianServiceMonitor.honorLabels }}
+    {{- if .Values.metrics.granian.serviceMonitor.honorLabels }}
+    honorLabels: {{ .Values.metrics.granian.serviceMonitor.honorLabels }}
     {{- end }}
-    {{- if .Values.metrics.granianServiceMonitor.metricRelabelings }}
-    metricRelabelings: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.granianServiceMonitor.metricRelabelings "context" $) | nindent 6 }}
+    {{- if .Values.metrics.granian.serviceMonitor.metricRelabelings }}
+    metricRelabelings: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.granian.serviceMonitor.metricRelabelings "context" $) | nindent 6 }}
     {{- end }}
-    {{- if .Values.metrics.granianServiceMonitor.relabelings }}
-    relabelings: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.granianServiceMonitor.relabelings "context" $) | nindent 6 }}
+    {{- if .Values.metrics.granian.serviceMonitor.relabelings }}
+    relabelings: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.granian.serviceMonitor.relabelings "context" $) | nindent 6 }}
     {{- end }}
 {{- end }}

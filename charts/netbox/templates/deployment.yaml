@@ -110,7 +110,7 @@ spec:
         - name: http
           containerPort: 8080
           protocol: TCP
-        {{- if .Values.metrics.granianServiceMonitor.enabled}}
+        {{- if .Values.metrics.granian.serviceMonitor.enabled}}
         - name: granian-metrics
           containerPort: 9000
           protocol: TCP

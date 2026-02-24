@@ -840,35 +840,40 @@
     "metrics": {
       "properties": {
         "granian": {
-          "type": "boolean"
-        },
-        "granianServiceMonitor": {
           "properties": {
-            "additionalLabels": {
-              "properties": {},
-              "type": "object"
-            },
             "enabled": {
               "type": "boolean"
             },
-            "honorLabels": {
-              "type": "boolean"
-            },
-            "interval": {
-              "type": "string"
-            },
-            "metricRelabelings": {
-              "type": ["array", "string"]
-            },
-            "relabelings": {
-              "type": ["array", "string"]
-            },
-            "scrapeTimeout": {
-              "type": "string"
-            },
-            "selector": {
-              "properties": {},
-              "type": ["object", "string"]
+            "serviceMonitor": {
+              "properties": {
+                "additionalLabels": {
+                  "properties": {},
+                  "type": "object"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "honorLabels": {
+                  "type": "boolean"
+                },
+                "interval": {
+                  "type": "string"
+                },
+                "metricRelabelings": {
+                  "type": ["array", "string"]
+                },
+                "relabelings": {
+                  "type": ["array", "string"]
+                },
+                "scrapeTimeout": {
+                  "type": "string"
+                },
+                "selector": {
+                  "properties": {},
+                  "type": ["object", "string"]
+                }
+              },
+              "type": "object"
             }
           },
           "type": "object"

@@ -85,10 +85,6 @@ spec:
         - name: DB_WAIT_DEBUG
           value: "1"
         {{- end }}
-        {{- if .Values.overrideUnitConfig }}
-        - name: UNIT_CONFIG
-          value: /run/config/netbox/nginx-unit.json
-        {{- end }}
         {{- if .Values.allowedHostsIncludesPodIP }}
         - name: POD_IP
           valueFrom:
@@ -114,16 +110,17 @@ spec:
         - name: http
           containerPort: 8080
           protocol: TCP
-        - name: nginx-status
-          containerPort: 8081
+        {{- if .Values.metrics.granian.serviceMonitor.enabled}}
+        - name: granian-metrics
+          containerPort: 9000
           protocol: TCP
+        {{- end }}
         {{- if .Values.customLivenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customLivenessProbe "context" $) | nindent 10 }}
         {{- else if .Values.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 10 }}
-          httpGet:
-            path: /status/applications/netbox/processes/running
-            port: nginx-status
+          tcpSocket:
+            port: http
         {{- end }}
         {{- if .Values.customReadinessProbe }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 10 }}

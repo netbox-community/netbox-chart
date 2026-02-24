@@ -839,6 +839,45 @@
     },
     "metrics": {
       "properties": {
+        "granian": {
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "serviceMonitor": {
+              "properties": {
+                "additionalLabels": {
+                  "properties": {},
+                  "type": "object"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "honorLabels": {
+                  "type": "boolean"
+                },
+                "interval": {
+                  "type": "string"
+                },
+                "metricRelabelings": {
+                  "type": ["array", "string"]
+                },
+                "relabelings": {
+                  "type": ["array", "string"]
+                },
+                "scrapeTimeout": {
+                  "type": "string"
+                },
+                "selector": {
+                  "properties": {},
+                  "type": ["object", "string"]
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
         "enabled": {
           "type": "boolean"
         },
@@ -882,10 +921,6 @@
     "nodeSelector": {
       "properties": {},
       "type": ["object", "string"]
-    },
-    "overrideUnitConfig": {
-      "properties": {},
-      "type": "object"
     },
     "paginateCount": {
       "type": "integer"

@@ -1799,7 +1799,7 @@ worker:
     image:
       registry: docker.io
       repository: rancher/kubectl
-      tag: v1.35.1
+      tag: v1.35.2
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images

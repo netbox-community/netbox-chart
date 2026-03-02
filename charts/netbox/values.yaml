@@ -471,7 +471,7 @@ extraConfig: []
 # This is additional configuration to be added to the configuration.py file before plugins are imported.
 # This is useful for bootstrapping NetBox with custom settings that may be required by plugins.
 # The values is evaluated as a template, so you can use it to load values from ConfigMaps and Secrets.
-# The value is appended to the configuration.py file, and needs to contain valid pyhton code.
+# The value is appended to the configuration.py file, and needs to contain valid python code.
 extraBootstrapConfig: ""
 
 # If provided, this should be a 50+ character string of random characters. It

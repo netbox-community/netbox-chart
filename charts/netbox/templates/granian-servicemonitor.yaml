@@ -22,7 +22,7 @@ spec:
       {{- end }}
   endpoints:
   - port: granian-metrics
-    path: "/"
+    path: "/metrics"
     {{- if .Values.metrics.granian.serviceMonitor.interval }}
     interval: {{ .Values.metrics.granian.serviceMonitor.interval }}
     {{- end }}

@@ -88,6 +88,10 @@ spec:
           value: "9000"
         - name: GRANIAN_METRICS_ADDRESS
           value: "0.0.0.0"
+        {{- if and .Values.metrics.granian.serviceMonitor.enabled .Values.metrics.granian.serviceMonitor.interval }}
+        - name: GRANIAN_METRICS_SCRAPE_INTERVAL
+          value: {{ .Values.metrics.granian.serviceMonitor.interval | quote }}
+        {{- end }}
         {{- end }}
         {{- if .Values.dbWaitDebug }}
         - name: DB_WAIT_DEBUG

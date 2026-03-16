@@ -83,9 +83,7 @@ spec:
               key: email
         {{- if and .Values.metrics.enabled .Values.metrics.granian.enabled }}
         - name: GRANIAN_METRICS_ENABLED
-          value: "true"
-        - name: GRANIAN_METRICS_PORT
-          value: "9000"
+          value: {{ .Values.metrics.granian.enabled | quote }}
         - name: GRANIAN_METRICS_ADDRESS
           value: {{ .Values.metrics.granian.listenAddress | quote }}
         {{- if and .Values.metrics.granian.serviceMonitor.enabled .Values.metrics.granian.serviceMonitor.interval }}
@@ -124,7 +122,7 @@ spec:
           protocol: TCP
         {{- if .Values.metrics.granian.serviceMonitor.enabled}}
         - name: granian-metrics
-          containerPort: 9000
+          containerPort: 9090
           protocol: TCP
         {{- end }}
         {{- if .Values.customLivenessProbe }}

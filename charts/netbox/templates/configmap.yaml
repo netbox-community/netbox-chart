@@ -119,6 +119,12 @@ data:
     REMOTE_AUTH_STAFF_GROUPS: {{ toJson .Values.remoteAuth.staffGroups }}
     REMOTE_AUTH_STAFF_USERS: {{ toJson .Values.remoteAuth.staffUsers }}
     REMOTE_AUTH_GROUP_SEPARATOR: {{ .Values.remoteAuth.groupSeparator | quote }}
+    {{- if has "social_core.backends.open_id_connect.OpenIdConnectAuth" .Values.remoteAuth.backends }}
+    SOCIAL_AUTH_OIDC_OIDC_ENDPOINT: {{ .Values.remoteAuth.oidc.oidcEndpoint | quote }}
+    SOCIAL_AUTH_OIDC_KEY: {{ .Values.remoteAuth.oidc.key | quote }}
+    SOCIAL_AUTH_OIDC_SCOPE: {{ toJson .Values.remoteAuth.oidc.scope }}
+    SOCIAL_AUTH_OIDC_JWT_ALGORITHMS: {{ toJson .Values.remoteAuth.oidc.jwtAlgorithms }}
+    {{- end }}
     RELEASE_CHECK_URL: {{ toJson .Values.releaseCheck.url }}
 
     REDIS:

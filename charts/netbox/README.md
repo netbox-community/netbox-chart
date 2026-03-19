@@ -127,6 +127,13 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.staffGroups`                        | The list of groups that promote an remote User to Staff on login    | `[]`                                         |
 | `remoteAuth.staffUsers`                         | The list of users that get promoted to Staff on login               | `[]`                                         |
 | `remoteAuth.groupSeparator`                     | The Seperator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
+| `remoteAuth.oidc.oidcEndpoint`                  | OpenID Connect endpoint URL                                         | `""`                                         |
+| `remoteAuth.oidc.key`                           | OIDC client ID (public key)                                         | `""`                                         |
+| `remoteAuth.oidc.secret`                        | OIDC client secret                                                  | `""`                                         |
+| `remoteAuth.oidc.existingSecretName`            | Use an existing `Secret` for the OIDC client secret                 | `""`                                         |
+| `remoteAuth.oidc.existingSecretKey`             | Key in the existing `Secret` that contains the OIDC client secret   | `oidc_secret`                                |
+| `remoteAuth.oidc.scope`                         | List of OIDC scopes to request                                      | `["openid", "profile", "email"]`             |
+| `remoteAuth.oidc.jwtAlgorithms`                 | List of JWT algorithms to accept                                    | `["RS256"]`                                  |
 | `remoteAuth.ldap.serverUri`                     | see [django-auth-ldap](https://django-auth-ldap.readthedocs.io)     | `""`                                         |
 | `remoteAuth.ldap.startTls`                      | if StarTLS should be used                                           | *see values.yaml*                            |
 | `remoteAuth.ldap.ignoreCertErrors`              | if Certificate errors should be ignored                             | *see values.yaml*                            |
@@ -446,6 +453,7 @@ Type: `kubernetes.io/basic-auth`
 | Key                  | Description                                                   | Required?                                                                                         |
 | -------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `ldap_bind_password` | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
+| `oidc_secret`        | OIDC client secret                                             | If `remoteAuth.backends` includes `social_core.backends.open_id_connect.OpenIdConnectAuth`         |
 | `secret_key`         | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
 
 ### Email secret (`email.existingSecretName`)

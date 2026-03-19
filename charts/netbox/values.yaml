@@ -381,6 +381,23 @@ remoteAuth:
   staffUsers: []
   groupSeparator: "|"
 
+  # The following options are specific for backend
+  # "social_core.backends.open_id_connect.OpenIdConnectAuth"
+  # you can use an existing netbox secret with "oidc_secret" instead of "secret"
+  oidc:
+    # oidcEndpoint: https://auth.example.com
+    oidcEndpoint: ""
+    key: ""
+    secret: ""
+    existingSecretName: ""
+    existingSecretKey: oidc_secret
+    scope:
+      - openid
+      - profile
+      - email
+    jwtAlgorithms:
+      - RS256
+
   # The following options are specific for backend "netbox.authentication.LDAPBackend"
   # you can use an existing netbox secret with "ldap_bind_password" instead of "bindPassword"
   # see https://django-auth-ldap.readthedocs.io

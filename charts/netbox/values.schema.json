@@ -1120,6 +1120,39 @@
         "userLastName": {
           "type": "string"
         },
+        "oidc": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "oidcEndpoint": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "secret": {
+              "type": "string"
+            },
+            "existingSecretName": {
+              "type": "string"
+            },
+            "existingSecretKey": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "jwtAlgorithms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "ldap": {
           "type": "object",
           "additionalProperties": false,

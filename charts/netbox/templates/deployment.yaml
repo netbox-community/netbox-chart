@@ -227,6 +227,17 @@ spec:
               - key: ldap_bind_password
                 path: ldap_bind_password
               {{- end }}
+              {{- if and (has "social_core.backends.open_id_connect.OpenIdConnectAuth" .Values.remoteAuth.backends) (not .Values.remoteAuth.oidc.existingSecretName) }}
+              - key: oidc_secret
+                path: oidc_secret
+              {{- end }}
+          {{- if and (has "social_core.backends.open_id_connect.OpenIdConnectAuth" .Values.remoteAuth.backends) .Values.remoteAuth.oidc.existingSecretName }}
+          - secret:
+              name: {{ include "netbox.oidc.secret" . | quote }}
+              items:
+              - key: {{ include "netbox.oidc.secretKey" . | quote }}
+                path: oidc_secret
+          {{- end }}
           - secret:
               name: {{ include "common.secrets.name" (dict "existingSecret" (default .Values.existingSecret .Values.email.existingSecretName) "defaultNameSuffix" "config" "context" $) }}
               items:

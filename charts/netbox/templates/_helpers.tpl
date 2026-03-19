@@ -37,6 +37,28 @@ Name of the key in Secret that contains the email password
 {{- end }}
 
 {{/*
+Name of the Secret that contains the OIDC client secret
+*/}}
+{{- define "netbox.oidc.secret" -}}
+  {{- if .Values.remoteAuth.oidc.existingSecretName -}}
+    {{- .Values.remoteAuth.oidc.existingSecretName -}}
+  {{- else -}}
+    {{- include "common.secrets.name" (dict "existingSecret" .Values.existingSecret "defaultNameSuffix" "config" "context" $) -}}
+  {{- end -}}
+{{- end }}
+
+{{/*
+Name of the key in Secret that contains the OIDC client secret
+*/}}
+{{- define "netbox.oidc.secretKey" -}}
+  {{- if .Values.remoteAuth.oidc.existingSecretName -}}
+    {{- .Values.remoteAuth.oidc.existingSecretKey -}}
+  {{- else -}}
+    oidc_secret
+  {{- end -}}
+{{- end }}
+
+{{/*
 Name of the Secret that contains the PostgreSQL password
 */}}
 {{- define "netbox.postgresql.secret" -}}
@@ -184,6 +206,7 @@ Compile all warnings into a single message.
 {{- $messages := list -}}
 {{- $messages := append $messages (include "netbox.validateValues.postgresql" .) -}}
 {{- $messages := append $messages (include "netbox.validateValues.ldap" .) -}}
+{{- $messages := append $messages (include "netbox.validateValues.oidc" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 {{- if $message -}}
@@ -214,5 +237,16 @@ Validate values of Netbox Chart - LDAP
 netbox: remoteAuth.ldap
     When LDAP backend is activated, you must provide all the necessary parameters.
     Review the values under `remoteAuth.ldap`.
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate values of Netbox Chart - OIDC
+*/}}
+{{- define "netbox.validateValues.oidc" -}}
+{{- if and (has "social_core.backends.open_id_connect.OpenIdConnectAuth" .Values.remoteAuth.backends) (empty .Values.remoteAuth.oidc.oidcEndpoint) -}}
+netbox: remoteAuth.oidc
+    When OIDC backend is activated, you must provide all the necessary parameters.
+    Review the values under `remoteAuth.oidc`.
 {{- end -}}
 {{- end -}}

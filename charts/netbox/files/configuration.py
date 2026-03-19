@@ -64,6 +64,7 @@ EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
 REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "tasks_password")
 REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "cache_password")
 SECRET_KEY = _read_secret(provided_secret_name, "secret_key")
+SOCIAL_AUTH_OIDC_SECRET = _read_secret(provided_secret_name, "oidc_secret")
 
 # Post-process certain values
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]

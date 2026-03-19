@@ -84,8 +84,10 @@ spec:
         {{- if and .Values.metrics.enabled .Values.metrics.granian.enabled }}
         - name: GRANIAN_METRICS_ENABLED
           value: {{ .Values.metrics.granian.enabled | quote }}
+        {{- if .Values.metrics.granian.listenAddress }}
         - name: GRANIAN_METRICS_ADDRESS
           value: {{ .Values.metrics.granian.listenAddress | quote }}
+        {{- end }}
         {{- if and .Values.metrics.granian.serviceMonitor.enabled .Values.metrics.granian.serviceMonitor.interval }}
         - name: GRANIAN_METRICS_SCRAPE_INTERVAL
           value: {{ .Values.metrics.granian.serviceMonitor.interval | quote }}

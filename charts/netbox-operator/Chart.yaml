@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox-operator
-version: 1.2.32
+version: 1.2.33
 # renovate: image=ghcr.io/netbox-community/netbox-operator
 appVersion: "0.2.47"
 type: application

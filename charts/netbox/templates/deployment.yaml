@@ -81,6 +81,18 @@ spec:
             secretKeyRef:
               name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
               key: email
+        {{- if and .Values.metrics.enabled .Values.metrics.granian.enabled }}
+        - name: GRANIAN_METRICS_ENABLED
+          value: {{ .Values.metrics.granian.enabled | quote }}
+        {{- if .Values.metrics.granian.listenAddress }}
+        - name: GRANIAN_METRICS_ADDRESS
+          value: {{ .Values.metrics.granian.listenAddress | quote }}
+        {{- end }}
+        {{- if and .Values.metrics.granian.serviceMonitor.enabled .Values.metrics.granian.serviceMonitor.interval }}
+        - name: GRANIAN_METRICS_SCRAPE_INTERVAL
+          value: {{ .Values.metrics.granian.serviceMonitor.interval | quote }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.dbWaitDebug }}
         - name: DB_WAIT_DEBUG
           value: "1"
@@ -112,7 +124,7 @@ spec:
           protocol: TCP
         {{- if .Values.metrics.granian.serviceMonitor.enabled}}
         - name: granian-metrics
-          containerPort: 9000
+          containerPort: 9090
           protocol: TCP
         {{- end }}
         {{- if .Values.customLivenessProbe }}

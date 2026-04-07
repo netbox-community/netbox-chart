@@ -478,7 +478,7 @@ secretKey: ""
 # https://netboxlabs.com/docs/netbox/configuration/required-parameters/#api_token_peppers
 # You can also use an existing secret with "api_token_pepper_1" instead of "apiTokenPepper1"
 # See `existingSecret` for details
-# Alternativley, you can provide `API_TOKEN_PEPPER_1` as an environment variable
+# Alternatively, you can provide `API_TOKEN_PEPPER_1` as an environment variable
 # with `extraEnvVarsSecret`
 apiTokenPepper1: ""
 

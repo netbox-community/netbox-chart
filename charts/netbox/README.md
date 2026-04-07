@@ -180,6 +180,7 @@ The following table lists the configurable parameters for this chart and their d
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
 | `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
 | `secretKey`                                     | Django secret key used for sessions and password reset tokens       | `""` (generated)                             |
+| `apiTokenPepper1`                               | Random string of characters used as an API token pepper             | `""` (generated)                             |
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |
 | `postgresql.auth.username`                      | Username to create for NetBox in bundled PostgreSQL instance        | `netbox`                                     |
@@ -447,6 +448,7 @@ Type: `kubernetes.io/basic-auth`
 | -------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `ldap_bind_password` | Password for LDAP bind DN                                     | If `remoteAuth.enabled` is `true` and `remoteAuth.backend` is `netbox.authentication.LDAPBackend` |
 | `secret_key`         | Django secret key used for sessions and password reset tokens | Yes                                                                                               |
+| `api_token_pepper_1` | API token pepper (Optional, the projected volume will mount an empty file if missing) | No                                                                                                |
 
 ### Email secret (`email.existingSecretName`)
 

@@ -54,6 +54,7 @@ CORS_ORIGIN_REGEX_WHITELIST = []
 DATABASES = {}
 EMAIL = {}
 REDIS = {}
+API_TOKEN_PEPPERS = {}
 
 _load_yaml()
 
@@ -64,6 +65,10 @@ EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
 REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "tasks_password")
 REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "cache_password")
 SECRET_KEY = _read_secret(provided_secret_name, "secret_key")
+
+# Read API_TOKEN_PEPPER_1 from secret or environment variable
+if api_token_pepper := _read_secret(provided_secret_name, "api_token_pepper_1", os.getenv("API_TOKEN_PEPPER_1", "")):
+    API_TOKEN_PEPPERS.update({1: api_token_pepper})
 
 # Post-process certain values
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]

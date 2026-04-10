@@ -8,6 +8,9 @@
 name: Lint Status
 
 on:
+  # zizmor: ignore[dangerous-triggers] -- intentional; this is the secure
+  # two-workflow pattern for posting status on fork PRs. The workflow only
+  # calls createCommitStatus with data from the workflow_run payload.
   workflow_run:
     # Must match the `name:` in lint.yml exactly.
     workflows: ["Lint Code Base"]

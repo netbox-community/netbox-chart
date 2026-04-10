@@ -10,6 +10,9 @@ metadata:
 data:
   configuration.py: |-
     {{ .Files.Get "files/configuration.py" | nindent 4 }}
+    {{- if .Values.extraBootstrapConfig }}
+    {{ tpl .Values.extraBootstrapConfig . | nindent 4 }}
+    {{- end }}
 
   netbox.yaml: |-
     ALLOWED_HOSTS: {{ toJson .Values.allowedHosts }}

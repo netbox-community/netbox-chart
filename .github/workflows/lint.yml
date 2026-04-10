@@ -30,6 +30,8 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
+          MULTI_STATUS: false
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
           FIX_MARKDOWN_PRETTIER: false
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_MARKDOWN_PRETTIER: false

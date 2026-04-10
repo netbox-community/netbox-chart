@@ -9,6 +9,7 @@ name: Lint Status
 
 on:
   workflow_run:
+    # Must match the `name:` in lint.yml exactly.
     workflows: ["Lint Code Base"]
     types: [completed]
 
@@ -26,17 +27,42 @@ jobs:
         with:
           script: |
             const run = context.payload.workflow_run;
-            const state = run.conclusion === 'success' ? 'success'
-              : run.conclusion === 'cancelled' ? 'error'
-              : 'failure';
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: run.head_sha,
-              state,
-              target_url: run.html_url,
-              description: run.conclusion === 'success'
-                ? 'Lint passed'
-                : `Lint ${run.conclusion} — see workflow run for details`,
-              context: 'Lint / Super-Linter',
-            });
+            if (!run || !run.head_sha) {
+              core.setFailed('workflow_run payload missing or has no head_sha');
+              return;
+            }
+            if (!run.conclusion) {
+              core.setFailed(`workflow_run ${run.id} has no conclusion`);
+              return;
+            }
+
+            let state;
+            let description;
+            if (run.conclusion === 'success') {
+              state = 'success';
+              description = 'Lint passed';
+            } else if (run.conclusion === 'cancelled' || run.conclusion === 'timed_out') {
+              state = 'error';
+              description = `Lint ${run.conclusion} — see workflow run for details`;
+            } else {
+              state = 'failure';
+              description = `Lint ${run.conclusion} — see workflow run for details`;
+            }
+
+            try {
+              await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: run.head_sha,
+                state,
+                target_url: run.html_url,
+                description,
+                context: 'Lint / Super-Linter',
+              });
+            } catch (error) {
+              core.error(
+                `Failed to post status for ${run.head_sha}: `
+                + `${error.status ?? 'unknown'} - ${error.message}`
+              );
+              throw error;
+            }

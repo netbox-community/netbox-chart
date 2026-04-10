@@ -1,4 +1,6 @@
 # https://docs.github.com/actions
+# NOTE: lint-report.yml triggers on this workflow by name.
+# If you rename it, update lint-report.yml to match.
 
 name: Lint Code Base
 

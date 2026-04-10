@@ -1,0 +1,42 @@
+# https://docs.github.com/actions
+#
+# Posts a commit status after the Lint workflow completes.
+# Runs in the base repo context (full token permissions),
+# so it works correctly for fork PRs where the lint workflow
+# itself has only read access.
+
+name: Lint Status
+
+on:
+  workflow_run:
+    workflows: ["Lint Code Base"]
+    types: [completed]
+
+permissions:
+  statuses: write
+
+jobs:
+  report:
+    name: Report Lint Status
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Update commit status
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const state = run.conclusion === 'success' ? 'success'
+              : run.conclusion === 'cancelled' ? 'error'
+              : 'failure';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: run.head_sha,
+              state,
+              target_url: run.html_url,
+              description: run.conclusion === 'success'
+                ? 'Lint passed'
+                : `Lint ${run.conclusion} — see workflow run for details`,
+              context: 'Lint / Super-Linter',
+            });

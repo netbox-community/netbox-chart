@@ -11,7 +11,6 @@ on:
 permissions:
   contents: read
   packages: read
-  statuses: write
 
 jobs:
   build:
@@ -29,7 +28,6 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIX_MARKDOWN_PRETTIER: false
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_MARKDOWN_PRETTIER: false

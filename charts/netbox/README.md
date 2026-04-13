@@ -126,7 +126,7 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.superusers`                         | The list of users that get promoted to Superuser on login           | `[]`                                         |
 | `remoteAuth.staffGroups`                        | The list of groups that promote an remote User to Staff on login    | `[]`                                         |
 | `remoteAuth.staffUsers`                         | The list of users that get promoted to Staff on login               | `[]`                                         |
-| `remoteAuth.groupSeparator`                     | The Seperator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
+| `remoteAuth.groupSeparator`                     | The Separator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
 | `remoteAuth.ldap.serverUri`                     | see [django-auth-ldap](https://django-auth-ldap.readthedocs.io)     | `""`                                         |
 | `remoteAuth.ldap.startTls`                      | if StarTLS should be used                                           | *see values.yaml*                            |
 | `remoteAuth.ldap.ignoreCertErrors`              | if Certificate errors should be ignored                             | *see values.yaml*                            |
@@ -159,7 +159,7 @@ The following table lists the configurable parameters for this chart and their d
 | `timeFormat`                                    | Django date format for long-form time strings                       | `"g:i a"`                                    |
 | `metrics.granian.enabled`                       | Enable Granian metrics                                              | `true`                                       |
 | `metrics.granian.serviceMonitor.enabled`        | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Granian metrics | `false`                                      |
-| `metrics.granian.serviceMonitor.additionalLabels`| Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.granian.serviceMonitor.additionalLabels`| Additional labels to apply to the ServiceMonitor                     | `{}`                                         |
 | `metrics.granian.serviceMonitor.honorLabels`    | honorLabels chooses the metric's labels on collisions               | `false`                                      |
 | `metrics.granian.serviceMonitor.interval`       | Interval at which metrics should be scraped                         | `""`                                         |
 | `metrics.granian.serviceMonitor.scrapeTimeout`  | Timeout duration for scraping metrics                               | `""`                                         |
@@ -168,7 +168,7 @@ The following table lists the configurable parameters for this chart and their d
 | `metrics.granian.serviceMonitor.selector`       | Prometheus instance selector labels                                 | `{}`                                         |
 | `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `metrics.serviceMonitor.enabled`                | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
-| `metrics.serviceMonitor.additionalLabels`       | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.serviceMonitor.additionalLabels`       | Additional labels to apply to the ServiceMonitor                     | `{}`                                         |
 | `metrics.serviceMonitor.honorLabels`            | honorLabels chooses the metric's labels on collisions               | `false`                                      |
 | `metrics.serviceMonitor.interval`               | Interval at which metrics should be scraped                         | `""`                                         |
 | `metrics.serviceMonitor.scrapeTimeout`          | Timeout duration for scraping metrics                               | `""`                                         |

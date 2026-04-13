@@ -829,7 +829,7 @@
       "type": "string"
     },
     "maintenanceMode": {
-      "type": "boolean"
+      "type": ["boolean", "null"]
     },
     "mapsUrl": {
       "type": "string"

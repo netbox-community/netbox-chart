@@ -299,7 +299,8 @@ loginTimeout: 1209600
 logoutRedirectUrl: home
 
 # Setting this to True will display a "maintenance mode" banner at the top of
-# every page.
+# every page. Setting this to null will allow to manage maintenance mode from
+# the web interface.
 maintenanceMode: false
 
 # The URL to use when mapping physical addresses or GPS coordinates

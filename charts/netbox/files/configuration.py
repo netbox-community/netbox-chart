@@ -36,7 +36,9 @@ def _load_yaml() -> None:
         _deep_merge(config, globals())
 
 
-def _read_secret(secret_name: str, secret_key: str, default: str | None = None) -> str | None:
+def _read_secret(
+    secret_name: str, secret_key: str, default: str | None = None
+) -> str | None:
     """Read secret from file"""
     try:
         secret = open(
@@ -75,8 +77,12 @@ if api_token_pepper := _read_secret(
 # Post-process certain values
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]
 if "SENTINELS" in REDIS["tasks"]:
-    REDIS["tasks"]["SENTINELS"] = [tuple(x.split(r":")) for x in REDIS["tasks"]["SENTINELS"]]
+    REDIS["tasks"]["SENTINELS"] = [
+        tuple(x.split(r":")) for x in REDIS["tasks"]["SENTINELS"]
+    ]
 if "SENTINELS" in REDIS["caching"]:
-    REDIS["caching"]["SENTINELS"] = [tuple(x.split(r":")) for x in REDIS["caching"]["SENTINELS"]]
+    REDIS["caching"]["SENTINELS"] = [
+        tuple(x.split(r":")) for x in REDIS["caching"]["SENTINELS"]
+    ]
 if ALLOWED_HOSTS_INCLUDES_POD_ID:
     ALLOWED_HOSTS.append(os.getenv("POD_IP"))

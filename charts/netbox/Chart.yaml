@@ -23,11 +23,11 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^18.5.16
+    version: ^18.5.17
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: valkey
-    version: ^5.4.10
+    version: ^5.4.11
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: valkey.enabled
 annotations:

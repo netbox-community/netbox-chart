@@ -1,8 +1,8 @@
 apiVersion: v2
 name: netbox-operator
-version: 1.2.37
+version: 1.2.40
 # renovate: image=ghcr.io/netbox-community/netbox-operator
-appVersion: "0.2.47"
+appVersion: "0.2.48"
 type: application
 kubeVersion: ^1.25.0-0
 description: Operator to manage NetBox resources directly through Kubernetes
@@ -21,7 +21,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: netbox
-    version: ^8.0.29
+    version: ^8.0.31
     repository: oci://ghcr.io/netbox-community/netbox-chart
     condition: netbox.enabled
 annotations:

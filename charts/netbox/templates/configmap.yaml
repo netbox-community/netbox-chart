@@ -48,9 +48,9 @@ data:
     ALLOW_TOKEN_RETRIEVAL: {{ toJson .Values.allowTokenRetrieval }}
     AUTH_PASSWORD_VALIDATORS: {{ toJson .Values.authPasswordValidators }}
     ALLOWED_URL_SCHEMES: {{ toJson .Values.allowedUrlSchemes }}
-    BANNER_TOP: {{ .Values.banner.top | quote }}
-    BANNER_BOTTOM: {{ .Values.banner.bottom | quote }}
-    BANNER_LOGIN: {{ .Values.banner.login | quote }}
+    {{- range $k, $v := .Values.banner }}
+    BANNER_{{ upper $k }}: {{ $v | quote }}
+    {{- end }}
     BASE_PATH: {{ .Values.basePath | quote }}
     CHANGELOG_RETENTION: {{ int .Values.changelogRetention }}
     CUSTOM_VALIDATORS: {{ toJson .Values.customValidators }}

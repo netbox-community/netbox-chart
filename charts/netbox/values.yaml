@@ -474,7 +474,6 @@ extraConfig: []
 secretKey: ""
 
 # If provided, this should be a 50+ character string of random characters.
-# It will be randomly generated if left blank.
 # https://netboxlabs.com/docs/netbox/configuration/required-parameters/#api_token_peppers
 # You can also use an existing secret with "api_token_pepper_1" instead of "apiTokenPepper1"
 # See `existingSecret` for details

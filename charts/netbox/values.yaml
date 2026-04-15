@@ -935,7 +935,7 @@ ingress:
     - host: chart-example.local
       paths:
         # You can manually specify the service name and service port if
-        # required. This could be useful if for exemple you are using the AWS
+        # required. This could be useful if for example you are using the AWS
         # ALB Ingress Controller and want to set up automatic SSL redirect.
         # https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/tasks/ssl_redirect/#redirect-traffic-from-http-to-https
         # - path: /*

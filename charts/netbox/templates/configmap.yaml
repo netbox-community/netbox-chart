@@ -87,7 +87,9 @@ data:
     LOGIN_REQUIRED: {{ toJson .Values.loginRequired }}
     LOGIN_TIMEOUT: {{ int .Values.loginTimeout }}
     LOGOUT_REDIRECT_URL: {{ .Values.logoutRedirectUrl | quote }}
-    {{ if ne nil .Values.maintenanceMode }}MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}{{ end }}
+    {{- if ne nil .Values.maintenanceMode }}
+    MAINTENANCE_MODE: {{ toJson .Values.maintenanceMode }}
+    {{- end }}
     MAPS_URL: {{ .Values.mapsUrl | quote }}
     MAX_PAGE_SIZE: {{ int .Values.maxPageSize }}
     MEDIA_ROOT: /opt/netbox/netbox/media

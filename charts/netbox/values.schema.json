@@ -234,16 +234,16 @@
     "banner": {
       "properties": {
         "bottom": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "login": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "top": {
-          "type": "string"
+          "type": ["string", "null"]
         }
       },
-      "type": "object"
+      "type": ["object", "null"]
     },
     "basePath": {
       "type": "string"
@@ -829,7 +829,7 @@
       "type": "string"
     },
     "maintenanceMode": {
-      "type": "boolean"
+      "type": ["boolean", "null"]
     },
     "mapsUrl": {
       "type": "string"

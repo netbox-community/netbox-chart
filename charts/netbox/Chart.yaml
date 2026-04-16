@@ -2,15 +2,15 @@ apiVersion: v2
 name: netbox
 version: 8.1.0
 # renovate: image=ghcr.io/netbox-community/netbox
-appVersion: "v4.5.7"
+appVersion: "v4.5.8"
 type: application
 kubeVersion: ^1.25.0-0
 description: IP address management (IPAM) and data center infrastructure management (DCIM) tool
 home: https://netbox.dev/
 icon: https://raw.githubusercontent.com/netbox-community/netbox/main/docs/netbox_logo_light.svg
 sources:
-  - https://github.com/netbox-community/netbox
   - https://github.com/netbox-community/netbox-chart
+  - https://github.com/netbox-community/netbox
 maintainers:
   - name: netbox-community
     url: https://github.com/netbox-community
@@ -33,7 +33,7 @@ dependencies:
 annotations:
   artifacthub.io/images: |
     - name: netbox
-      image: ghcr.io/netbox-community/netbox:v4.5.7
+      image: ghcr.io/netbox-community/netbox:v4.5.8
     - name: busybox
       image: docker.io/busybox:1.37.0
     - name: kubectl

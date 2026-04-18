@@ -134,6 +134,9 @@ allowedUrlSchemes:
   - vnc
   - xmpp
 
+# Setting this to null will allow all banners to be managed from the web interface.
+# Setting any individual banner (top/bottom/login) under this key to null with allow
+# to manage it from the web interface.
 banner:
   # Optionally display a persistent banner at the top and/or bottom of every
   # page. HTML is allowed.
@@ -296,7 +299,8 @@ loginTimeout: 1209600
 logoutRedirectUrl: home
 
 # Setting this to True will display a "maintenance mode" banner at the top of
-# every page.
+# every page. Setting this to null will allow to manage maintenance mode from
+# the web interface.
 maintenanceMode: false
 
 # The URL to use when mapping physical addresses or GPS coordinates

@@ -1291,6 +1291,9 @@
     "secretKey": {
       "type": "string"
     },
+    "apiTokenPepper1": {
+      "type": "string"
+    },
     "securityContext": {
       "properties": {
         "allowPrivilegeEscalation": {

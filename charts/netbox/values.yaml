@@ -996,6 +996,7 @@ metrics:
   ## @param Enable Granian metrics.
   granian:
     enabled: true
+    listenAddress: ""
     ## Prometheus Operator ServiceMonitor configuration
     ##
     serviceMonitor:

@@ -23,11 +23,11 @@ dependencies:
     tags:
       - bitnami-common
   - name: postgresql
-    version: ^18.5.24
+    version: ^18.6.1
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: valkey
-    version: ^5.4.11
+    version: ^5.5.0
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: valkey.enabled
 annotations:
@@ -37,7 +37,7 @@ annotations:
     - name: busybox
       image: docker.io/busybox:1.37.0
     - name: kubectl
-      image: docker.io/rancher/kubectl:v1.35.2
+      image: docker.io/rancher/kubectl:v1.35.4
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |
     - name: Upstream Project

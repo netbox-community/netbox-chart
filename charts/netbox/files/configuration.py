@@ -3,6 +3,7 @@ This file serves as a base configuration for Netbox
 https://netboxlabs.com/docs/netbox/en/stable/configuration/
 """
 
+import json
 import os
 import re
 from pathlib import Path
@@ -47,7 +48,7 @@ def _read_secret(secret_name: str, secret_key: str, default: str | None = None) 
     except EnvironmentError:
         return default
     with secret:
-        return secret.readline().strip()
+        return secret.read().strip()
 
 
 CORS_ORIGIN_REGEX_WHITELIST = []
@@ -64,6 +65,18 @@ EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
 REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "tasks_password")
 REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "cache_password")
 SECRET_KEY = _read_secret(provided_secret_name, "secret_key")
+
+# Read API token peppers from secret (JSON with integer or string keys)
+_peppers_raw = _read_secret(provided_secret_name, "api_token_peppers")
+if _peppers_raw:
+    try:
+        API_TOKEN_PEPPERS = {int(k): v for k, v in json.loads(_peppers_raw).items()}
+    except (json.JSONDecodeError, ValueError, TypeError) as exc:
+        raise ValueError(
+            f"Invalid api_token_peppers secret: expected a JSON object mapping numeric "
+            f'string keys to string values, e.g. {{"1": "random-string..."}}. '
+            f"Keys are converted to integers at load time. Error: {exc}"
+        ) from exc
 
 # Post-process certain values
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]

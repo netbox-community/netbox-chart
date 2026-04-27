@@ -1288,6 +1288,16 @@
       },
       "type": "object"
     },
+    "apiTokenPeppers": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "string",
+          "minLength": 50
+        }
+      },
+      "additionalProperties": false
+    },
     "secretKey": {
       "type": "string"
     },

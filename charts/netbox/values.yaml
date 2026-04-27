@@ -477,9 +477,25 @@ extraConfig: []
 # See `existingSecret` for details
 secretKey: ""
 
+# API token peppers used for v2 API token HMAC signing.
+# https://netboxlabs.com/docs/netbox/configuration/required-parameters/#api_token_peppers
+# Keys must be integers (0-32767), values must be 50+ character random strings.
+# If empty, one pepper (key 1) will be auto-generated and preserved across upgrades.
+# New tokens always use the highest-numbered pepper. To rotate, add a new
+# higher-numbered entry; do NOT remove old entries or existing tokens will break.
+# You can also use an existing secret with "api_token_peppers" instead.
+# See `existingSecret` for details.
+# apiTokenPeppers:
+#   1: "<50+ random characters>"
+#   2: "<50+ random characters>"
+apiTokenPeppers: {}
+
 ## Provide passwords using existing secret
 # If set, this Secret must contain the following keys:
 # - secret_key: session encryption token (50+ random characters)
+# It may optionally contain:
+# - api_token_peppers: JSON object mapping integer pepper IDs to 50+ char strings,
+#   e.g. {"1": "abcdef..."}. Keys may be integers or strings (converted at runtime).
 existingSecret: ""
 
 ## @section Deployment parameters

@@ -178,6 +178,30 @@ Volume mounts for .Values.extraConfig entries
 {{- end }}
 
 {{/*
+Generate the api_token_peppers secret value.
+Returns a base64-encoded, quoted JSON object.
+
+Priority:
+  1. User-provided apiTokenPeppers from values.yaml (always wins for rotation)
+  2. Existing secret value (preserved across upgrades via lookup)
+  3. Auto-generated single pepper {"1": "<random 50 chars>"}
+*/}}
+{{- define "netbox.apiTokenPeppers.secret" -}}
+{{- if not (empty .Values.apiTokenPeppers) -}}
+  {{- .Values.apiTokenPeppers | toJson | b64enc | quote }}
+{{- else -}}
+  {{- $secretName := include "common.secrets.name" (dict "defaultNameSuffix" "config" "context" $) -}}
+  {{- $existingSecret := (lookup "v1" "Secret" (include "common.names.namespace" .) $secretName).data -}}
+  {{- if and $existingSecret (hasKey $existingSecret "api_token_peppers") -}}
+    {{- index $existingSecret "api_token_peppers" | quote }}
+  {{- else -}}
+    {{- $pepper := randAlphaNum 50 -}}
+    {{- dict "1" $pepper | toJson | b64enc | quote }}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Compile all warnings into a single message.
 */}}
 {{- define "netbox.validateValues" -}}

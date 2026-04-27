@@ -844,6 +844,9 @@
             "enabled": {
               "type": "boolean"
             },
+            "listenAddress": {
+              "type": "string"
+            },
             "serviceMonitor": {
               "properties": {
                 "additionalLabels": {

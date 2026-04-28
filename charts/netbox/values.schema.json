@@ -466,6 +466,10 @@
     "extraConfig": {
       "type": "array"
     },
+    "extraBootstrapConfig": {
+      "type": "string",
+      "default": ""
+    },
     "extraDeploy": {
       "type": ["array", "string"]
     },

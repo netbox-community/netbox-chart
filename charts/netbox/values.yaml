@@ -438,11 +438,11 @@ rqDefaultTimeout: 300
 # The name to use for the session cookie.
 sessionCookieName: sessionid
 
-# Localization
-enableLocalization: false
-
 # Time zone (default: UTC)
 timeZone: UTC
+
+# Web UI translation
+translationEnabled: true
 
 # Date/time formatting. See the following link for supported formats:
 # https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date

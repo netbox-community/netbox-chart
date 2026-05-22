@@ -164,7 +164,7 @@ data:
     SCRIPTS_ROOT: /opt/netbox/netbox/scripts
     CSRF_COOKIE_NAME: {{ .Values.csrf.cookieName | quote }}
     SESSION_COOKIE_NAME: {{ .Values.sessionCookieName }}
-    ENABLE_LOCALIZATION: {{ toJson .Values.enableLocalization }}
+    TRANSLATION_ENABLED: {{ toJson .Values.translationEnabled }}
     TIME_ZONE: {{ .Values.timeZone | quote }}
     DATE_FORMAT: {{ .Values.dateFormat | quote }}
     SHORT_DATE_FORMAT: {{ .Values.shortDateFormat | quote }}

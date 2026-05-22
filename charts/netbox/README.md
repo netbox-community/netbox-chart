@@ -152,7 +152,7 @@ The following table lists the configurable parameters for this chart and their d
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `rqDefaultTimeout`                              | Maximum execution time for background tasks, in seconds             | `300` (5 minutes)                            |
 | `sessionCookieName`                             | The name to use for the session cookie                              | `"sessionid"`                                |
-| `enableLocalization`                            | Localization                                                        | `false`                                      |
+| `translationEnabled`                            | Enables language translation for the user interface                 | `true`                                       |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |

@@ -126,7 +126,7 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.superusers`                         | The list of users that get promoted to Superuser on login           | `[]`                                         |
 | `remoteAuth.staffGroups`                        | The list of groups that promote an remote User to Staff on login    | `[]`                                         |
 | `remoteAuth.staffUsers`                         | The list of users that get promoted to Staff on login               | `[]`                                         |
-| `remoteAuth.groupSeparator`                     | The Seperator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
+| `remoteAuth.groupSeparator`                     | The separator upon which `remoteAuth.groupHeader` gets split into individual groups | `\|`                        |
 | `remoteAuth.ldap.serverUri`                     | see [django-auth-ldap](https://django-auth-ldap.readthedocs.io)     | `""`                                         |
 | `remoteAuth.ldap.startTls`                      | if StarTLS should be used                                           | *see values.yaml*                            |
 | `remoteAuth.ldap.ignoreCertErrors`              | if Certificate errors should be ignored                             | *see values.yaml*                            |
@@ -152,14 +152,14 @@ The following table lists the configurable parameters for this chart and their d
 | `releaseCheck.url`                              | Release check URL (GitHub API URL; see `values.yaml`)               | `null` (disabled by default)                 |
 | `rqDefaultTimeout`                              | Maximum execution time for background tasks, in seconds             | `300` (5 minutes)                            |
 | `sessionCookieName`                             | The name to use for the session cookie                              | `"sessionid"`                                |
-| `enableLocalization`                            | Localization                                                        | `false`                                      |
+| `translationEnabled`                            | Enables language translation for the user interface                 | `true`                                       |
 | `timeZone`                                      | The time zone NetBox will use when dealing with dates and times     | `UTC`                                        |
 | `dateFormat`                                    | Django date format for long-form date strings                       | `"N j, Y"`                                   |
 | `shortDateFormat`                               | Django date format for short-form date strings                      | `"Y-m-d"`                                    |
 | `timeFormat`                                    | Django date format for long-form time strings                       | `"g:i a"`                                    |
 | `metrics.granian.enabled`                       | Enable Granian metrics                                              | `true`                                       |
 | `metrics.granian.serviceMonitor.enabled`        | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Granian metrics | `false`                                      |
-| `metrics.granian.serviceMonitor.additionalLabels`| Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.granian.serviceMonitor.additionalLabels`| Additional labels to apply to the ServiceMonitor                    | `{}`                                         |
 | `metrics.granian.serviceMonitor.honorLabels`    | honorLabels chooses the metric's labels on collisions               | `false`                                      |
 | `metrics.granian.serviceMonitor.interval`       | Interval at which metrics should be scraped                         | `""`                                         |
 | `metrics.granian.serviceMonitor.scrapeTimeout`  | Timeout duration for scraping metrics                               | `""`                                         |
@@ -168,7 +168,7 @@ The following table lists the configurable parameters for this chart and their d
 | `metrics.granian.serviceMonitor.selector`       | Prometheus instance selector labels                                 | `{}`                                         |
 | `metrics.enabled`                               | Expose Prometheus metrics at the `/metrics` HTTP endpoint           | `false`                                      |
 | `metrics.serviceMonitor.enabled`                | Whether to enable a [ServiceMonitor](https://prometheus-operator.dev/docs/operator/design/#servicemonitor) for Netbox | `false`                                      |
-| `metrics.serviceMonitor.additionalLabels`       | Additonal labels to apply to the ServiceMonitor                     | `{}`                                         |
+| `metrics.serviceMonitor.additionalLabels`       | Additional labels to apply to the ServiceMonitor                    | `{}`                                         |
 | `metrics.serviceMonitor.honorLabels`            | honorLabels chooses the metric's labels on collisions               | `false`                                      |
 | `metrics.serviceMonitor.interval`               | Interval at which metrics should be scraped                         | `""`                                         |
 | `metrics.serviceMonitor.scrapeTimeout`          | Timeout duration for scraping metrics                               | `""`                                         |

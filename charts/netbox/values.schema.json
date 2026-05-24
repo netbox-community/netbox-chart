@@ -410,9 +410,6 @@
       },
       "type": "object"
     },
-    "enableLocalization": {
-      "type": "boolean"
-    },
     "enforceGlobalUnique": {
       "type": "boolean"
     },
@@ -1574,6 +1571,9 @@
     },
     "topologySpreadConstraints": {
       "type": ["array", "string"]
+    },
+    "translationEnabled": {
+      "type": "boolean"
     },
     "updateStrategy": {
       "properties": {

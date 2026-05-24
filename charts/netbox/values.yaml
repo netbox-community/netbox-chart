@@ -1258,7 +1258,7 @@ init:
   image:
     registry: docker.io
     repository: busybox
-    tag: 1.37.0
+    tag: 1.38.0
     digest: ""
     ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1326,7 +1326,7 @@ test:
   image:
     registry: docker.io
     repository: busybox
-    tag: 1.37.0
+    tag: 1.38.0
     digest: ""
     ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images

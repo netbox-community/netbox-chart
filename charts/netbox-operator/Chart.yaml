@@ -17,7 +17,7 @@ maintainers:
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: ^2.39.0
+    version: ^2.40.0
     tags:
       - bitnami-common
   - name: netbox

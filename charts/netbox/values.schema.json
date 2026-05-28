@@ -133,8 +133,15 @@
       "type": "array"
     },
     "affinity": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "allowTokenRetrieval": {
       "type": "boolean"
@@ -305,12 +312,26 @@
       "type": ["array", "string"]
     },
     "commonAnnotations": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "commonLabels": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "cors": {
       "properties": {
@@ -338,16 +359,37 @@
       "type": "object"
     },
     "customLivenessProbe": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "customReadinessProbe": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "customStartupProbe": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "customValidators": {
       "properties": {},
@@ -518,8 +560,15 @@
     "housekeeping": {
       "properties": {
         "affinity": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "args": {
           "items": {
@@ -571,16 +620,37 @@
           "type": ["array", "string"]
         },
         "nodeSelector": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podAnnotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podLabels": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podSecurityContext": {
           "properties": {
@@ -698,8 +768,15 @@
     "ingress": {
       "properties": {
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "className": {
           "type": "string"
@@ -803,8 +880,15 @@
       "type": "integer"
     },
     "lifecycleHooks": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "livenessProbe": {
       "$ref": "#/$defs/probe"
@@ -866,8 +950,15 @@
                   "type": "string"
                 },
                 "selector": {
-                  "properties": {},
-                  "type": ["object", "string"]
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {}
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "type": "object"
@@ -903,8 +994,15 @@
               "type": "string"
             },
             "selector": {
-              "properties": {},
-              "type": ["object", "string"]
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
             }
           },
           "type": "object"
@@ -916,8 +1014,15 @@
       "type": "string"
     },
     "nodeSelector": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "paginateCount": {
       "type": "integer"
@@ -928,8 +1033,15 @@
           "type": "string"
         },
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -938,8 +1050,15 @@
           "type": "string"
         },
         "selector": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -970,12 +1089,26 @@
       "type": "object"
     },
     "podAnnotations": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "podLabels": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "podSecurityContext": {
       "properties": {
@@ -1213,8 +1346,15 @@
           "type": "string"
         },
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -1223,8 +1363,15 @@
           "type": "string"
         },
         "selector": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -1239,8 +1386,15 @@
       "type": "object"
     },
     "resources": {
-      "properties": {},
-      "type": ["object", "string"]
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {}
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "resourcesPreset": {
       "type": "string"
@@ -1260,8 +1414,15 @@
           "type": "string"
         },
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -1270,8 +1431,15 @@
           "type": "string"
         },
         "selector": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -1350,8 +1518,15 @@
     "service": {
       "properties": {
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "clusterIP": {
           "type": "string"
@@ -1387,8 +1562,15 @@
           "type": "string"
         },
         "sessionAffinityConfig": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "type": {
           "type": "string"
@@ -1399,8 +1581,15 @@
     "serviceAccount": {
       "properties": {
         "annotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "automountServiceAccountToken": {
           "type": "boolean"
@@ -1576,18 +1765,32 @@
       "type": "boolean"
     },
     "updateStrategy": {
-      "properties": {
-        "type": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            }
+          }
+        },
+        {
           "type": "string"
         }
-      },
-      "type": ["object", "string"]
+      ]
     },
     "worker": {
       "properties": {
         "affinity": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "args": {
           "items": {
@@ -1698,16 +1901,37 @@
           "type": ["array", "string"]
         },
         "nodeSelector": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podAnnotations": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podLabels": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podSecurityContext": {
           "properties": {
@@ -1739,8 +1963,15 @@
           "type": "boolean"
         },
         "resources": {
-          "properties": {},
-          "type": ["object", "string"]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "resourcesPreset": {
           "type": "string"
@@ -1810,12 +2041,19 @@
           "type": ["array", "string"]
         },
         "updateStrategy": {
-          "properties": {
-            "type": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              }
+            },
+            {
               "type": "string"
             }
-          },
-          "type": ["object", "string"]
+          ]
         },
         "pdb": {
           "title": "PodDisruptionBudget for NetBox worker",
@@ -1864,8 +2102,15 @@
               "type": "object"
             },
             "resources": {
-              "properties": {},
-              "type": ["object", "string"]
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "resourcesPreset": {
               "type": "string"

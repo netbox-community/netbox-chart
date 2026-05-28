@@ -560,15 +560,15 @@
     "housekeeping": {
       "properties": {
         "affinity": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "args": {
           "items": {
@@ -620,37 +620,37 @@
           "type": ["array", "string"]
         },
         "nodeSelector": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podAnnotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podLabels": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podSecurityContext": {
           "properties": {
@@ -768,15 +768,15 @@
     "ingress": {
       "properties": {
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "className": {
           "type": "string"
@@ -1033,15 +1033,15 @@
           "type": "string"
         },
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -1050,15 +1050,15 @@
           "type": "string"
         },
         "selector": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -1346,15 +1346,15 @@
           "type": "string"
         },
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -1363,15 +1363,15 @@
           "type": "string"
         },
         "selector": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -1414,15 +1414,15 @@
           "type": "string"
         },
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -1431,15 +1431,15 @@
           "type": "string"
         },
         "selector": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "size": {
           "type": "string"
@@ -1518,15 +1518,15 @@
     "service": {
       "properties": {
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "clusterIP": {
           "type": "string"
@@ -1562,15 +1562,15 @@
           "type": "string"
         },
         "sessionAffinityConfig": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "type": {
           "type": "string"
@@ -1581,15 +1581,15 @@
     "serviceAccount": {
       "properties": {
         "annotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "automountServiceAccountToken": {
           "type": "boolean"
@@ -1782,15 +1782,15 @@
     "worker": {
       "properties": {
         "affinity": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "args": {
           "items": {
@@ -1901,37 +1901,37 @@
           "type": ["array", "string"]
         },
         "nodeSelector": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podAnnotations": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podLabels": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "podSecurityContext": {
           "properties": {
@@ -1963,15 +1963,15 @@
           "type": "boolean"
         },
         "resources": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {}
-          },
-          {
-            "type": "string"
-          }
-        ]
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {}
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "resourcesPreset": {
           "type": "string"

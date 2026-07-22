@@ -1,6 +1,6 @@
 apiVersion: v2
 name: netbox-operator
-version: 1.2.128
+version: 1.2.129
 # renovate: image=ghcr.io/netbox-community/netbox-operator
 appVersion: "0.2.62"
 type: application
@@ -21,7 +21,7 @@ dependencies:
     tags:
       - bitnami-common
   - name: netbox
-    version: ^8.3.37
+    version: ^8.3.38
     repository: oci://ghcr.io/netbox-community/netbox-chart
     condition: netbox.enabled
 annotations:

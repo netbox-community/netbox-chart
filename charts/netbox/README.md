@@ -179,6 +179,7 @@ The following table lists the configurable parameters for this chart and their d
 | `dateTimeFormat`                                | Django date format for long-form date and time strings              | `"N j, Y g:i a"`                             |
 | `shortDateTimeFormat`                           | Django date format for short-form date and time strongs             | `"Y-m-d H:i"`                                |
 | `extraConfig`                                   | Additional NetBox configuration (see `values.yaml`)                 | `[]`                                         |
+| `extraBootstrapConfig`                          | Additional config to add to configuration.py. Normally used for config that is required before Plugins are imported. | `""`  |
 | `secretKey`                                     | Django secret key used for sessions and password reset tokens       | `""` (generated)                             |
 | `existingSecret`                                | Use an existing Kubernetes `Secret` for secret values (see below)   | `""` (use individual chart values)           |
 | `postgresql.enabled`                            | Deploy PostgreSQL using bundled Bitnami PostgreSQL chart            | `true`                                       |

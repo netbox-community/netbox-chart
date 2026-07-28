@@ -8,5 +8,5 @@ dependencies:
 - name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 6.2.4
-digest: sha256:b5804dd5c995e2348e5f8c2744d72b5f08521a7e5509fb5ad8177ae5cf9467f9
-generated: "2026-07-27T17:56:23.285978472Z"
+digest: sha256:1de21baa0c3aad6dff4fb7b07c85fdcea54e0b94240ed7205c0c9ed38c1a1e71
+generated: "2026-07-28T02:40:07.919748065Z"

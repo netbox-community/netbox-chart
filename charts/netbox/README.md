@@ -139,6 +139,7 @@ The following table lists the configurable parameters for this chart and their d
 | `remoteAuth.ldap.userSearchAttr`                | User attribute name for user search                                 | `sAMAccountName`                             |
 | `remoteAuth.ldap.groupSearchBaseDn`             | base DN for group search                                            | *see values.yaml*                            |
 | `remoteAuth.ldap.groupSearchClass`              | [django-auth-ldap](https://django-auth-ldap.readthedocs.io) for group search | `group`                             |
+| `remoteAuth.ldap.groupSearchFilter`             | LDAP filter used for group search; when empty, a filter is derived from `groupSearchClass` | `""`                  |
 | `remoteAuth.ldap.groupType`                     | see [AUTH_LDAP_GROUP_TYPE](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-group-type) | `GroupOfNamesType` |
 | `remoteAuth.ldap.requireGroupDn`                | DN of a group that is required for login                            | `null`                                       |
 | `remoteAuth.ldap.findGroupPerms`                | see [AUTH_LDAP_FIND_GROUP_PERMS](https://django-auth-ldap.readthedocs.io/en/latest/reference.html#auth-ldap-find-group-perms) | true |

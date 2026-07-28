@@ -405,6 +405,10 @@ remoteAuth:
     # groupSearchBaseDn: OU=Groups,OU=MyCompany,DC=example,dc=com
     groupSearchBaseDn: ""
     groupSearchClass: group
+    # Optional LDAP group search filter. It must be enclosed in parentheses.
+    # When empty, the filter falls back to "(objectClass=<groupSearchClass>)".
+    # groupSearchFilter: '(&(objectClass=groupOfNames)(|(cn=netbox-users)(cn=netbox-admins)))'
+    groupSearchFilter: ""
     groupType: GroupOfNamesType
     # requireGroupDn:
     #   - CN=Network Configuration Operators,CN=Builtin,DC=example,dc=com

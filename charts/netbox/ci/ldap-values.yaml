@@ -15,6 +15,7 @@ remoteAuth:
     userSearchAttr: "sAMAccountName"
     groupSearchBaseDn: "dc=example,dc=com"
     groupSearchClass: "group"
+    groupSearchFilter: "(objectClass=group)"
     groupType: "GroupOfNamesType"
     requireGroupDn:
       - "cn=read-only-admin,dc=example,dc=com"

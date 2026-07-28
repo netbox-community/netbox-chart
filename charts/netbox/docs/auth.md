@@ -250,6 +250,35 @@ remoteAuth:
 > In order to use anonymous LDAP binding, set `bindDn` and `bindPassword`
 > to an empty string as in the example above.
 
+### Restricting LDAP Group Search
+
+Use `remoteAuth.ldap.groupSearchFilter` to restrict the LDAP groups
+considered by the LDAP authentication backend. The value must be a valid
+LDAP filter enclosed in parentheses.
+
+When `groupSearchFilter` is empty, the group search falls back to an
+`objectClass` filter derived from `remoteAuth.ldap.groupSearchClass`.
+
+For example:
+
+```yaml
+remoteAuth:
+  ldap:
+    groupSearchBaseDn: OU=Groups,DC=example,DC=com
+    groupSearchFilter: '(&(objectClass=groupOfNames)(|(cn=netbox-users)(cn=netbox-admins)))'
+```
+
+> [!IMPORTANT]
+> This setting restricts LDAP group discovery, not only group mirroring.
+> Ensure that the filter includes all groups referenced by `requireGroupDn`,
+> `isAdminDn`, and `isSuperUserDn`, as well as all LDAP groups whose Django
+> permissions should be resolved when `findGroupPerms` is enabled. When using
+> a nested group type, the filter must also include any intermediate groups
+> needed to resolve nested membership.
+>
+> To restrict only which LDAP groups are mirrored into NetBox, configure
+> `remoteAuth.ldap.mirrorGroups` as a list of group names instead.
+
 ### LDAP Certificate Verification
 
 If you need to specify your own CA certificate, follow the instructions below.

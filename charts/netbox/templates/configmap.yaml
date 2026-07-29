@@ -193,6 +193,7 @@ data:
     AUTH_LDAP_USER_SEARCH_ATTR: {{ .Values.remoteAuth.ldap.userSearchAttr | quote }}
     AUTH_LDAP_GROUP_SEARCH_BASEDN: {{ .Values.remoteAuth.ldap.groupSearchBaseDn | quote }}
     AUTH_LDAP_GROUP_SEARCH_CLASS: {{ .Values.remoteAuth.ldap.groupSearchClass | quote }}
+    AUTH_LDAP_GROUP_SEARCH_FILTER: {{ .Values.remoteAuth.ldap.groupSearchFilter | quote }}
     AUTH_LDAP_GROUP_TYPE: {{ .Values.remoteAuth.ldap.groupType | quote }}
     AUTH_LDAP_FIND_GROUP_PERMS: {{ toJson .Values.remoteAuth.ldap.findGroupPerms }}
     AUTH_LDAP_MIRROR_GROUPS: {{ toJson .Values.remoteAuth.ldap.mirrorGroups }}

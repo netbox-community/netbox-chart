@@ -25484,6 +25484,46 @@ entries:
           url: https://github.com/netbox-community/netbox-operator
     apiVersion: v2
     appVersion: 0.2.66
+    created: "2026-08-18T04:53:39.992865285Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.41.0
+    - condition: netbox.enabled
+      name: netbox
+      repository: oci://ghcr.io/netbox-community/netbox-chart
+      version: ^8.3.57
+    description: Operator to manage NetBox resources directly through Kubernetes
+    digest: 55f7a335368819a52aefaebd1d234a0b3a8e517f454bf5b66cf336b343c5cbc2
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/main/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    name: netbox-operator
+    sources:
+    - https://github.com/netbox-community/netbox-operator
+    - https://github.com/netbox-community/netbox-chart
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-1.2.151/netbox-operator-1.2.151.tgz
+    version: 1.2.151
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-operator-
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox-operator
+    apiVersion: v2
+    appVersion: 0.2.66
     created: "2026-08-17T22:48:56.24566512Z"
     dependencies:
     - name: common
@@ -42383,4 +42423,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-18T04:00:24.281038523Z"
+generated: "2026-08-18T04:53:39.994294809Z"

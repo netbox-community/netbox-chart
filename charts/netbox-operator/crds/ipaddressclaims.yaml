@@ -11,7 +11,7 @@ spec:
     listKind: IpAddressClaimList
     plural: ipaddressclaims
     shortNames:
-      - ipc
+      - ipac
     singular: ipaddressclaim
   scope: Namespaced
   versions:

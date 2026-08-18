@@ -197,6 +197,12 @@ spec:
                   description: The ID of the resource in NetBox
                   format: int64
                   type: integer
+                lastUpdated:
+                  description: |-
+                    Last updated, corresponds to the 'last_updated' returned by NetBox when NetBox Operator updates a resource in NetBox.
+                    Format: date-time
+                  format: date-time
+                  type: string
                 url:
                   description: |-
                     The URL to the resource in the NetBox UI. Note that the base of this

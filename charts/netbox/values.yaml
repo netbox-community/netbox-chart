@@ -1390,9 +1390,9 @@ test:
 ## Configuration of Cron settings
 ##
 housekeeping:
-  ## @param housekeeping.enabled Enable housekeeping job
+  ## @param housekeeping.enabled Enable housekeeping job (only useful on NetBox versions before v4.6.0, afterwards the internal housekeeping takes over)
   ##
-  enabled: true
+  enabled: false
   ## @param housekeeping.schedule Schedule in Cron format to save snapshots
   ## See https://en.wikipedia.org/wiki/Cron
   ##

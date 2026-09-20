@@ -4,6 +4,6 @@ dependencies:
   version: 2.41.0
 - name: netbox
   repository: oci://ghcr.io/netbox-community/netbox-chart
-  version: 8.3.81
-digest: sha256:72b2f09bb6d20764604e4cc1e10aa9daa901f06360d7794f41d69914b742b6c5
-generated: "2026-09-19T22:34:05.757409608Z"
+  version: 8.3.82
+digest: sha256:62425fb0b3d6a1134501dc6b06471065c012af5a37a4ffed5b04b25a6f7b4eb7
+generated: "2026-09-20T08:38:12.512773762Z"

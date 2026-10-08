@@ -3,25 +3,22 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.4
-  name: ipranges.netbox.dev
+  name: asns.netbox.dev
 spec:
   group: netbox.dev
   names:
-    kind: IpRange
-    listKind: IpRangeList
-    plural: ipranges
+    kind: Asn
+    listKind: AsnList
+    plural: asns
     shortNames:
-      - ipr
-    singular: iprange
+      - asn
+    singular: asn
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .spec.startAddress
-          name: StartAddress
-          type: string
-        - jsonPath: .spec.endAddress
-          name: EndAddress
-          type: string
+        - jsonPath: .spec.asn
+          name: ASN
+          type: integer
         - jsonPath: .status.conditions[?(@.type=="Ready")].status
           name: Ready
           type: string
@@ -38,8 +35,8 @@ spec:
       schema:
         openAPIV3Schema:
           description:
-            "IpRange allows to create a NetBox IP Range. More info about
-            NetBox IP Ranges: https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/iprange.md"
+            "Asn allows to create a NetBox ASN (Autonomous System Number).
+            More info about NetBox ASNs: https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/asn.md"
           properties:
             apiVersion:
               description: |-
@@ -59,8 +56,20 @@ spec:
             metadata:
               type: object
             spec:
-              description: IpRangeSpec defines the desired state of IpRange
+              description: AsnSpec defines the desired state of Asn
               properties:
+                asn:
+                  description: |-
+                    The ASN (Autonomous System Number) that should be reserved in NetBox
+                    Field is immutable, required
+                    Example: 65001
+                  format: int64
+                  maximum: 4294967295
+                  minimum: 1
+                  type: integer
+                  x-kubernetes-validations:
+                    - message: Field 'asn' is immutable
+                      rule: self == oldSelf
                 comments:
                   description: |-
                     Comment that should be added to the resource in NetBox
@@ -84,16 +93,6 @@ spec:
                     Description that should be added to the resource in NetBox
                     Field is mutable, not required
                   type: string
-                endAddress:
-                  description: |-
-                    The last IP in CIDR notation that should be included in the NetBox IP Range
-                    Field is immutable, required
-                    Example: "192.168.0.20/32"
-                  format: cidr
-                  type: string
-                  x-kubernetes-validations:
-                    - message: Field 'endAddress' is immutable
-                      rule: self == oldSelf
                 preserveInNetbox:
                   description: |-
                     Defines whether the Resource should be preserved in NetBox when the
@@ -103,20 +102,18 @@ spec:
                     - When set to false, the resource will be cleaned up in NetBox
                       upon CR deletion
                     Setting preserveInNetbox to true is mandatory if the user wants to restore
-                    resources from NetBox (e.g. Sticky CIDRs even if resources are deleted and
+                    resources from NetBox (e.g. Sticky ASNs even if resources are deleted and
                     recreated in Kubernetes)
                     Field is mutable, not required
                   type: boolean
-                startAddress:
+                rir:
                   description: |-
-                    The first IP in CIDR notation that should be included in the NetBox IP Range
-                    Field is immutable, required
-                    Example: "192.168.0.1/32"
-                  format: cidr
+                    The NetBox RIR (Regional Internet Registry) to be assigned to this resource in
+                    NetBox. Use the `name` value instead of the `slug` value
+                    Field is mutable, required
+                    Example: "RFC 6996" or "ARIN"
+                  minLength: 1
                   type: string
-                  x-kubernetes-validations:
-                    - message: Field 'startAddress' is immutable
-                      rule: self == oldSelf
                 tenant:
                   description: |-
                     The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
@@ -127,11 +124,11 @@ spec:
                     - message: Field 'tenant' is immutable
                       rule: self == oldSelf
               required:
-                - endAddress
-                - startAddress
+                - asn
+                - rir
               type: object
             status:
-              description: IpRangeStatus defines the observed state of IpRange
+              description: AsnStatus defines the observed state of Asn
               properties:
                 conditions:
                   description:

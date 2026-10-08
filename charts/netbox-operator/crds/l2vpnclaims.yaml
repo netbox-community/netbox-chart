@@ -3,33 +3,30 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.4
-  name: ipranges.netbox.dev
+  name: l2vpnclaims.netbox.dev
 spec:
   group: netbox.dev
   names:
-    kind: IpRange
-    listKind: IpRangeList
-    plural: ipranges
+    kind: L2VPNClaim
+    listKind: L2VPNClaimList
+    plural: l2vpnclaims
     shortNames:
-      - ipr
-    singular: iprange
+      - l2vc
+    singular: l2vpnclaim
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .spec.startAddress
-          name: StartAddress
+        - jsonPath: .spec.type
+          name: Type
           type: string
-        - jsonPath: .spec.endAddress
-          name: EndAddress
+        - jsonPath: .status.identifier
+          name: Identifier
+          type: integer
+        - jsonPath: .status.conditions[?(@.type=="L2VPNAssigned")].status
+          name: L2VPNAssigned
           type: string
         - jsonPath: .status.conditions[?(@.type=="Ready")].status
           name: Ready
-          type: string
-        - jsonPath: .status.id
-          name: ID
-          type: string
-        - jsonPath: .status.url
-          name: URL
           type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
@@ -37,9 +34,11 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description:
-            "IpRange allows to create a NetBox IP Range. More info about
-            NetBox IP Ranges: https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/iprange.md"
+          description: |-
+            L2VPNClaim allows to claim a VNI for a NetBox L2VPN, either an exact one or
+            the next free one in a range. The L2VPNClaim Controller will try to assign
+            an available identifier and if successful it will create the L2VPN CR.
+            More info about NetBox L2VPNs: https://github.com/netbox-community/netbox/blob/main/docs/models/vpn/l2vpn.md
           properties:
             apiVersion:
               description: |-
@@ -59,7 +58,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: IpRangeSpec defines the desired state of IpRange
+              description: L2VPNClaimSpec defines the desired state of L2VPNClaim
               properties:
                 comments:
                   description: |-
@@ -84,15 +83,31 @@ spec:
                     Description that should be added to the resource in NetBox
                     Field is mutable, not required
                   type: string
-                endAddress:
+                identifierRangeEnd:
                   description: |-
-                    The last IP in CIDR notation that should be included in the NetBox IP Range
+                    The upper bound (inclusive) of the range to pick a free VNI from. Set
+                    both this and identifierRangeStart to the same value to claim an exact
+                    VNI.
                     Field is immutable, required
-                    Example: "192.168.0.20/32"
-                  format: cidr
-                  type: string
+                  format: int64
+                  maximum: 16777215
+                  minimum: 0
+                  type: integer
                   x-kubernetes-validations:
-                    - message: Field 'endAddress' is immutable
+                    - message: Field 'identifierRangeEnd' is immutable
+                      rule: self == oldSelf
+                identifierRangeStart:
+                  description: |-
+                    The lower bound (inclusive) of the range to pick a free VNI from. Set
+                    both this and identifierRangeEnd to the same value to claim an exact
+                    VNI.
+                    Field is immutable, required
+                  format: int64
+                  maximum: 16777215
+                  minimum: 0
+                  type: integer
+                  x-kubernetes-validations:
+                    - message: Field 'identifierRangeStart' is immutable
                       rule: self == oldSelf
                 preserveInNetbox:
                   description: |-
@@ -103,20 +118,10 @@ spec:
                     - When set to false, the resource will be cleaned up in NetBox
                       upon CR deletion
                     Setting preserveInNetbox to true is mandatory if the user wants to restore
-                    resources from NetBox (e.g. Sticky CIDRs even if resources are deleted and
+                    resources from NetBox (e.g. Sticky VNIs even if resources are deleted and
                     recreated in Kubernetes)
                     Field is mutable, not required
                   type: boolean
-                startAddress:
-                  description: |-
-                    The first IP in CIDR notation that should be included in the NetBox IP Range
-                    Field is immutable, required
-                    Example: "192.168.0.1/32"
-                  format: cidr
-                  type: string
-                  x-kubernetes-validations:
-                    - message: Field 'startAddress' is immutable
-                      rule: self == oldSelf
                 tenant:
                   description: |-
                     The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
@@ -126,12 +131,25 @@ spec:
                   x-kubernetes-validations:
                     - message: Field 'tenant' is immutable
                       rule: self == oldSelf
+                type:
+                  description: |-
+                    The NetBox L2VPN type. Only VXLAN-based types are supported, since those
+                    are the ones that carry a VNI in their identifier.
+                    Field is immutable, required
+                  enum:
+                    - vxlan
+                    - vxlan-evpn
+                  type: string
+                  x-kubernetes-validations:
+                    - message: Field 'type' is immutable
+                      rule: self == oldSelf
               required:
-                - endAddress
-                - startAddress
+                - identifierRangeEnd
+                - identifierRangeStart
+                - type
               type: object
             status:
-              description: IpRangeStatus defines the observed state of IpRange
+              description: L2VPNClaimStatus defines the observed state of L2VPNClaim
               properties:
                 conditions:
                   description:
@@ -193,20 +211,12 @@ spec:
                       - type
                     type: object
                   type: array
-                id:
-                  description: The ID of the resource in NetBox
+                identifier:
+                  description: The assigned VNI
                   format: int64
                   type: integer
-                lastUpdated:
-                  description: |-
-                    Last updated, corresponds to the 'last_updated' returned by NetBox when NetBox Operator updates a resource in NetBox.
-                    Format: date-time
-                  format: date-time
-                  type: string
-                url:
-                  description: |-
-                    The URL to the resource in the NetBox UI. Note that the base of this
-                    URL depends on the runtime config of NetBox Operator
+                l2VPNName:
+                  description: The name of the L2VPN CR created by the L2VPNClaim Controller
                   type: string
               type: object
           type: object

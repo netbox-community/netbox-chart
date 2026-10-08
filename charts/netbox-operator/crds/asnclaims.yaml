@@ -3,33 +3,27 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.4
-  name: ipranges.netbox.dev
+  name: asnclaims.netbox.dev
 spec:
   group: netbox.dev
   names:
-    kind: IpRange
-    listKind: IpRangeList
-    plural: ipranges
+    kind: AsnClaim
+    listKind: AsnClaimList
+    plural: asnclaims
     shortNames:
-      - ipr
-    singular: iprange
+      - asnc
+    singular: asnclaim
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .spec.startAddress
-          name: StartAddress
-          type: string
-        - jsonPath: .spec.endAddress
-          name: EndAddress
+        - jsonPath: .status.asn
+          name: ASN
+          type: integer
+        - jsonPath: .status.conditions[?(@.type=="ASNAssigned")].status
+          name: ASNAssigned
           type: string
         - jsonPath: .status.conditions[?(@.type=="Ready")].status
           name: Ready
-          type: string
-        - jsonPath: .status.id
-          name: ID
-          type: string
-        - jsonPath: .status.url
-          name: URL
           type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
@@ -37,9 +31,12 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description:
-            "IpRange allows to create a NetBox IP Range. More info about
-            NetBox IP Ranges: https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/iprange.md"
+          description: |-
+            AsnClaim allows to claim a NetBox ASN from an existing ASN Range.
+            The AsnClaim Controller will try to assign an available ASN
+            from the ASN Range that is defined in the spec and if successful it will create
+            the Asn CR. More info about NetBox ASNs:
+            https://github.com/netbox-community/netbox/blob/main/docs/models/ipam/asn.md
           properties:
             apiVersion:
               description: |-
@@ -59,7 +56,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: IpRangeSpec defines the desired state of IpRange
+              description: AsnClaimSpec defines the desired state of AsnClaim
               properties:
                 comments:
                   description: |-
@@ -84,15 +81,16 @@ spec:
                     Description that should be added to the resource in NetBox
                     Field is mutable, not required
                   type: string
-                endAddress:
+                parentAsnRange:
                   description: |-
-                    The last IP in CIDR notation that should be included in the NetBox IP Range
+                    The name of the NetBox ASN Range from which this ASN should be claimed. Use the
+                    `name` value instead of the `slug` value
                     Field is immutable, required
-                    Example: "192.168.0.20/32"
-                  format: cidr
+                    Example: "Private ASNs"
+                  minLength: 1
                   type: string
                   x-kubernetes-validations:
-                    - message: Field 'endAddress' is immutable
+                    - message: Field 'parentAsnRange' is immutable
                       rule: self == oldSelf
                 preserveInNetbox:
                   description: |-
@@ -103,20 +101,18 @@ spec:
                     - When set to false, the resource will be cleaned up in NetBox
                       upon CR deletion
                     Setting preserveInNetbox to true is mandatory if the user wants to restore
-                    resources from NetBox (e.g. Sticky CIDRs even if resources are deleted and
+                    resources from NetBox (e.g. Sticky ASNs even if resources are deleted and
                     recreated in Kubernetes)
                     Field is mutable, not required
                   type: boolean
-                startAddress:
+                rir:
                   description: |-
-                    The first IP in CIDR notation that should be included in the NetBox IP Range
-                    Field is immutable, required
-                    Example: "192.168.0.1/32"
-                  format: cidr
+                    The NetBox RIR (Regional Internet Registry) to be assigned to the claimed ASN in
+                    NetBox. Use the `name` value instead of the `slug` value.
+                    If left empty, the RIR of the parent ASN Range is inherited.
+                    Field is mutable, not required
+                    Example: "RFC 6996" or "ARIN"
                   type: string
-                  x-kubernetes-validations:
-                    - message: Field 'startAddress' is immutable
-                      rule: self == oldSelf
                 tenant:
                   description: |-
                     The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
@@ -127,12 +123,18 @@ spec:
                     - message: Field 'tenant' is immutable
                       rule: self == oldSelf
               required:
-                - endAddress
-                - startAddress
+                - parentAsnRange
               type: object
             status:
-              description: IpRangeStatus defines the observed state of IpRange
+              description: AsnClaimStatus defines the observed state of AsnClaim
               properties:
+                asn:
+                  description: The assigned ASN (Autonomous System Number)
+                  format: int64
+                  type: integer
+                asnName:
+                  description: The name of the Asn CR created by the AsnClaim Controller
+                  type: string
                 conditions:
                   description:
                     Conditions represent the latest available observations
@@ -193,21 +195,6 @@ spec:
                       - type
                     type: object
                   type: array
-                id:
-                  description: The ID of the resource in NetBox
-                  format: int64
-                  type: integer
-                lastUpdated:
-                  description: |-
-                    Last updated, corresponds to the 'last_updated' returned by NetBox when NetBox Operator updates a resource in NetBox.
-                    Format: date-time
-                  format: date-time
-                  type: string
-                url:
-                  description: |-
-                    The URL to the resource in the NetBox UI. Note that the base of this
-                    URL depends on the runtime config of NetBox Operator
-                  type: string
               type: object
           type: object
       served: true

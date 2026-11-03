@@ -1,0 +1,226 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.4
+  name: l2vpnclaims.netbox.dev
+spec:
+  group: netbox.dev
+  names:
+    kind: L2VPNClaim
+    listKind: L2VPNClaimList
+    plural: l2vpnclaims
+    shortNames:
+      - l2vc
+    singular: l2vpnclaim
+  scope: Namespaced
+  versions:
+    - additionalPrinterColumns:
+        - jsonPath: .spec.type
+          name: Type
+          type: string
+        - jsonPath: .status.identifier
+          name: Identifier
+          type: integer
+        - jsonPath: .status.conditions[?(@.type=="L2VPNAssigned")].status
+          name: L2VPNAssigned
+          type: string
+        - jsonPath: .status.conditions[?(@.type=="Ready")].status
+          name: Ready
+          type: string
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v1
+      schema:
+        openAPIV3Schema:
+          description: |-
+            L2VPNClaim allows to claim a VNI for a NetBox L2VPN, either an exact one or
+            the next free one in a range. The L2VPNClaim Controller will try to assign
+            an available identifier and if successful it will create the L2VPN CR.
+            More info about NetBox L2VPNs: https://github.com/netbox-community/netbox/blob/main/docs/models/vpn/l2vpn.md
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: L2VPNClaimSpec defines the desired state of L2VPNClaim
+              properties:
+                comments:
+                  description: |-
+                    Comment that should be added to the resource in NetBox
+                    Field is mutable, not required
+                  type: string
+                customFields:
+                  additionalProperties:
+                    type: string
+                  description: |-
+                    The NetBox Custom Fields that should be added to the resource in NetBox.
+                    Note that currently only Text Type is supported (GitHub #129)
+                    More info on NetBox Custom Fields:
+                    https://github.com/netbox-community/netbox/blob/main/docs/customization/custom-fields.md
+                    Field is mutable, not required
+                    Example:
+                      customfield1: "Production"
+                      customfield2: "This is a string"
+                  type: object
+                description:
+                  description: |-
+                    Description that should be added to the resource in NetBox
+                    Field is mutable, not required
+                  type: string
+                identifierRangeEnd:
+                  description: |-
+                    The upper bound (inclusive) of the range to pick a free VNI from. Set
+                    both this and identifierRangeStart to the same value to claim an exact
+                    VNI.
+                    Field is immutable, required
+                  format: int64
+                  maximum: 16777215
+                  minimum: 0
+                  type: integer
+                  x-kubernetes-validations:
+                    - message: Field 'identifierRangeEnd' is immutable
+                      rule: self == oldSelf
+                identifierRangeStart:
+                  description: |-
+                    The lower bound (inclusive) of the range to pick a free VNI from. Set
+                    both this and identifierRangeEnd to the same value to claim an exact
+                    VNI.
+                    Field is immutable, required
+                  format: int64
+                  maximum: 16777215
+                  minimum: 0
+                  type: integer
+                  x-kubernetes-validations:
+                    - message: Field 'identifierRangeStart' is immutable
+                      rule: self == oldSelf
+                preserveInNetbox:
+                  description: |-
+                    Defines whether the Resource should be preserved in NetBox when the
+                    Kubernetes Resource is deleted.
+                    - When set to true, the resource will not be deleted but preserved in
+                      NetBox upon CR deletion
+                    - When set to false, the resource will be cleaned up in NetBox
+                      upon CR deletion
+                    Setting preserveInNetbox to true is mandatory if the user wants to restore
+                    resources from NetBox (e.g. Sticky VNIs even if resources are deleted and
+                    recreated in Kubernetes)
+                    Field is mutable, not required
+                  type: boolean
+                tenant:
+                  description: |-
+                    The NetBox Tenant to be assigned to this resource in NetBox. Use the `name` value instead of the `slug` value
+                    Field is immutable, not required
+                    Example: "Initech" or "Cyberdyne Systems"
+                  type: string
+                  x-kubernetes-validations:
+                    - message: Field 'tenant' is immutable
+                      rule: self == oldSelf
+                type:
+                  description: |-
+                    The NetBox L2VPN type. Only VXLAN-based types are supported, since those
+                    are the ones that carry a VNI in their identifier.
+                    Field is immutable, required
+                  enum:
+                    - vxlan
+                    - vxlan-evpn
+                  type: string
+                  x-kubernetes-validations:
+                    - message: Field 'type' is immutable
+                      rule: self == oldSelf
+              required:
+                - identifierRangeEnd
+                - identifierRangeStart
+                - type
+              type: object
+            status:
+              description: L2VPNClaimStatus defines the observed state of L2VPNClaim
+              properties:
+                conditions:
+                  description:
+                    Conditions represent the latest available observations
+                    of an object's state
+                  items:
+                    description:
+                      Condition contains details for one aspect of the current
+                      state of this API Resource.
+                    properties:
+                      lastTransitionTime:
+                        description: |-
+                          lastTransitionTime is the last time the condition transitioned from one status to another.
+                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                        format: date-time
+                        type: string
+                      message:
+                        description: |-
+                          message is a human readable message indicating details about the transition.
+                          This may be an empty string.
+                        maxLength: 32768
+                        type: string
+                      observedGeneration:
+                        description: |-
+                          observedGeneration represents the .metadata.generation that the condition was set based upon.
+                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                          with respect to the current state of the instance.
+                        format: int64
+                        minimum: 0
+                        type: integer
+                      reason:
+                        description: |-
+                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                          Producers of specific condition types may define expected values and meanings for this field,
+                          and whether the values are considered a guaranteed API.
+                          The value should be a CamelCase string.
+                          This field may not be empty.
+                        maxLength: 1024
+                        minLength: 1
+                        pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                        type: string
+                      status:
+                        description: status of the condition, one of True, False, Unknown.
+                        enum:
+                          - "True"
+                          - "False"
+                          - Unknown
+                        type: string
+                      type:
+                        description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                        maxLength: 316
+                        pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                        type: string
+                    required:
+                      - lastTransitionTime
+                      - message
+                      - reason
+                      - status
+                      - type
+                    type: object
+                  type: array
+                identifier:
+                  description: The assigned VNI
+                  format: int64
+                  type: integer
+                l2VPNName:
+                  description: The name of the L2VPN CR created by the L2VPNClaim Controller
+                  type: string
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}

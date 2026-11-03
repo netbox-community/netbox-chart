@@ -113,7 +113,7 @@ spec:
                     The desired prefix length of your Prefix using slash notation. Example: `/24` for an IPv4 Prefix or `/64` for an IPv6 Prefix
                     Field is immutable, required
                     Example: "/24"
-                  pattern: ^\/[0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]$
+                  pattern: ^\/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8])$
                   type: string
                   x-kubernetes-validations:
                     - message: Field 'prefixLength' is immutable

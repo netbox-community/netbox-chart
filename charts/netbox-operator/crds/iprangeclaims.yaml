@@ -199,11 +199,6 @@ spec:
                 endAddressDotDecimal:
                   description: The last IP Addresses in Dot Decimal notation
                   type: string
-                ipAddressName:
-                  description:
-                    The name of the IpRange CR created by the IpRangeClaim
-                    Controller
-                  type: string
                 ipAddresses:
                   description: The full list of IP Addresses in CIDR notation
                   items:
@@ -219,6 +214,11 @@ spec:
                   type: string
                 ipRangeDotDecimal:
                   description: The assigned IP Range in Dot Decimal notation (e.g. 192.168.0.1-192.168.0.123)
+                  type: string
+                ipRangeName:
+                  description:
+                    The name of the IpRange CR created by the IpRangeClaim
+                    Controller
                   type: string
                 startAddress:
                   description: The first IP Addresses in CIDR notation

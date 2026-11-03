@@ -21,6 +21,60 @@ entries:
           url: https://github.com/netbox-community/netbox
     apiVersion: v2
     appVersion: v4.7.4
+    created: "2026-11-03T03:52:35.725720375Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: ^2.41.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^18.12.17
+    - condition: valkey.enabled
+      name: valkey
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: ^6.3.13
+    description: IP address management (IPAM) and data center infrastructure management
+      (DCIM) tool
+    digest: 681766d72479ac9018c544a3c3fa1798f2f3363260192b7bc200e7d306c63103
+    home: https://netbox.dev/
+    icon: https://raw.githubusercontent.com/netbox-community/netbox/main/docs/netbox_logo_light.svg
+    kubeVersion: ^1.25.0-0
+    maintainers:
+    - name: netbox-community
+      url: https://github.com/netbox-community
+    - name: bootc
+      url: https://github.com/bootc
+    name: netbox
+    sources:
+    - https://github.com/netbox-community/netbox-chart
+    - https://github.com/netbox-community/netbox
+    type: application
+    urls:
+    - https://github.com/netbox-community/netbox-chart/releases/download/netbox-8.3.99/netbox-8.3.99.tgz
+    version: 8.3.99
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: New release
+          links:
+            - name: Changelog on GitHub Releases
+              url: https://github.com/netbox-community/netbox-chart/releases?q=netbox-
+      artifacthub.io/images: |
+        - name: netbox
+          image: ghcr.io/netbox-community/netbox:v4.7.4
+        - name: busybox
+          image: docker.io/busybox:1.38.0
+        - name: kubectl
+          image: docker.io/rancher/kubectl:v1.36.2
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Upstream Project
+          url: https://github.com/netbox-community/netbox
+    apiVersion: v2
+    appVersion: v4.7.4
     created: "2026-10-28T13:42:52.101770123Z"
     dependencies:
     - name: common
@@ -46677,4 +46731,4 @@ entries:
     urls:
     - https://github.com/netbox-community/netbox-chart/releases/download/netbox-operator-0.1.0/netbox-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-02T12:02:07.936598973Z"
+generated: "2026-11-03T03:52:35.728002101Z"

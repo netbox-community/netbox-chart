@@ -38,7 +38,7 @@ jobs:
         uses: helm/chart-testing-action@v2.9.0
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.15.1
+        uses: helm/kind-action@v1.15.2
         if: contains(matrix.action, 'install')
 
       - name: Run chart-testing (${{ matrix.action }})

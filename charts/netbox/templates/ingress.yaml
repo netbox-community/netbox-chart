@@ -31,7 +31,7 @@ spec:
       {{- range .paths }}
       {{- if kindIs "string" . }}
       - path: {{ . }}
-        pathType: Prefix
+        pathType: {{ $.Values.ingress.pathType | default "Prefix" }}
         backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" $) "servicePort" "http" "context" $) | nindent 10 }}
       {{- else }}
       {{- (list .) | toYaml | nindent 6 }}

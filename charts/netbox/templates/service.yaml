@@ -52,6 +52,9 @@ spec:
   {{- if .Values.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy | quote }}
   {{- end }}
+  {{- if .Values.service.ipFamilies }}
+  ipFamilies: {{- include "common.tplvalues.render" (dict "value" .Values.service.ipFamilies "context" $) | nindent 4 }}
+  {{- end }}
   {{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | quote }}
   {{- end }}

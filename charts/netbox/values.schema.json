@@ -1543,6 +1543,12 @@
         "externalTrafficPolicy": {
           "type": "string"
         },
+        "ipFamilies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "ipFamilyPolicy": {
           "type": "string"
         },

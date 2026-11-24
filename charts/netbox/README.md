@@ -264,6 +264,7 @@ The following table lists the configurable parameters for this chart and their d
 | `service.clusterIPs`                            | A list of cluster IP addresses assigned to the service              | `[]`                                         |
 | `service.externalIPs`                           | A list of external IP addresses aliased to this service             | `[]`                                         |
 | `service.externalTrafficPolicy`                 | Policy for routing external traffic                                 | `Cluster`                                    |
+| `service.ipFamilies`                            | A list of IP families (`IPv4`, `IPv6`) for the service              | `[]`                                         |
 | `service.ipFamilyPolicy`                        | Represents the dual-stack-ness of the service                       | `""`                                         |
 | `service.loadBalancerIP`                        | Request a specific IP address when `service.type` is `LoadBalancer` | `""`                                         |
 | `service.loadBalancerSourceRanges`              | A list of allowed IP ranges when `service.type` is `LoadBalancer`   | `[]`                                         |

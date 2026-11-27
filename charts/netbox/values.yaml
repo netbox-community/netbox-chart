@@ -515,6 +515,12 @@ args: []
 ## NOTE: ReadWriteMany PVC(s) are required if replicaCount > 1
 ##
 replicaCount: 1
+
+## Settings for Granian webserver
+## @param granian.workers Number of workers (processes) per pod. See: https://github.com/emmett-framework/granian#workers-and-threads
+granian:
+  workers: 1
+
 ## Enable persistence using Persistent Volume Claims
 ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 ## @param persistence.enabled Enable persistence using PVC

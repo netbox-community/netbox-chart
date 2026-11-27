@@ -81,6 +81,10 @@ spec:
             secretKeyRef:
               name: {{ include "common.secrets.name" (dict "existingSecret" .Values.superuser.existingSecret "defaultNameSuffix" "superuser" "context" $) }}
               key: email
+        {{- if and .Values.granian .Values.granian.workers }}
+        - name: GRANIAN_WORKERS
+          value: {{ .Values.granian.workers | quote }}
+        {{- end }}
         {{- if and .Values.metrics.enabled .Values.metrics.granian.enabled }}
         - name: GRANIAN_METRICS_ENABLED
           value: {{ .Values.metrics.granian.enabled | quote }}

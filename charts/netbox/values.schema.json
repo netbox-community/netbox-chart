@@ -1343,6 +1343,13 @@
     "replicaCount": {
       "type": "integer"
     },
+    "granian": {
+      "properties": {
+        "workers": {
+          "type": ["null", "integer"]
+        }
+      }
+    },
     "reportsPersistence": {
       "properties": {
         "accessMode": {
